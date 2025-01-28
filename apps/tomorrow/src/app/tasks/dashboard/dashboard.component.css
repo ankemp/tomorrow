@@ -1,0 +1,24 @@
+:host {
+  display: block;
+}
+
+section {
+  display: block;
+  padding: 1rem;
+}
+
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  padding: 1rem;
+
+  & ::ng-deep tw-category-card > button {
+    width: 100%;
+  }
+}
+
+.task-list-grid {
+  display: grid;
+  gap: 1rem;
+}

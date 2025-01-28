@@ -2,7 +2,7 @@
   "name": "tomorrow",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
-  "prefix": "app",
+  "prefix": "tw",
   "sourceRoot": "apps/tomorrow/src",
   "tags": [],
   "targets": {
@@ -22,14 +22,14 @@
           },
           {
             "glob": "**/*",
-            "input": "@taiga-ui/icons/src",
+            "input": "node_modules/@taiga-ui/icons/src",
             "output": "assets/taiga-ui/icons"
           }
         ],
         "styles": [
-          "@taiga-ui/core/styles/taiga-ui-theme.less",
-          "@taiga-ui/core/styles/taiga-ui-fonts.less",
-          "@taiga-ui/addon-mobile/styles/taiga-ui-mobile.less",
+          "node_modules/@taiga-ui/core/styles/taiga-ui-theme.less",
+          "node_modules/@taiga-ui/core/styles/taiga-ui-fonts.less",
+          "node_modules/@taiga-ui/addon-mobile/styles/taiga-ui-mobile.less",
           "apps/tomorrow/src/styles.css"
         ],
         "scripts": [],

@@ -1,0 +1,19 @@
+<button
+  tuiCardLarge
+  tuiCell
+  tuiSurface="neutral"
+  type="button"
+  [style.background-color]="color()"
+>
+  <tui-avatar appearance="glass" [src]="icon()" [style.color]="color()" />
+  <div tuiTitle>
+    {{ title() }}
+    <div tuiSubtitle>
+      {{ taskCount() | i18nPlural : {
+      '=0': 'No tasks',
+      '=1': '1 task',
+      'other': '# tasks',
+    } }}
+    </div>
+  </div>
+</button>

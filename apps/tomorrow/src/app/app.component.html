@@ -1,3 +1,5 @@
-<tui-root>
+<tui-root [attr.tuiTheme]="darkMode() ? 'dark' : null">
+  <tw-app-bar />
+
   <router-outlet></router-outlet>
 </tui-root>
