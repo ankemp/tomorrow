@@ -39,9 +39,7 @@ module.exports = [
         {
           groups: [
             ['^@?\\w'],
-            // TODO: https://medium.com/@tomas.gabrs/establishing-consistent-import-sorting-in-an-nx-monorepo-64515b05968f
-            // ['^@tomio-open(/.*|$)'],
-            // ['^\\u0000'],
+            ['^@tmrw(/.*|$)'],
             ['^\\.\\.(?!/?$)', '^\\.\\./?$'],
             ['^\\./(?=.*/)(?!/?$)', '^\\.(?!/?$)', '^\\./?$'],
           ],
