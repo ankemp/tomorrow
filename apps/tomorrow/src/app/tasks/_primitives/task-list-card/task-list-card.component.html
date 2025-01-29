@@ -1,17 +1,24 @@
-<div tuiCell tuiSurface="neutral" [style.white-space]="'nowrap'">
+<div
+  tuiCell
+  tuiSurface="neutral"
+  [style.white-space]="'nowrap'"
+  [class.completed]="task().completedAt"
+>
   <button
+    appearance="flat"
     [iconStart]="icon()"
     size="xs"
     tuiIconButton
     type="button"
     [style.border-radius.%]="100"
+    (click)="toggleTask()"
   >
-    {{ task().completed ? 'Undone' : 'Done' }}
+    {{ task().completedAt ? 'Undo' : 'Done' }}
   </button>
   <div tuiFade tuiTitle>
-    {{ task().title }}
+    <span class="title">{{ task().title }}</span>
     <div tuiSubtitle>
-      {{ task().date | date : dateFormat() }}
+      {{ task().date | date: dateFormat() }}
     </div>
   </div>
   <tui-badge>{{ task().category }}</tui-badge>

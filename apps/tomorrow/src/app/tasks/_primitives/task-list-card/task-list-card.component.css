@@ -1,3 +1,7 @@
 :host {
   display: block;
 }
+
+.completed .title {
+  text-decoration: line-through;
+}
