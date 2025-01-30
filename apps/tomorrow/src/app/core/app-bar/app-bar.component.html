@@ -14,9 +14,13 @@
     </div>
   </h1>
 
-  <tw-theme-toggler tuiSlot="right" />
   <a iconStart="@tui.search" title="User" tuiIconButton tuiSlot="right"></a>
-  <button iconStart="@tui.user" tuiIconButton tuiSlot="right" type="button">
+  <a
+    iconStart="@tui.settings"
+    tuiIconButton
+    tuiSlot="right"
+    [routerLink]="['/settings']"
+  >
     Settings
-  </button>
+  </a>
 </tui-app-bar>

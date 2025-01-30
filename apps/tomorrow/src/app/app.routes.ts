@@ -16,4 +16,11 @@ export const appRoutes: Route[] = [
         (m) => m.CategoryComponent,
       ),
   },
+  {
+    path: 'settings',
+    loadComponent: () =>
+      import('./settings/general/general.component').then(
+        (m) => m.GeneralComponent,
+      ),
+  },
 ];

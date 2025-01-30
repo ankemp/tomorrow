@@ -15,8 +15,6 @@ import { TuiAppBar } from '@taiga-ui/layout';
 
 import { Tasks } from '@tmrw/data-access';
 
-import { ThemeTogglerComponent } from '../theme-toggler/theme-toggler.component';
-
 @Component({
   selector: 'tw-app-bar',
   imports: [
@@ -27,7 +25,6 @@ import { ThemeTogglerComponent } from '../theme-toggler/theme-toggler.component'
     TuiSkeleton,
     TuiAppBar,
     TuiPlatform,
-    ThemeTogglerComponent,
   ],
   templateUrl: './app-bar.component.html',
   styleUrl: './app-bar.component.css',

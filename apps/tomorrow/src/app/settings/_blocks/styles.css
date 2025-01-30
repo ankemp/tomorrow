@@ -1,0 +1,14 @@
+:host {
+  display: block;
+}
+
+.switch-container {
+  display: grid;
+  gap: 1rem;
+
+  & > [tuilabel] {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+}
