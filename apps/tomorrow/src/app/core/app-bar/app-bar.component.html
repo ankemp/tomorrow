@@ -14,7 +14,16 @@
     </div>
   </h1>
 
-  <a iconStart="@tui.search" title="User" tuiIconButton tuiSlot="right"></a>
+  <button
+    type="button"
+    iconStart="@tui.search"
+    title="User"
+    tuiIconButton
+    tuiSlot="right"
+    (click)="showSearch.set(!showSearch())"
+  >
+    Search
+  </button>
   <a
     iconStart="@tui.settings"
     tuiIconButton

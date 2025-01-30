@@ -32,6 +32,7 @@ import { Tasks } from '@tmrw/data-access';
 })
 export class AppBarComponent {
   taskCount = signal<number>(-1);
+  showSearch = signal<boolean>(false);
 
   constructor(@Inject(PLATFORM_ID) platformId: any) {
     if (isPlatformBrowser(platformId)) {

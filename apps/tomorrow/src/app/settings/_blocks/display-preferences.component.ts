@@ -6,20 +6,13 @@ import {
   inject,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TUI_DARK_MODE, TuiButton, TuiLabel } from '@taiga-ui/core';
-import { TuiSwitch, tuiSwitchOptionsProvider } from '@taiga-ui/kit';
+import { TUI_DARK_MODE, TuiButton } from '@taiga-ui/core';
 
 import { PreferencesCardComponent } from '../_primitives/preferences-card.component';
 
 @Component({
   selector: 'tw-display-preferences',
-  imports: [
-    CommonModule,
-    FormsModule,
-    TuiLabel,
-    TuiButton,
-    PreferencesCardComponent,
-  ],
+  imports: [CommonModule, FormsModule, TuiButton, PreferencesCardComponent],
   template: `
     <tw-preferences-card title="Display" icon="@tui.palette">
       <div class="switch-container">
@@ -28,7 +21,7 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
 
           <button
             appearance="action"
-            size="s"
+            size="xs"
             [iconStart]="themeIcon()"
             tuiButton
             (click)="darkMode.set(!darkMode())"
