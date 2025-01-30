@@ -98,6 +98,10 @@
         "staticFilePath": "dist/apps/tomorrow/browser",
         "spa": true
       }
+    },
+    "docker-build": {
+      "dependsOn": ["build"],
+      "command": "docker build -f apps/tomorrow/Dockerfile . -t tomorrow"
     }
   }
 }
