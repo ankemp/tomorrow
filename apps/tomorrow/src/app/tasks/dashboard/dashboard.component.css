@@ -1,5 +1,6 @@
 :host {
   display: block;
+  margin-bottom: 5.5rem;
 }
 
 section {
@@ -21,4 +22,18 @@ section {
 .task-list-grid {
   display: grid;
   gap: 1rem;
+}
+
+.task-create-container {
+  align-items: center;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+  position: fixed;
+  width: calc(100% - 2rem);
+
+  & button {
+    width: 100%;
+  }
 }

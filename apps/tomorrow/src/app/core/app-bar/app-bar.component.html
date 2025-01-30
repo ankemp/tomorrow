@@ -1,7 +1,17 @@
 <tui-app-bar tuiPlatform="ios">
-  <h1 tuiTitle>
+  <h1 tuiTitle [routerLink]="['/']">
     tmr.w
-    <span tuiSubtitle>You have 6 tasks today</span>
+    <div [tuiSkeleton]="taskCount() === -1" tuiSubtitle>
+      {{
+        taskCount()
+          | i18nPlural
+            : {
+                '=0': 'You have no tasks today',
+                '=1': 'You have one task today',
+                other: 'You have # tasks today',
+              }
+      }}
+    </div>
   </h1>
 
   <tw-theme-toggler tuiSlot="right" />

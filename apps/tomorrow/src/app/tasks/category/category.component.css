@@ -1,0 +1,13 @@
+:host {
+  display: block;
+}
+
+section {
+  display: block;
+  padding: 1rem;
+}
+
+.task-list-grid {
+  display: grid;
+  gap: 1rem;
+}

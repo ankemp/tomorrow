@@ -1,25 +1,52 @@
-<div
-  tuiCell
-  tuiSurface="neutral"
-  [style.white-space]="'nowrap'"
-  [class.completed]="task().completedAt"
->
+<tui-swipe-actions>
+  <div
+    tuiCell
+    tuiSurface="neutral"
+    [style.white-space]="'nowrap'"
+    [class.completed]="task().completedAt"
+  >
+    <button
+      appearance="flat"
+      [iconStart]="icon()"
+      size="xs"
+      tuiIconButton
+      type="button"
+      [style.border-radius.%]="100"
+      (click)="toggleTask()"
+    >
+      {{ task().completedAt ? 'Undo' : 'Done' }}
+    </button>
+    <div tuiFade tuiTitle>
+      <span class="title">{{ task().title }}</span>
+      <div tuiSubtitle>
+        {{ dateString() }}
+      </div>
+    </div>
+    <tui-chip
+      appearance="custom"
+      [style.background-color]="task().category | tuiAutoColor"
+    >
+      {{ task().category }}
+    </tui-chip>
+  </div>
   <button
     appearance="flat"
-    [iconStart]="icon()"
-    size="xs"
+    iconStart="@tui.pencil"
+    size="m"
     tuiIconButton
+    tuiSwipeAction
     type="button"
-    [style.border-radius.%]="100"
-    (click)="toggleTask()"
   >
-    {{ task().completedAt ? 'Undo' : 'Done' }}
+    Edit
   </button>
-  <div tuiFade tuiTitle>
-    <span class="title">{{ task().title }}</span>
-    <div tuiSubtitle>
-      {{ task().date | date: dateFormat() }}
-    </div>
-  </div>
-  <tui-badge>{{ task().category }}</tui-badge>
-</div>
+  <button
+    appearance="flat-destructive"
+    iconStart="@tui.trash-2"
+    size="m"
+    tuiIconButton
+    tuiSwipeAction
+    type="button"
+  >
+    Delete
+  </button>
+</tui-swipe-actions>

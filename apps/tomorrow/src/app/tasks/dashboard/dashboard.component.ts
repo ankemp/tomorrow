@@ -1,8 +1,10 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   effect,
+  Inject,
+  PLATFORM_ID,
   signal,
 } from '@angular/core';
 import { TuiButton, TuiTitle } from '@taiga-ui/core';
@@ -26,23 +28,37 @@ import { TaskListCardComponent } from '../_primitives/task-list-card/task-list-c
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent {
-  tasks = signal<Task[]>([]);
+  todaysTasks = signal<Task[]>([]);
+  upcomingTasks = signal<Task[]>([]);
 
-  constructor() {
-    effect((onCleanup) => {
-      const cursor = Tasks.find();
-      this.tasks.set(cursor.fetch());
-      onCleanup(() => {
-        cursor.cleanup();
+  constructor(@Inject(PLATFORM_ID) platformId: any) {
+    if (isPlatformBrowser(platformId)) {
+      effect((onCleanup) => {
+        const tt = Tasks.getTodaysTasks();
+        this.todaysTasks.set(tt.fetch());
+        const ut = Tasks.getUpcomingTasks();
+        this.upcomingTasks.set(ut.fetch());
+        onCleanup(() => {
+          tt.cleanup();
+          ut.cleanup();
+        });
       });
-    });
+    }
   }
 
   createTask() {
+    const randomTitle = `Task ${Math.floor(Math.random() * 1000)}`;
+    const randomDate = new Date(
+      Date.now() + Math.floor(Math.random() * 8) * 24 * 60 * 60 * 1000,
+    );
+    const categories = ['Work', 'Personal', 'Health', 'Shopping'];
+    const randomCategory =
+      categories[Math.floor(Math.random() * categories.length)];
+
     Tasks.insert({
-      title: 'Task 1',
-      date: new Date(),
-      category: 'Work',
+      title: randomTitle,
+      date: randomDate,
+      category: randomCategory,
       completedAt: null,
     });
   }

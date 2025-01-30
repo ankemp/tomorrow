@@ -1,8 +1,19 @@
-import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  Inject,
+  PLATFORM_ID,
+  signal,
+} from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { TuiPlatform } from '@taiga-ui/cdk';
 import { TuiButton, TuiTitle } from '@taiga-ui/core';
+import { TuiSkeleton } from '@taiga-ui/kit';
 import { TuiAppBar } from '@taiga-ui/layout';
+
+import { Tasks } from '@tmrw/data-access';
 
 import { ThemeTogglerComponent } from '../theme-toggler/theme-toggler.component';
 
@@ -10,8 +21,10 @@ import { ThemeTogglerComponent } from '../theme-toggler/theme-toggler.component'
   selector: 'tw-app-bar',
   imports: [
     CommonModule,
+    RouterModule,
     TuiButton,
     TuiTitle,
+    TuiSkeleton,
     TuiAppBar,
     TuiPlatform,
     ThemeTogglerComponent,
@@ -20,4 +33,18 @@ import { ThemeTogglerComponent } from '../theme-toggler/theme-toggler.component'
   styleUrl: './app-bar.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppBarComponent {}
+export class AppBarComponent {
+  taskCount = signal<number>(-1);
+
+  constructor(@Inject(PLATFORM_ID) platformId: any) {
+    if (isPlatformBrowser(platformId)) {
+      effect((onCleanup) => {
+        const c = Tasks.getTodaysTasks();
+        this.taskCount.set(c.count());
+        onCleanup(() => {
+          c.cleanup();
+        });
+      });
+    }
+  }
+}

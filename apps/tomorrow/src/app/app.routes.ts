@@ -6,7 +6,14 @@ export const appRoutes: Route[] = [
     path: 'dashboard',
     loadComponent: () =>
       import('./tasks/dashboard/dashboard.component').then(
-        (m) => m.DashboardComponent
+        (m) => m.DashboardComponent,
+      ),
+  },
+  {
+    path: 'category/:slug',
+    loadComponent: () =>
+      import('./tasks/category/category.component').then(
+        (m) => m.CategoryComponent,
       ),
   },
 ];

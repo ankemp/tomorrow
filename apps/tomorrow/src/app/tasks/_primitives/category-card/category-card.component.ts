@@ -1,22 +1,37 @@
-import { CommonModule, I18nPluralPipe } from '@angular/common';
+import {
+  CommonModule,
+  I18nPluralPipe,
+  isPlatformBrowser,
+} from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
+  effect,
+  Inject,
   input,
+  PLATFORM_ID,
+  signal,
 } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { TuiAppearance, TuiSurface, TuiTitle } from '@taiga-ui/core';
+import { TuiAutoColorPipe } from '@taiga-ui/core';
+import { TuiSkeleton } from '@taiga-ui/kit';
 import { TuiAvatar } from '@taiga-ui/kit';
 import { TuiCardLarge, TuiCell } from '@taiga-ui/layout';
+
+import { Tasks } from '@tmrw/data-access';
 
 @Component({
   selector: 'tw-category-card',
   imports: [
     CommonModule,
+    RouterModule,
     I18nPluralPipe,
     TuiAppearance,
     TuiSurface,
     TuiTitle,
+    TuiAutoColorPipe,
+    TuiSkeleton,
     TuiAvatar,
     TuiCardLarge,
     TuiCell,
@@ -27,9 +42,20 @@ import { TuiCardLarge, TuiCell } from '@taiga-ui/layout';
 })
 export class CategoryCardComponent {
   title = input.required<string>();
-  tasks = input.required<any[]>();
-  color = input<string>(); // TODO: make random color if not provided
+  color = input<string>();
   icon = input<string>('@tui.star');
 
-  taskCount = computed(() => this.tasks().length);
+  taskCount = signal<number>(-1);
+
+  constructor(@Inject(PLATFORM_ID) platformId: any) {
+    if (isPlatformBrowser(platformId)) {
+      effect((onCleanup) => {
+        const c = Tasks.getByCategory(this.title());
+        this.taskCount.set(c.count());
+        onCleanup(() => {
+          c.cleanup();
+        });
+      });
+    }
+  }
 }
