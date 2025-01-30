@@ -59,6 +59,13 @@
           "optimization": false,
           "extractLicenses": false,
           "sourceMap": true
+        },
+        "development-no-ssr": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "ssr": true,
+          "prerender": false
         }
       },
       "defaultConfiguration": "production"
@@ -71,9 +78,12 @@
         },
         "development": {
           "buildTarget": "tomorrow:build:development"
+        },
+        "development-no-ssr": {
+          "buildTarget": "tomorrow:build:development-no-ssr"
         }
       },
-      "defaultConfiguration": "development"
+      "defaultConfiguration": "development-no-ssr"
     },
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
