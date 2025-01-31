@@ -1,3 +1,17 @@
 :host {
   display: block;
 }
+
+.category-card:hover {
+  &::before,
+  &:active::before {
+    backdrop-filter: brightness(0.85);
+  }
+
+  tui-avatar {
+    transform: scale(1.1);
+    transition-property: transform;
+    transition-duration: var(--tui-duration, 0.3s);
+    transition-timing-function: ease-in-out;
+  }
+}
