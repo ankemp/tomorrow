@@ -68,7 +68,7 @@
           "prerender": false
         }
       },
-      "defaultConfiguration": "production"
+      "defaultConfiguration": "development"
     },
     "serve": {
       "executor": "@angular-devkit/build-angular:dev-server",
@@ -83,7 +83,7 @@
           "buildTarget": "tomorrow:build:development-no-ssr"
         }
       },
-      "defaultConfiguration": "development-no-ssr"
+      "defaultConfiguration": "development"
     },
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",

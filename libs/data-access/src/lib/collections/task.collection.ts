@@ -4,6 +4,7 @@ import createIndexedDBAdapter from '@signaldb/indexeddb';
 import { endOfToday, startOfToday, startOfTomorrow } from 'date-fns';
 
 import { Task } from '../models/task.model';
+import { syncManager } from '../sync-manager';
 
 class TaskCollection extends Collection<Task> {
   constructor() {
@@ -58,3 +59,8 @@ class TaskCollection extends Collection<Task> {
 }
 
 export const Tasks = new TaskCollection();
+
+syncManager.addCollection(Tasks, {
+  name: 'tasks',
+  apiPath: '/api/tasks',
+});
