@@ -14,12 +14,16 @@ type SettingsState = {
   defaultReminderTime: string;
   startOfWeek: string;
   timeFormat: string;
+  remoteSync: boolean;
+  encryption: boolean;
 };
 
 const initialState: SettingsState = {
   defaultReminderTime: '08:00',
   startOfWeek: 'Sunday',
   timeFormat: '12h',
+  remoteSync: false,
+  encryption: false,
 };
 
 export const Settings = signalStore(
@@ -42,6 +46,12 @@ export const Settings = signalStore(
     },
     updateStartOfWeek(startOfWeek: string): void {
       patchState(store, { startOfWeek });
+    },
+    updateRemoteSync(remoteSync: boolean): void {
+      patchState(store, { remoteSync });
+    },
+    updateEncryption(encryption: boolean): void {
+      patchState(store, { encryption });
     },
   })),
   withHooks({

@@ -48,7 +48,7 @@ class TimeTransformer extends TuiValueTransformer<
     }),
   ],
   template: `
-    <tw-preferences-card title="Reminder Preferences" icon="@tui.clock">
+    <tw-preferences-card title="Reminder" icon="@tui.clock">
       <div class="switch-container">
         <div tuiLabel>
           Default Reminder Time

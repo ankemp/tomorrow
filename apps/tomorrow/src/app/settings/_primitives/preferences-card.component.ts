@@ -10,7 +10,7 @@ import { TuiCardLarge, TuiCell } from '@taiga-ui/layout';
     <div tuiCardLarge tuiAppearance="floating">
       <div tuiCell>
         <tui-icon [icon]="icon()" />
-        <h2 tuiTitle>{{ title() }}</h2>
+        <h2 tuiTitle>{{ title() }} Preferences</h2>
       </div>
       <ng-content></ng-content>
     </div>
