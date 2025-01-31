@@ -1,8 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TuiLabel } from '@taiga-ui/core';
-import { TuiSwitch } from '@taiga-ui/kit';
+import { TuiIcon, TuiLabel } from '@taiga-ui/core';
+import { TuiSwitch, TuiTooltip } from '@taiga-ui/kit';
 
 import { Settings } from '@tmrw/data-access';
 
@@ -13,8 +18,10 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
   imports: [
     CommonModule,
     FormsModule,
+    TuiIcon,
     TuiLabel,
     TuiSwitch,
+    TuiTooltip,
     PreferencesCardComponent,
   ],
   template: `
@@ -30,7 +37,18 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
           />
         </label>
         <label tuiLabel>
-          Encryption
+          <span
+            >Encryption
+            <tui-icon
+              [appearance]="
+                settings.hasEncryptionKey() ? 'positive' : 'negative'
+              "
+              [icon]="encryptionIcon()"
+              tuiTooltip="Encryption key is {{
+                settings.hasEncryptionKey() ? 'set' : 'not set'
+              }}"
+          /></span>
+          <!-- TODO: Add ability to delete key, warn about losing all data -->
           <input
             tuiSwitch
             type="checkbox"
@@ -46,4 +64,10 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
 })
 export class SyncPreferencesComponent {
   settings = inject(Settings);
+
+  encryptionIcon = computed(() => {
+    return this.settings.hasEncryptionKey()
+      ? '@tui.shield-check'
+      : '@tui.shield-x';
+  });
 }

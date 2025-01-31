@@ -16,6 +16,7 @@ type SettingsState = {
   timeFormat: string;
   remoteSync: boolean;
   encryption: boolean;
+  _encryptionKey: JsonWebKey | null;
 };
 
 const initialState: SettingsState = {
@@ -24,6 +25,7 @@ const initialState: SettingsState = {
   timeFormat: '12h',
   remoteSync: false,
   encryption: false,
+  _encryptionKey: null,
 };
 
 export const Settings = signalStore(
@@ -36,6 +38,7 @@ export const Settings = signalStore(
           ? 'HH:MM AA'
           : 'HH:MM') satisfies TuiTimeMode,
     ),
+    hasEncryptionKey: computed(() => !!state._encryptionKey()),
   })),
   withMethods((store) => ({
     updateDefaultReminderTime(defaultReminderTime: string): void {
@@ -50,7 +53,20 @@ export const Settings = signalStore(
     updateRemoteSync(remoteSync: boolean): void {
       patchState(store, { remoteSync });
     },
-    updateEncryption(encryption: boolean): void {
+    async updateEncryption(encryption: boolean): Promise<void> {
+      const state = getState(store);
+      if (!state._encryptionKey) {
+        const key = await window.crypto.subtle.generateKey(
+          {
+            name: 'AES-GCM',
+            length: 256,
+          },
+          true,
+          ['encrypt', 'decrypt'],
+        );
+        const exportedKey = await window.crypto.subtle.exportKey('jwk', key);
+        patchState(store, { _encryptionKey: exportedKey });
+      }
       patchState(store, { encryption });
     },
   })),
