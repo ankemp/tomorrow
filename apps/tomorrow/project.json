@@ -37,7 +37,8 @@
         "ssr": {
           "entry": "apps/tomorrow/src/server.ts"
         },
-        "prerender": true
+        "prerender": true,
+        "outputMode": "server"
       },
       "configurations": {
         "production": {
