@@ -13,6 +13,7 @@
         "outputPath": "dist/apps/tomorrow",
         "index": "apps/tomorrow/src/index.html",
         "browser": "apps/tomorrow/src/main.ts",
+        "externalDependencies": ["sequelize"],
         "polyfills": ["zone.js"],
         "tsConfig": "apps/tomorrow/tsconfig.app.json",
         "assets": [

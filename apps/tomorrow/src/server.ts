@@ -8,11 +8,16 @@ import express from 'express';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { apiRouter } from './api';
+
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder = resolve(serverDistFolder, '../browser');
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
+
+// Use the apiRouter for API endpoints
+app.use('/api', apiRouter);
 
 /**
  * Serve static files from /browser
