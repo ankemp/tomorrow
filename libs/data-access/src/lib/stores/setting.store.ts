@@ -50,10 +50,7 @@ export const Settings = signalStore(
     updateStartOfWeek(startOfWeek: string): void {
       patchState(store, { startOfWeek });
     },
-    updateRemoteSync(remoteSync: boolean): void {
-      patchState(store, { remoteSync });
-    },
-    async updateEncryption(encryption: boolean): Promise<void> {
+    async updateRemoteSync(remoteSync: boolean): Promise<void> {
       const state = getState(store);
       if (!state._encryptionKey) {
         const key = await window.crypto.subtle.generateKey(
@@ -67,6 +64,12 @@ export const Settings = signalStore(
         const exportedKey = await window.crypto.subtle.exportKey('jwk', key);
         patchState(store, { _encryptionKey: exportedKey });
       }
+      patchState(store, {
+        remoteSync,
+        encryption: remoteSync === false ? false : state.encryption,
+      });
+    },
+    updateEncryption(encryption: boolean): void {
       patchState(store, { encryption });
     },
   })),

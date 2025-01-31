@@ -54,6 +54,7 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
             type="checkbox"
             [ngModel]="settings.encryption()"
             (ngModelChange)="settings.updateEncryption($event)"
+            [disabled]="!this.settings.remoteSync()"
           />
         </label>
       </div>
