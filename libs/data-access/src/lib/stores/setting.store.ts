@@ -10,14 +10,7 @@ import {
 } from '@ngrx/signals';
 import { TuiTimeMode } from '@taiga-ui/cdk';
 
-type SettingsState = {
-  defaultReminderTime: string;
-  startOfWeek: string;
-  timeFormat: string;
-  remoteSync: boolean;
-  encryption: boolean;
-  _encryptionKey: JsonWebKey | null;
-};
+import { SettingsState } from '../models/settings.state';
 
 const initialState: SettingsState = {
   defaultReminderTime: '08:00',
@@ -38,6 +31,10 @@ export const Settings = signalStore(
           ? 'HH:MM AA'
           : 'HH:MM') satisfies TuiTimeMode,
     ),
+    jwtKey: computed(() => {
+      const key = state._encryptionKey();
+      return key ? JSON.parse(key) : null;
+    }),
     hasEncryptionKey: computed(() => !!state._encryptionKey()),
   })),
   withMethods((store) => ({
@@ -62,7 +59,7 @@ export const Settings = signalStore(
           ['encrypt', 'decrypt'],
         );
         const exportedKey = await window.crypto.subtle.exportKey('jwk', key);
-        patchState(store, { _encryptionKey: exportedKey });
+        patchState(store, { _encryptionKey: JSON.stringify(exportedKey) });
       }
       patchState(store, {
         remoteSync,

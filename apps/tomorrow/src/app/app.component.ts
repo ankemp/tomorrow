@@ -1,6 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Component, effect, Inject, inject, PLATFORM_ID } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TUI_DARK_MODE, TuiRoot } from '@taiga-ui/core';
+
+import { Settings, syncManager } from '@tmrw/data-access';
 
 import { AppBarComponent } from './core/app-bar/app-bar.component';
 
@@ -12,4 +15,22 @@ import { AppBarComponent } from './core/app-bar/app-bar.component';
 })
 export class AppComponent {
   readonly darkMode = inject(TUI_DARK_MODE);
+  settings = inject(Settings);
+
+  constructor(@Inject(PLATFORM_ID) platformId: any) {
+    if (isPlatformBrowser(platformId)) {
+      if (this.settings.remoteSync()) {
+        syncManager.startAll();
+      } else {
+        syncManager.pauseAll();
+      }
+      effect(() => {
+        if (this.settings.remoteSync()) {
+          syncManager.startAll();
+        } else {
+          syncManager.pauseAll();
+        }
+      });
+    }
+  }
 }
