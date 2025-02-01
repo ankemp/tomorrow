@@ -1,8 +1,13 @@
-<section class="task-list-grid">
-  <h2 tuiTitle="m">{{ title() }} tasks</h2>
-  @defer {
-    @for (task of categoryTasks(); track task.id) {
-      <tw-task-list-card [task]="task" />
-    }
-  }
-</section>
+<h2 tuiTitle="m">{{ title() }} tasks</h2>
+@for (group of groupedTasks(); track group) {
+  <div class="task-list-group">
+    <header tuiHeader="xs">
+      <h3 tuiTitle>{{ group.key }}</h3>
+    </header>
+    <div class="task-list-grid">
+      @for (task of group.value; track task.id) {
+        <tw-task-list-card [task]="task" />
+      }
+    </div>
+  </div>
+}

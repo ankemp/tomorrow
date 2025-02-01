@@ -2,6 +2,7 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   effect,
   Inject,
   PLATFORM_ID,
@@ -28,17 +29,23 @@ import { TaskListCardComponent } from '../_primitives/task-list-card/task-list-c
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent {
+  overDueTasks = signal<Task[]>([]);
   todaysTasks = signal<Task[]>([]);
   upcomingTasks = signal<Task[]>([]);
+
+  hasOverdueTasks = computed(() => this.overDueTasks().length > 0);
 
   constructor(@Inject(PLATFORM_ID) platformId: any) {
     if (isPlatformBrowser(platformId)) {
       effect((onCleanup) => {
+        const ot = Tasks.getOverdueTasks();
+        this.overDueTasks.set(ot.fetch());
         const tt = Tasks.getTodaysTasks();
         this.todaysTasks.set(tt.fetch());
         const ut = Tasks.getUpcomingTasks();
         this.upcomingTasks.set(ut.fetch());
         onCleanup(() => {
+          ot.cleanup();
           tt.cleanup();
           ut.cleanup();
         });

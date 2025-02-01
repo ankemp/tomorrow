@@ -5,6 +5,15 @@
   <tw-category-card title="Health" icon="@tui.heart-pulse" />
 </section>
 
+@if (hasOverdueTasks()) {
+  <section class="task-list-grid">
+    <h2 tuiTitle="m">Overdue Tasks</h2>
+    @for (task of overDueTasks(); track task.id) {
+      <tw-task-list-card [task]="task" />
+    }
+  </section>
+}
+
 <section class="task-list-grid">
   <h2 tuiTitle="m">Todays Tasks</h2>
   @for (task of todaysTasks(); track task.id) {

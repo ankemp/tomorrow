@@ -23,6 +23,18 @@ class TaskCollection extends Collection<Task> {
     );
   }
 
+  getOverdueTasks() {
+    return this.find(
+      {
+        date: { $lt: startOfToday() },
+        completedAt: null,
+      },
+      {
+        sort: { date: 1 },
+      },
+    );
+  }
+
   getTodaysTasks() {
     return this.find(
       {

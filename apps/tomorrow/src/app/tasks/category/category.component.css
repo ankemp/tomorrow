@@ -1,13 +1,14 @@
 :host {
   display: block;
+  padding: 1rem;
 }
 
-section {
-  display: block;
-  padding: 1rem;
+.task-list-group {
+  padding: 1rem 0;
 }
 
 .task-list-grid {
   display: grid;
   gap: 1rem;
+  margin-top: 0.5rem;
 }
