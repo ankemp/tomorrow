@@ -17,7 +17,7 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
     <tw-preferences-card title="Display" icon="@tui.palette">
       <div class="switch-container">
         <div tuiLabel>
-          Theme (Dark/Light)
+          Theme
 
           <button
             appearance="action"
