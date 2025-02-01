@@ -23,4 +23,11 @@ export const appRoutes: Route[] = [
         (m) => m.GeneralComponent,
       ),
   },
+  {
+    path: 'settings/add-device',
+    loadComponent: () =>
+      import('./settings/add-device/add-device.component').then(
+        (m) => m.AddDeviceComponent,
+      ),
+  },
 ];
