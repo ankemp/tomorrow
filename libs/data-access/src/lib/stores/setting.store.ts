@@ -10,6 +10,8 @@ import {
 } from '@ngrx/signals';
 import { TuiTimeMode } from '@taiga-ui/cdk';
 
+import { generateSymmetricKey } from '@tmrw/encryption';
+
 import { SettingsState } from '../models/settings.state';
 
 const initialState: SettingsState = {
@@ -50,14 +52,7 @@ export const Settings = signalStore(
     async updateRemoteSync(remoteSync: boolean): Promise<void> {
       const state = getState(store);
       if (!state._encryptionKey) {
-        const key = await window.crypto.subtle.generateKey(
-          {
-            name: 'AES-GCM',
-            length: 256,
-          },
-          true,
-          ['encrypt', 'decrypt'],
-        );
+        const key = await generateSymmetricKey();
         const exportedKey = await window.crypto.subtle.exportKey('jwk', key);
         patchState(store, { _encryptionKey: JSON.stringify(exportedKey) });
       }

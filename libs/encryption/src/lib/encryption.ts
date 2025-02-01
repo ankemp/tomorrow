@@ -1,3 +1,16 @@
+export async function generateSymmetricKey(
+  usages: KeyUsage[] = ['encrypt', 'decrypt'],
+) {
+  return await window.crypto.subtle.generateKey(
+    {
+      name: 'AES-GCM',
+      length: 256,
+    },
+    true,
+    usages,
+  );
+}
+
 export async function parseJWTAndImport(
   key: string,
   usages: KeyUsage[] = ['encrypt', 'decrypt'],
