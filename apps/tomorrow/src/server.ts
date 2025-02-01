@@ -16,6 +16,9 @@ const browserDistFolder = resolve(serverDistFolder, '../browser');
 const app = express();
 const angularApp = new AngularNodeAppEngine();
 
+// Add middleware to parse JSON request bodies
+app.use(express.json());
+
 // Use the apiRouter for API endpoints
 app.use('/api', apiRouter);
 

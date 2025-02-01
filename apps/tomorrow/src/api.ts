@@ -13,8 +13,8 @@ import type { Task } from '@tmrw/data-access';
 const apiRouter = express.Router();
 const sequelize = new Sequelize('sqlite::memory:', { dialect: 'sqlite' });
 
-export class SqTask
-  extends Model<InferAttributes<SqTask>, InferCreationAttributes<SqTask>>
+export class PlainTask
+  extends Model<InferAttributes<PlainTask>, InferCreationAttributes<PlainTask>>
   implements Task
 {
   declare id: string;
@@ -24,7 +24,7 @@ export class SqTask
   declare completedAt: CreationOptional<Date>;
 }
 
-SqTask.init(
+PlainTask.init(
   {
     id: {
       type: DataTypes.STRING,
@@ -41,27 +41,76 @@ SqTask.init(
   },
 );
 
-await SqTask.sync();
+export class EncryptedTask extends Model<
+  InferAttributes<EncryptedTask>,
+  InferCreationAttributes<EncryptedTask>
+> {
+  declare id: string;
+  declare encryptedData: string;
+}
+
+EncryptedTask.init(
+  {
+    id: {
+      type: DataTypes.STRING,
+      primaryKey: true,
+    },
+    encryptedData: { type: DataTypes.TEXT },
+  },
+  {
+    sequelize,
+    paranoid: true,
+  },
+);
+
+await PlainTask.sync();
+await EncryptedTask.sync();
 
 apiRouter.post('/tasks', async (req, res) => {
-  console.log(req.body);
-  await SqTask.create(req.body);
+  if (req.body.encrypted) {
+    await EncryptedTask.create({
+      id: req.body.id,
+      encryptedData: req.body.content,
+    });
+  } else {
+    await PlainTask.create(req.body.content);
+  }
   res.sendStatus(200);
 });
 
 apiRouter.put('/tasks', async (req, res) => {
-  await SqTask.update(req.body, { where: { id: req.body.id } });
+  if (req.body?.encrypted) {
+    await EncryptedTask.update(
+      { encryptedData: req.body.content },
+      { where: { id: req.body.id } },
+    );
+  } else {
+    await PlainTask.update(req.body, { where: { id: req.body.id } });
+  }
   res.sendStatus(200);
 });
 
 apiRouter.delete('/tasks', async (req, res) => {
-  await SqTask.destroy({ where: { id: req.body.id } });
+  if (req.body?.encrypted) {
+    await EncryptedTask.destroy({ where: { id: req.body.id } });
+  } else {
+    await PlainTask.destroy({ where: { id: req.body.id } });
+  }
   res.sendStatus(200);
 });
 
 apiRouter.get('/tasks', (req, res) => {
   // TODO: figure out how to use lastFinishedSyncStart here instead of just sending all
-  SqTask.findAll().then((tasks) => res.json(tasks));
+  const exclude = ['createdAt', 'updatedAt', 'deletedAt'];
+  if (req.query['encrypted'] === 'true') {
+    EncryptedTask.findAll({
+      attributes: { exclude },
+    }).then((tasks) => res.json(tasks));
+  } else {
+    PlainTask.findAll({
+      attributes: { exclude },
+    }).then((tasks) => res.json(tasks));
+  }
 });
 
 export { apiRouter };
