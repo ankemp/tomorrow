@@ -12,12 +12,14 @@ import { TuiTimeMode } from '@taiga-ui/cdk';
 
 import { generateSymmetricKey } from '@tmrw/encryption';
 
+import { Tasks } from '../collections/task.collection';
 import { SettingsState } from '../models/settings.state';
 
 const initialState: SettingsState = {
   defaultReminderTime: '08:00',
   startOfWeek: 'Sunday',
   timeFormat: '12h',
+  userId: null,
   remoteSync: false,
   encryption: false,
   _encryptionKey: null,
@@ -51,7 +53,12 @@ export const Settings = signalStore(
     },
     async updateRemoteSync(remoteSync: boolean): Promise<void> {
       const state = getState(store);
-      if (!state._encryptionKey) {
+      if (remoteSync && !state.userId) {
+        const userId = window.crypto.randomUUID();
+        patchState(store, { userId: userId });
+        Tasks.attachUserId(userId);
+      }
+      if (remoteSync && !state._encryptionKey) {
         const key = await generateSymmetricKey();
         const exportedKey = await window.crypto.subtle.exportKey('jwk', key);
         patchState(store, { _encryptionKey: JSON.stringify(exportedKey) });
@@ -62,6 +69,8 @@ export const Settings = signalStore(
       });
     },
     updateEncryption(encryption: boolean): void {
+      // TODO: Force push data to remote server.
+      // TODO: Clear old data from remote server.
       patchState(store, { encryption });
     },
   })),

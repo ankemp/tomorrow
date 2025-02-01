@@ -5,4 +5,5 @@ export interface Task extends BaseModel {
   date: Date;
   category: string;
   completedAt: Date | null;
+  userId: string | null;
 }

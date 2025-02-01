@@ -56,6 +56,14 @@ class TaskCollection extends Collection<Task> {
       },
     );
   }
+
+  attachUserId(userId: string) {
+    this.updateMany({}, { $set: { userId } });
+  }
+
+  detachUserId() {
+    this.updateMany({}, { $unset: { userId: '' } });
+  }
 }
 
 export const Tasks = new TaskCollection();

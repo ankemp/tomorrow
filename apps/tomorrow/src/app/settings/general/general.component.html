@@ -1,10 +1,17 @@
 <section class="settings-grid">
   <div tuiCardLarge tuiCell tuiAppearance="floating">
     <tui-avatar appearance="primary" src="@tui.user" />
-    <h2 tuiTitle>
-      Local User
-      <div tuiSubtitle>Sync not enabled</div>
-    </h2>
+    @if (settings.remoteSync()) {
+      <h2 tuiTitle>
+        Remote User
+        <div tuiSubtitle>Sync is enabled</div>
+      </h2>
+    } @else {
+      <h2 tuiTitle>
+        Local User
+        <div tuiSubtitle>Sync not enabled</div>
+      </h2>
+    }
   </div>
 
   <tw-notification-preferences />

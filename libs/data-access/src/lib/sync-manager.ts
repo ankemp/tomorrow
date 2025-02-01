@@ -22,7 +22,7 @@ export const syncManager = new SyncManager({
     const settings = getSettings();
 
     let data: any[] = await fetch(
-      `${apiPath}?since=${lastFinishedSyncStart}&encrypted=${settings.encryption}`,
+      `${apiPath}/user/${settings.userId}?since=${lastFinishedSyncStart}&encrypted=${settings.encryption}`,
     ).then((res) => res.json());
 
     if (settings.encryption) {

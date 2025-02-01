@@ -22,6 +22,7 @@ export class PlainTask
   declare date: Date;
   declare category: string;
   declare completedAt: CreationOptional<Date>;
+  declare userId: CreationOptional<string>;
 }
 
 PlainTask.init(
@@ -34,6 +35,7 @@ PlainTask.init(
     date: { type: DataTypes.DATE },
     category: { type: DataTypes.STRING },
     completedAt: { type: DataTypes.DATE },
+    userId: { type: DataTypes.STRING },
   },
   {
     sequelize,
@@ -99,7 +101,7 @@ apiRouter.delete('/tasks', async (req, res) => {
   res.sendStatus(200);
 });
 
-apiRouter.get('/tasks', (req, res) => {
+apiRouter.get('/tasks/user/:userId', (req, res) => {
   // TODO: figure out how to use lastFinishedSyncStart here instead of just sending all
   const exclude = ['createdAt', 'updatedAt', 'deletedAt'];
   if (req.query['encrypted'] === 'true') {
@@ -111,6 +113,12 @@ apiRouter.get('/tasks', (req, res) => {
       attributes: { exclude },
     }).then((tasks) => res.json(tasks));
   }
+});
+
+apiRouter.delete('/tasks/user/:userId', async (req, res) => {
+  const userId = req.params.userId;
+  await PlainTask.destroy({ where: { userId }, force: true });
+  res.sendStatus(200);
 });
 
 export { apiRouter };
