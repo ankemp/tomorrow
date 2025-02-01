@@ -85,7 +85,7 @@ apiRouter.put('/tasks', async (req, res) => {
       { where: { id: req.body.id } },
     );
   } else {
-    await PlainTask.update(req.body, { where: { id: req.body.id } });
+    await PlainTask.update(req.body.content, { where: { id: req.body.id } });
   }
   res.sendStatus(200);
 });
