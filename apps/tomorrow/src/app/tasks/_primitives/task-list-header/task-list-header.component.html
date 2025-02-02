@@ -1,0 +1,12 @@
+<div [tuiHeader]="headerSize()">
+  <div tuiTitle>
+    {{ title() }}
+    @if (hasSubtitle()) {
+      <div tuiSubtitle>{{ subtitle() }}</div>
+    }
+  </div>
+
+  <div tuiAccessories>
+    <ng-content></ng-content>
+  </div>
+</div>

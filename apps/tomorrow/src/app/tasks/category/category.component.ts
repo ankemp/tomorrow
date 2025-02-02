@@ -10,7 +10,6 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TuiTitle } from '@taiga-ui/core';
-import { TuiHeader } from '@taiga-ui/layout';
 import {
   endOfYesterday,
   format,
@@ -22,12 +21,18 @@ import {
 import { Task, Tasks } from '@tmrw/data-access';
 
 import { TaskListCardComponent } from '../_primitives/task-list-card/task-list-card.component';
+import { TaskListHeaderComponent } from '../_primitives/task-list-header/task-list-header.component';
 
 const TASK_ORDER = ['Overdue', 'Today', 'Tomorrow'];
 
 @Component({
   selector: 'tw-category',
-  imports: [CommonModule, TuiHeader, TuiTitle, TaskListCardComponent],
+  imports: [
+    CommonModule,
+    TuiTitle,
+    TaskListCardComponent,
+    TaskListHeaderComponent,
+  ],
   templateUrl: './category.component.html',
   styleUrl: './category.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

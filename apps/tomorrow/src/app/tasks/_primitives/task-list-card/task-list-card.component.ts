@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   input,
 } from '@angular/core';
 import { TuiSwipeActions } from '@taiga-ui/addon-mobile';
@@ -17,7 +18,7 @@ import { TuiChip, TuiFade } from '@taiga-ui/kit';
 import { TuiCell } from '@taiga-ui/layout';
 import { format, isFuture, isTomorrow } from 'date-fns';
 
-import { Task, Tasks } from '@tmrw/data-access';
+import { Settings, Task, Tasks } from '@tmrw/data-access';
 
 @Component({
   selector: 'tw-task-list-card',
@@ -38,7 +39,9 @@ import { Task, Tasks } from '@tmrw/data-access';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskListCardComponent {
+  settings = inject(Settings);
   task = input.required<Task>();
+  showCategory = input<boolean>(true);
 
   icon = computed(() => {
     return this.task().completedAt ? '@tui.circle-check' : '@tui.circle';
@@ -48,14 +51,18 @@ export class TaskListCardComponent {
     const date = this.task().date;
     if (isFuture(date)) {
       if (isTomorrow(date)) {
-        return 'Tomorrow';
+        return `Tomorrow, ${format(date, this.settings.dateFnsTimeFormat())}`;
       }
-      return format(date, 'EEE, d MMM');
+      return `${format(date, 'EEE, d MMM')}, ${format(date, this.settings.dateFnsTimeFormat())}`;
     }
-    return format(date, 'hh:mm a');
+    return format(date, this.settings.dateFnsTimeFormat());
   });
 
   toggleTask() {
     Tasks.toggleTask(this.task());
+  }
+
+  deleteTask() {
+    Tasks.removeOne(this.task());
   }
 }

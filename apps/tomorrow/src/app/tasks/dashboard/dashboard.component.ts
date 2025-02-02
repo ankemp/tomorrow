@@ -8,21 +8,22 @@ import {
   PLATFORM_ID,
   signal,
 } from '@angular/core';
-import { TuiButton, TuiTitle } from '@taiga-ui/core';
+import { TuiButton } from '@taiga-ui/core';
 
 import { Task, Tasks } from '@tmrw/data-access';
 
 import { CategoryCardComponent } from '../_primitives/category-card/category-card.component';
 import { TaskListCardComponent } from '../_primitives/task-list-card/task-list-card.component';
+import { TaskListHeaderComponent } from '../_primitives/task-list-header/task-list-header.component';
 
 @Component({
   selector: 'tw-dashboard',
   imports: [
     CommonModule,
     TuiButton,
-    TuiTitle,
     CategoryCardComponent,
     TaskListCardComponent,
+    TaskListHeaderComponent,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',

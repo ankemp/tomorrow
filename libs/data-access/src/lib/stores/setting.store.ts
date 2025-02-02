@@ -35,6 +35,9 @@ export const Settings = signalStore(
           ? 'HH:MM AA'
           : 'HH:MM') satisfies TuiTimeMode,
     ),
+    dateFnsTimeFormat: computed(() =>
+      state.timeFormat() === '12h' ? 'hh:mm a' : 'HH:mm',
+    ),
     jwtKey: computed(() => {
       const key = state._encryptionKey();
       return key ? JSON.parse(key) : null;
