@@ -1,11 +1,89 @@
 <h2 tuiTitle="m">{{ title() }} tasks</h2>
-@for (group of groupedTasks(); track group) {
-  <div class="task-list-group">
-    <tw-task-list-header [title]="group.key" headerSize="xs" />
-    <div class="task-list-grid">
-      @for (task of group.value; track task.id) {
-        <tw-task-list-card [task]="task" [showCategory]="false" />
-      }
-    </div>
+
+<div class="task-list-group">
+  <tw-task-list-header title="Overdue" headerSize="xs">
+    @if (overdueTasks().length > 0) {
+      <button
+        appearance="flat-grayscale"
+        size="m"
+        tuiIconButton
+        iconStart="@tui.check-check"
+        type="button"
+        (click)="completeAll(overdueTasks())"
+      >
+        Complete All
+      </button>
+    }
+  </tw-task-list-header>
+  <div class="task-list-grid">
+    @for (task of overdueTasks(); track task.id) {
+      <tw-task-list-card [task]="task" [showCategory]="false" />
+    }
   </div>
-}
+</div>
+
+<div class="task-list-group">
+  <tw-task-list-header title="Today" headerSize="xs">
+    @if (todaysTasks().length > 0) {
+      <button
+        appearance="flat-grayscale"
+        size="m"
+        tuiIconButton
+        iconStart="@tui.check-check"
+        type="button"
+        (click)="completeAll(todaysTasks())"
+      >
+        Complete All
+      </button>
+    }
+  </tw-task-list-header>
+  <div class="task-list-grid">
+    @for (task of todaysTasks(); track task.id) {
+      <tw-task-list-card [task]="task" [showCategory]="false" />
+    }
+  </div>
+</div>
+
+<div class="task-list-group">
+  <tw-task-list-header title="Tomorrow" headerSize="xs">
+    @if (tomorrowTasks().length > 0) {
+      <button
+        appearance="flat-grayscale"
+        size="m"
+        tuiIconButton
+        iconStart="@tui.check-check"
+        type="button"
+        (click)="completeAll(tomorrowTasks())"
+      >
+        Complete All
+      </button>
+    }
+  </tw-task-list-header>
+  <div class="task-list-grid">
+    @for (task of tomorrowTasks(); track task.id) {
+      <tw-task-list-card [task]="task" [showCategory]="false" />
+    }
+  </div>
+</div>
+
+<div class="task-list-group">
+  <tw-task-list-header title="Future" headerSize="xs">
+    @if (futureTasks().length > 0) {
+      <button
+        appearance="flat-grayscale"
+        size="m"
+        tuiIconButton
+        iconStart="@tui.check-check"
+        type="button"
+        (click)="completeAll(futureTasks())"
+      >
+        Complete All
+      </button>
+    }
+  </tw-task-list-header>
+  <div class="task-list-grid">
+    @for (task of futureTasks(); track task.id) {
+      <tw-task-list-card [task]="task" [showCategory]="false" />
+    }
+  </div>
+</div>

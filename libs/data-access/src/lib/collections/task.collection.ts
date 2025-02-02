@@ -62,10 +62,11 @@ class TaskCollection extends Collection<Task> {
     );
   }
 
-  getByCategory(category: string) {
+  getByCategory(category: string, includeCompleted = false) {
     return this.find(
       {
         category,
+        completedAt: includeCompleted ? { $ne: null } : null,
       },
       {
         sort: { date: 1 },
