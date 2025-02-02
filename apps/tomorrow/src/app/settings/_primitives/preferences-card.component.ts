@@ -7,7 +7,7 @@ import { TuiCardLarge, TuiCell } from '@taiga-ui/layout';
   selector: 'tw-preferences-card',
   imports: [CommonModule, TuiAppearance, TuiIcon, TuiCardLarge, TuiCell],
   template: `
-    <div tuiCardLarge tuiAppearance="floating">
+    <div tuiCardLarge="compact" tuiAppearance="floating">
       <div tuiCell>
         <tui-icon [icon]="icon()" />
         <h2 tuiTitle>{{ title() }} Preferences</h2>

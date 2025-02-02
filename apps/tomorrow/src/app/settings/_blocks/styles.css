@@ -1,5 +1,7 @@
 :host {
   display: block;
+
+  --tui-background-accent-2: var(--tui-background-accent-1);
 }
 
 .switch-container {
@@ -11,4 +13,8 @@
     justify-content: space-between;
     width: 100%;
   }
+}
+
+[tuibutton] {
+  inline-size: unset !important;
 }
