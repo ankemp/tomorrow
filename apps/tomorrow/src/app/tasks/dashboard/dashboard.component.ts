@@ -70,4 +70,10 @@ export class DashboardComponent {
       completedAt: null,
     });
   }
+
+  completeAll(tasks: Task[]) {
+    tasks.forEach((task) => {
+      Tasks.completeTask(task);
+    });
+  }
 }

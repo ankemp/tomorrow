@@ -9,7 +9,18 @@
 
 @if (hasOverdueTasks()) {
   <section class="task-list-grid">
-    <tw-task-list-header title="Overdue Tasks" headerSize="s" />
+    <tw-task-list-header title="Overdue" headerSize="s">
+      <button
+        appearance="flat-grayscale"
+        size="m"
+        tuiIconButton
+        iconStart="@tui.check-check"
+        type="button"
+        (click)="completeAll(overDueTasks())"
+      >
+        Complete All
+      </button>
+    </tw-task-list-header>
     @for (task of overDueTasks(); track task.id) {
       <tw-task-list-card [task]="task" />
     }
@@ -17,14 +28,40 @@
 }
 
 <section class="task-list-grid">
-  <tw-task-list-header title="Todays Tasks" headerSize="s" />
+  <tw-task-list-header title="Today" headerSize="s">
+    @if (todaysTasks().length > 0) {
+      <button
+        appearance="flat-grayscale"
+        size="m"
+        tuiIconButton
+        iconStart="@tui.check-check"
+        type="button"
+        (click)="completeAll(todaysTasks())"
+      >
+        Complete All
+      </button>
+    }
+  </tw-task-list-header>
   @for (task of todaysTasks(); track task.id) {
     <tw-task-list-card [task]="task" />
   }
 </section>
 
 <section class="task-list-grid">
-  <tw-task-list-header title="Upcoming Tasks" headerSize="s" />
+  <tw-task-list-header title="Upcoming" headerSize="s">
+    @if (upcomingTasks().length > 0) {
+      <button
+        appearance="flat-grayscale"
+        size="m"
+        tuiIconButton
+        iconStart="@tui.check-check"
+        type="button"
+        (click)="completeAll(upcomingTasks())"
+      >
+        Complete All
+      </button>
+    }
+  </tw-task-list-header>
   @for (task of upcomingTasks(); track task.id) {
     <tw-task-list-card [task]="task" />
   }
