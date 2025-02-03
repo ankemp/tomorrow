@@ -5,11 +5,7 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Server,
   },
   {
-    path: 'dashboard',
-    renderMode: RenderMode.Client,
-  },
-  {
-    path: 'category/*',
+    path: 'tasks/*',
     renderMode: RenderMode.Client,
   },
   {

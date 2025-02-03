@@ -1,25 +1,34 @@
 import { Route } from '@angular/router';
 
 export const appRoutes: Route[] = [
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  { path: '', redirectTo: 'tasks/dashboard', pathMatch: 'full' },
   {
-    path: 'dashboard',
-    loadComponent: () =>
-      import('./tasks/dashboard/dashboard.component').then(
-        (m) => m.DashboardComponent,
-      ),
-  },
-  {
-    path: 'category/:slug',
-    loadComponent: () =>
-      import('./tasks/category/category.component').then(
-        (m) => m.CategoryComponent,
-      ),
-  },
-  {
-    path: 'task/:id',
-    loadComponent: () =>
-      import('./tasks/task/task.component').then((m) => m.TaskComponent),
+    path: 'tasks',
+    children: [
+      {
+        path: '',
+        redirectTo: 'dashboard',
+      },
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./tasks/dashboard/dashboard.component').then(
+            (m) => m.DashboardComponent,
+          ),
+      },
+      {
+        path: 'category/:slug',
+        loadComponent: () =>
+          import('./tasks/category/category.component').then(
+            (m) => m.CategoryComponent,
+          ),
+      },
+      {
+        path: ':id',
+        loadComponent: () =>
+          import('./tasks/task/task.component').then((m) => m.TaskComponent),
+      },
+    ],
   },
   {
     path: 'settings',
