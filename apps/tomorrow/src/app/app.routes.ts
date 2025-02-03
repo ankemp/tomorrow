@@ -17,6 +17,11 @@ export const appRoutes: Route[] = [
       ),
   },
   {
+    path: 'task/:id',
+    loadComponent: () =>
+      import('./tasks/task/task.component').then((m) => m.TaskComponent),
+  },
+  {
     path: 'settings',
     loadComponent: () =>
       import('./settings/general/general.component').then(

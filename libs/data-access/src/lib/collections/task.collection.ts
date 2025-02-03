@@ -27,6 +27,10 @@ class TaskCollection extends Collection<Task> {
     this.updateOne({ id: task.id }, { $set: { completedAt: new Date() } });
   }
 
+  getTaskById(id: string) {
+    return this.findOne({ id });
+  }
+
   getOverdueTasks() {
     return this.find(
       {

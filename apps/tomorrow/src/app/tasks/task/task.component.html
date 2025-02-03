@@ -1,0 +1,27 @@
+@if (taskExists()) {
+  <div tuiCardLarge tuiAppearance="icon">
+    <header tuiHeader="m">
+      <h2 tuiTitle>
+        {{ task()?.title }}
+
+        <div tuiSubtitle>
+          <tui-chip
+            size="xs"
+            appearance="custom"
+            [style.background-color]="task()!.category | tuiAutoColor"
+          >
+            {{ task()?.category }}
+          </tui-chip>
+          <tui-badge
+            appearance="secondary-grayscale"
+            iconStart="@tui.clock"
+            size="l"
+            class="tui-space_left-1"
+          >
+            {{ date() }}
+          </tui-badge>
+        </div>
+      </h2>
+    </header>
+  </div>
+}

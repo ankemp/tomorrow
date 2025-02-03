@@ -1,0 +1,7 @@
+:host {
+  display: block;
+}
+
+[tuisubtitle] > * + * {
+  margin-left: 0.25rem;
+}
