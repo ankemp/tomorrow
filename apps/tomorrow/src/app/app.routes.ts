@@ -8,6 +8,7 @@ export const appRoutes: Route[] = [
       {
         path: '',
         redirectTo: 'dashboard',
+        pathMatch: 'full',
       },
       {
         path: 'dashboard',
@@ -21,6 +22,13 @@ export const appRoutes: Route[] = [
         loadComponent: () =>
           import('./tasks/category/category.component').then(
             (m) => m.CategoryComponent,
+          ),
+      },
+      {
+        path: 'new',
+        loadComponent: () =>
+          import('./tasks/create/create.component').then(
+            (m) => m.CreateComponent,
           ),
       },
       {

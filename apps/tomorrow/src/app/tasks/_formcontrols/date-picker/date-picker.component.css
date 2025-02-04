@@ -1,0 +1,12 @@
+:host {
+  display: block;
+}
+
+.presets {
+  display: flex;
+  justify-content: space-between;
+}
+
+.presets + * {
+  margin-top: 0.5rem;
+}

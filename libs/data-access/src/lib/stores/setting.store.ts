@@ -8,17 +8,19 @@ import {
   withMethods,
   withState,
 } from '@ngrx/signals';
-import { TuiTimeMode } from '@taiga-ui/cdk';
+import { TuiDayOfWeek, TuiTimeMode } from '@taiga-ui/cdk';
 
 import { generateSymmetricKey } from '@tmrw/encryption';
 
 import { Tasks } from '../collections/task.collection';
 import { SettingsState } from '../models/settings.state';
+// import { syncManager } from '../sync-manager';
 
 const initialState: SettingsState = {
   defaultReminderTime: '08:00',
   startOfWeek: 'Sunday',
   timeFormat: '12h',
+  locale: 'en-US', // TODO: Get from browser(?)
   userId: null,
   remoteSync: false,
   encryption: false,
@@ -35,6 +37,10 @@ export const Settings = signalStore(
           ? 'HH:MM AA'
           : 'HH:MM') satisfies TuiTimeMode,
     ),
+    tuiFirstDayOfWeek: computed(() => {
+      const day = state.startOfWeek() as keyof typeof TuiDayOfWeek;
+      return TuiDayOfWeek[day];
+    }),
     dateFnsTimeFormat: computed(() =>
       state.timeFormat() === '12h' ? 'hh:mm a' : 'HH:mm',
     ),
@@ -75,6 +81,7 @@ export const Settings = signalStore(
       // TODO: Force push data to remote server.
       // TODO: Clear old data from remote server.
       patchState(store, { encryption });
+      // syncManager.sync('tasks', {force: true});
     },
   })),
   withHooks({
