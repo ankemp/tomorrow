@@ -1,0 +1,17 @@
+<label tuiInputFiles>
+  <input
+    [accept]="accept()"
+    [(ngModel)]="files"
+    tuiInputFiles
+    [multiple]="true"
+    [disabled]="disabled()"
+  />
+</label>
+
+@if (hasFiles()) {
+  <tui-files>
+    @for (file of files(); track file.name) {
+      <tui-file tuiItem [file]="file" (remove)="onRemove(file)"></tui-file>
+    }
+  </tui-files>
+}
