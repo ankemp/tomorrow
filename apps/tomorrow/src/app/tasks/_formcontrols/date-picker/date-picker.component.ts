@@ -131,6 +131,9 @@ export class DatePickerComponent implements ControlValueAccessor {
           break;
       }
     });
+    effect(() => {
+      this._onChange(this.date());
+    });
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
