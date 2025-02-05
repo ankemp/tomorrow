@@ -4,12 +4,13 @@ import {
   Component,
   forwardRef,
   inject,
+  input,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   ControlValueAccessor,
   FormArray,
-  FormControl,
+  FormGroup,
   NG_VALUE_ACCESSOR,
   NonNullableFormBuilder,
   ReactiveFormsModule,
@@ -17,6 +18,8 @@ import {
 import { TuiButton, TuiLabel, TuiTextfield } from '@taiga-ui/core';
 import { TuiGroup } from '@taiga-ui/core';
 import { map } from 'rxjs';
+
+import { SubTask } from '@tmrw/data-access';
 
 @Component({
   selector: 'tw-subtasks',
@@ -42,12 +45,19 @@ import { map } from 'rxjs';
 export class SubtasksComponent implements ControlValueAccessor {
   private fb = inject(NonNullableFormBuilder);
 
+  createOnly = input(true);
+
   form = this.fb.group({
-    tasks: this.fb.array([this.fb.control<string>('')]),
+    tasks: this.fb.array([
+      this.fb.group({
+        title: this.fb.control<string>(''),
+        completedAt: this.fb.control<Date | null>(null),
+      }),
+    ]),
   });
 
   get formArray() {
-    return this.form.get('tasks') as FormArray<FormControl<string>>;
+    return this.form.get('tasks') as FormArray<FormGroup>;
   }
 
   constructor() {
@@ -66,10 +76,10 @@ export class SubtasksComponent implements ControlValueAccessor {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   private _onTouched = () => {};
 
-  writeValue(input: string[]): void {
+  writeValue(input: SubTask[]): void {
     if (input.length > 0) {
       input.forEach((item) => {
-        this.formArray.push(this.fb.control<string>(item));
+        this.formArray.push(this.newTask(item.title, item.completedAt));
       });
     }
   }
@@ -87,8 +97,15 @@ export class SubtasksComponent implements ControlValueAccessor {
     }
   }
 
+  private newTask(task = '', completedAt: Date | null = null) {
+    return this.fb.group({
+      task: this.fb.control<string>(task),
+      completedAt: this.fb.control<Date | null>(completedAt),
+    });
+  }
+
   addTask() {
-    this.formArray.push(this.fb.control<string>(''));
+    this.formArray.push(this.newTask());
   }
 
   removeTask(index: number) {

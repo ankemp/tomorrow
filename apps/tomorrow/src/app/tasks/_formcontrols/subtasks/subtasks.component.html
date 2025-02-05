@@ -1,10 +1,23 @@
 <ng-container [formGroup]="form">
   <div class="subtask-grid" formArrayName="tasks">
-    @for (control of formArray.controls; track $index) {
-      <div tuiGroup orientation="horizontal">
+    @for (group of formArray.controls; track $index) {
+      <div tuiGroup orientation="horizontal" [formGroup]="group">
+        @if (!createOnly) {
+          @let completedAt = group.get('completedAt')?.value;
+          <button
+            appearance="flat"
+            [iconStart]="completedAt ? '@tui.circle-check' : '@tui.circle'"
+            size="xs"
+            tuiIconButton
+            type="button"
+            [style.border-radius.%]="100"
+          >
+            {{ completedAt ? 'Undo' : 'Done' }}
+          </button>
+        }
         <tui-textfield>
           <label tuiLabel>Task {{ $index + 1 }}</label>
-          <input [formControl]="control" type="text" tuiTextfield />
+          <input formControlName="title" type="text" tuiTextfield />
         </tui-textfield>
         <button
           type="button"
