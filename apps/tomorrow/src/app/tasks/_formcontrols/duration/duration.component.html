@@ -1,0 +1,16 @@
+<tui-input-slider
+  [(ngModel)]="duration"
+  [keySteps]="keySteps"
+  [min]="0"
+  [max]="1440"
+  [steps]="100"
+  [segments]="12"
+  [disabled]="disabled()"
+  [valueContent]="durationLabel"
+>
+  Duration
+</tui-input-slider>
+
+<div class="slider-ticks-labels">
+  <span *ngFor="let label of tickLabels">{{ label }}</span>
+</div>
