@@ -16,7 +16,7 @@ import {
 } from '@taiga-ui/core';
 import { TuiChip, TuiFade } from '@taiga-ui/kit';
 import { TuiCell } from '@taiga-ui/layout';
-import { format, isFuture, isTomorrow } from 'date-fns';
+import { format, isFuture, isToday, isTomorrow } from 'date-fns';
 
 import { Settings, Task, Tasks } from '@tmrw/data-access';
 
@@ -49,13 +49,13 @@ export class TaskListCardComponent {
 
   dateString = computed(() => {
     const date = this.task().date;
-    if (isFuture(date)) {
-      if (isTomorrow(date)) {
-        return `Tomorrow, ${format(date, this.settings.dateFnsTimeFormat())}`;
-      }
-      return `${format(date, 'EEE, d MMM')}, ${format(date, this.settings.dateFnsTimeFormat())}`;
+    if (isToday(date)) {
+      return format(date, this.settings.dateFnsTimeFormat());
     }
-    return format(date, this.settings.dateFnsTimeFormat());
+    if (isTomorrow(date)) {
+      return `Tomorrow, ${format(date, this.settings.dateFnsTimeFormat())}`;
+    }
+    return `${format(date, 'EEE, d MMM')}, ${format(date, this.settings.dateFnsTimeFormat())}`;
   });
 
   toggleTask() {
