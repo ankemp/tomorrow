@@ -1,0 +1,32 @@
+<ng-container [formGroup]="form">
+  <div class="subtask-grid" formArrayName="tasks">
+    @for (control of formArray.controls; track $index) {
+      <div tuiGroup orientation="horizontal">
+        <tui-textfield>
+          <label tuiLabel>Task {{ $index + 1 }}</label>
+          <input [formControl]="control" type="text" tuiTextfield />
+        </tui-textfield>
+        <button
+          style="max-width: 4rem"
+          appearance="outline-destructive"
+          tuiIconButton
+          iconStart="@tui.minus"
+          (click)="removeTask($index)"
+          [disabled]="formArray.controls.length <= 1 || form.disabled"
+        >
+          Remove
+        </button>
+        <button
+          style="max-width: 4rem"
+          appearance="outline-grayscale"
+          tuiIconButton
+          iconStart="@tui.plus"
+          (click)="addTask()"
+          [disabled]="form.disabled"
+        >
+          Add
+        </button>
+      </div>
+    }
+  </div>
+</ng-container>
