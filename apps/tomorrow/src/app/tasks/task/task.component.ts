@@ -10,10 +10,12 @@ import {
   signal,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { TuiAppearance, TuiAutoColorPipe } from '@taiga-ui/core';
+import { TuiAppearance, TuiAutoColorPipe, TuiIcon } from '@taiga-ui/core';
 import { TuiBadge, TuiChip } from '@taiga-ui/kit';
+import { TuiFiles } from '@taiga-ui/kit';
 import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
 import { format } from 'date-fns';
+import { file } from 'opfs-tools';
 
 import { Settings, Task, Tasks } from '@tmrw/data-access';
 
@@ -23,8 +25,10 @@ import { Settings, Task, Tasks } from '@tmrw/data-access';
     CommonModule,
     TuiAppearance,
     TuiAutoColorPipe,
+    TuiIcon,
     TuiBadge,
     TuiChip,
+    TuiFiles,
     TuiCardLarge,
     TuiHeader,
   ],
@@ -48,6 +52,21 @@ export class TaskComponent {
     return `${format(date, 'EEE, d MMM')}, ${format(date, this.settings.dateFnsTimeFormat())}`;
   });
 
+  hasAttachments = computed(() => {
+    return (this.task()?.attachments?.length ?? 0) > 0;
+  });
+
+  attachments = computed(() => {
+    return this.task()!
+      .attachments.map(async (attachment) => {
+        const f = await file(
+          `files/${this.task()?.id}/${attachment}`,
+        ).getOriginFile();
+        return f;
+      })
+      .filter(Boolean);
+  });
+
   constructor(
     @Inject(PLATFORM_ID) platformId: any,
     private activatedRoute: ActivatedRoute,
@@ -62,5 +81,14 @@ export class TaskComponent {
         }
       });
     }
+  }
+
+  async getImageSrc(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
   }
 }

@@ -24,4 +24,29 @@
       </h2>
     </header>
   </div>
+
+  @if (hasAttachments()) {
+    <div tuiCardLarge>
+      @for (attachment of attachments(); track attachment) {
+        @let file = attachment | async;
+        @if (file) {
+          <tui-files>
+            <tui-file
+              size="l"
+              state="normal"
+              [leftContent]="icon"
+              [file]="file"
+            ></tui-file>
+          </tui-files>
+          <ng-template #icon>
+            @if (file.type.includes('image')) {
+              <tui-icon icon="@tui.image" />
+            } @else {
+              <tui-icon icon="@tui.paperclip" />
+            }
+          </ng-template>
+        }
+      }
+    </div>
+  }
 }
