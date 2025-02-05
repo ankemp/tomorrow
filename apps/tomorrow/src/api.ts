@@ -8,10 +8,13 @@ import {
   Sequelize,
 } from 'sequelize';
 
-import type { Task } from '@tmrw/data-access';
+import type { SubTask, Task } from '@tmrw/data-access';
 
 const apiRouter = express.Router();
-const sequelize = new Sequelize('sqlite::memory:', { dialect: 'sqlite' });
+const sequelize = new Sequelize({
+  storage: process.env['DB_PATH'] || ':memory:',
+  dialect: 'sqlite',
+});
 
 export class PlainTask
   extends Model<InferAttributes<PlainTask>, InferCreationAttributes<PlainTask>>
@@ -21,6 +24,11 @@ export class PlainTask
   declare title: string;
   declare date: Date;
   declare category: string;
+  declare location: CreationOptional<string>;
+  declare duration: CreationOptional<number>;
+  declare subTasks: CreationOptional<SubTask[]>;
+  declare attachments: CreationOptional<string[]>;
+  declare notes: CreationOptional<string>;
   declare completedAt: CreationOptional<Date>;
   declare userId: CreationOptional<string>;
 }
@@ -34,6 +42,11 @@ PlainTask.init(
     title: { type: DataTypes.STRING },
     date: { type: DataTypes.DATE },
     category: { type: DataTypes.STRING },
+    location: { type: DataTypes.STRING },
+    duration: { type: DataTypes.INTEGER },
+    subTasks: { type: DataTypes.JSON },
+    attachments: { type: DataTypes.JSON },
+    notes: { type: DataTypes.TEXT },
     completedAt: { type: DataTypes.DATE },
     userId: { type: DataTypes.STRING },
   },
