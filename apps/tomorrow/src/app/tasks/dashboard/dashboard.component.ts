@@ -8,6 +8,7 @@ import {
   PLATFORM_ID,
   signal,
 } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { TuiButton } from '@taiga-ui/core';
 
 import { Task, Tasks } from '@tmrw/data-access';
@@ -20,6 +21,7 @@ import { TaskListHeaderComponent } from '../_primitives/task-list-header/task-li
   selector: 'tw-dashboard',
   imports: [
     CommonModule,
+    RouterModule,
     TuiButton,
     CategoryCardComponent,
     TaskListCardComponent,

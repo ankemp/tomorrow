@@ -1,0 +1,11 @@
+:host {
+  display: block;
+  padding: 1rem;
+  margin-bottom: 5.5rem;
+}
+
+button[type='submit'] {
+  position: fixed;
+  bottom: 1rem;
+  width: calc(100% - 2rem);
+}
