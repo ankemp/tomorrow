@@ -9,6 +9,7 @@ export interface Task extends BaseModel {
   title: string;
   date: Date;
   category: string;
+  description: string | null;
   completedAt: Date | null;
   location: string | null;
   duration: number | null;

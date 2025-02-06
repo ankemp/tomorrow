@@ -24,6 +24,7 @@ export class PlainTask
   declare title: string;
   declare date: Date;
   declare category: string;
+  declare description: CreationOptional<string>;
   declare location: CreationOptional<string>;
   declare duration: CreationOptional<number>;
   declare subTasks: CreationOptional<SubTask[]>;
@@ -42,6 +43,7 @@ PlainTask.init(
     title: { type: DataTypes.STRING },
     date: { type: DataTypes.DATE },
     category: { type: DataTypes.STRING },
+    description: { type: DataTypes.TEXT },
     location: { type: DataTypes.STRING },
     duration: { type: DataTypes.INTEGER },
     subTasks: { type: DataTypes.JSON },

@@ -12,6 +12,15 @@
     <tw-date-picker formControlName="date" />
 
     <tw-category-selector formControlName="category" />
+
+    <tui-textarea
+      #description
+      style="min-block-size: 3.75rem"
+      formControlName="description"
+      [expandable]="description.focused"
+    >
+      Add description
+    </tui-textarea>
   </div>
 
   <tui-accordion [closeOthers]="false">
