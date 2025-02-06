@@ -6,6 +6,15 @@
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
   "dependencies": {
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.0",
+    "@signaldb/angular": "^1.0.4",
+    "@signaldb/core": "^1.2.2",
+    "@signaldb/indexeddb": "^1.0.0",
+    "date-fns": "^4.1.0",
+    "@angular/core": "19.1.4",
+    "@ngrx/signals": "^19.0.1",
+    "@taiga-ui/cdk": "4.23.0",
+    "@tw/encryption": "0.0.1",
+    "@signaldb/sync": "^1.1.1"
   }
 }

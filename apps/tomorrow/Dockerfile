@@ -15,11 +15,12 @@ RUN addgroup --system tomorrow && \
           adduser --system -G tomorrow tomorrow
 
 COPY dist/apps/tomorrow tomorrow/
+COPY package.json package-lock.json tomorrow/
 RUN chown -R tomorrow:tomorrow .
 
 # You can remove this install step if you build with `--bundle` option.
 # The bundled output will include external dependencies.
-# RUN npm --prefix tomorrow --omit=dev -f install
+RUN npm --prefix tomorrow --omit=dev install
 
 EXPOSE 4000
 
