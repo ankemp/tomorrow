@@ -52,7 +52,7 @@
     }
   </section>
 
-  <section tuiCardLarge>
+  <section tuiCardLarge="compact">
     <header tuiHeader="xs">
       <h3 tuiTitle>Subtasks</h3>
       <div tuiAccessories>
@@ -92,7 +92,7 @@
     }
   </section>
 
-  <section tuiCardLarge>
+  <section tuiCardLarge="compact">
     <header tuiHeader="xs">
       <h3 tuiTitle>Attachments</h3>
       <div tuiAccessories>
@@ -106,6 +106,7 @@
         </button>
       </div>
     </header>
+    <!-- FIXME: Attachments flicker when task obj is updated -->
     @if (hasAttachments()) {
       @for (attachment of attachments(); track $index) {
         @let file = attachment | async;
@@ -130,7 +131,7 @@
     }
   </section>
 
-  <section tuiCardLarge>
+  <section tuiCardLarge="compact">
     <header tuiHeader="xs">
       <h3 tuiTitle>Notes</h3>
       <div tuiAccessories>
