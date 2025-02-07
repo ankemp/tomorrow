@@ -9,8 +9,9 @@ import {
   PLATFORM_ID,
   signal,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
+  TuiAlertService,
   TuiAppearance,
   TuiAutoColorPipe,
   TuiButton,
@@ -24,7 +25,7 @@ import { TuiElasticContainer } from '@taiga-ui/kit';
 import { TUI_CONFIRM } from '@taiga-ui/kit';
 import { TuiCardLarge, TuiCell, TuiHeader } from '@taiga-ui/layout';
 import { file } from 'opfs-tools';
-import { EMPTY, of, switchMap } from 'rxjs';
+import { EMPTY, map, of, switchMap, tap } from 'rxjs';
 
 import { Settings, Task, Tasks } from '@tmrw/data-access';
 
@@ -54,15 +55,17 @@ import { FormatDatePipe } from '../_primitives/format-date/format-date.pipe';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskComponent {
+  private readonly router = inject(Router);
   private readonly dialogs = inject(TuiDialogService);
-  settings = inject(Settings);
-  task = signal<Task | null>(null);
+  private readonly alerts = inject(TuiAlertService);
+  readonly settings = inject(Settings);
+  readonly task = signal<Task | null>(null);
 
-  taskExists = computed(() => {
+  readonly taskExists = computed(() => {
     return !!this.task();
   });
 
-  duration = computed(() => {
+  readonly duration = computed(() => {
     const minutes = this.task()?.duration ?? 0;
     if (minutes >= 60) {
       const hours = Math.floor(minutes / 60);
@@ -72,11 +75,11 @@ export class TaskComponent {
     return `${minutes}m`;
   });
 
-  hasAttachments = computed(() => {
+  readonly hasAttachments = computed(() => {
     return (this.task()?.attachments?.length ?? 0) > 0;
   });
 
-  attachments = computed(() => {
+  readonly attachments = computed(() => {
     return this.task()!
       .attachments.map(async (attachment) => {
         const f = await file(
@@ -87,17 +90,17 @@ export class TaskComponent {
       .filter(Boolean);
   });
 
-  hasNotes = computed(() => {
+  readonly hasNotes = computed(() => {
     return !!this.task()?.notes;
   });
 
-  truncateNotes = signal(true);
+  readonly truncateNotes = signal(true);
 
-  shouldTruncateNotes = computed(() => {
+  readonly shouldTruncateNotes = computed(() => {
     return (this.task()?.notes?.length ?? 0) > 200;
   });
 
-  notes = computed(() => {
+  readonly notes = computed(() => {
     const fullNotes = this.task()?.notes || '';
 
     if (!this.truncateNotes() || fullNotes === '') {
@@ -143,7 +146,14 @@ export class TaskComponent {
   }
 
   toggleTask(task: Task) {
+    const isCompleted = task.completedAt !== null;
     Tasks.toggleTask(task);
+    this.alerts
+      .open(isCompleted ? 'Task marked incomplete' : 'Task completed', {
+        appearance: isCompleted ? 'destructive' : 'success',
+        icon: isCompleted ? '@tui.circle-slash' : '@tui.circle-check',
+      })
+      .subscribe();
   }
 
   deleteTask(task: Task) {
@@ -160,9 +170,19 @@ export class TaskComponent {
         switchMap((response) => {
           return response ? of(true) : EMPTY;
         }),
+        map(() => {
+          return Tasks.removeOne({ id: task.id });
+        }),
+        tap(() => {
+          this.router.navigate(['/tasks']);
+        }),
+        switchMap(() => {
+          return this.alerts.open('Task deleted', {
+            appearance: 'destructive',
+            icon: '@tui.trash-2',
+          });
+        }),
       )
-      .subscribe(() => {
-        Tasks.removeOne({ id: task.id });
-      });
+      .subscribe();
   }
 }

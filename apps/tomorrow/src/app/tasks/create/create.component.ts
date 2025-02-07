@@ -7,6 +7,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { TuiAutoFocus } from '@taiga-ui/cdk';
 import {
   TuiAppearance,
@@ -56,9 +57,10 @@ import { SubtasksComponent } from '../_formcontrols/subtasks/subtasks.component'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateComponent {
-  private fb = inject(FormBuilder);
+  private readonly fb = inject(FormBuilder);
+  private readonly router = inject(Router);
   private readonly alerts = inject(TuiAlertService);
-  settings = inject(Settings);
+  readonly settings = inject(Settings);
   form = this.fb.group({
     userId: this.fb.control<string>(''),
     title: this.fb.control<string>('', [Validators.required]),
@@ -73,7 +75,7 @@ export class CreateComponent {
   });
 
   @ViewChild(TuiAccordionComponent, { static: true })
-  accordion!: TuiAccordionComponent;
+  readonly accordion!: TuiAccordionComponent;
 
   constructor() {
     effect(() => {
@@ -105,7 +107,10 @@ export class CreateComponent {
       }
 
       this.reset();
-      this.alerts.open('Task created').subscribe();
+      this.alerts
+        .open('Task created', { appearance: 'success', icon: '@tui.check' })
+        .subscribe();
+      this.router.navigate(['/tasks', id]);
     } else {
       // TODO: Handle invalid form, show invalid fields
       this.alerts
