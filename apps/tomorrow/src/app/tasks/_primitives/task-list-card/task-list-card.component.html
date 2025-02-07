@@ -30,6 +30,14 @@
       {{ task().category }}
     </tui-chip>
   }
+  <button
+    appearance="action"
+    tuiIconButton
+    iconStart="@tui.chevron-right"
+    [routerLink]="['/tasks/', task().id]"
+  >
+    Open Task
+  </button>
 </div>
 <!-- <button
     appearance="flat"

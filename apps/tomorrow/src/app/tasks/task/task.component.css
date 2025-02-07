@@ -1,7 +1,15 @@
 :host {
   display: block;
+  margin-bottom: 10.5rem;
 }
 
 [tuisubtitle] > * + * {
   margin-left: 0.25rem;
+}
+
+.actions {
+  --t-radius: 0 !important;
+  bottom: 0;
+  position: fixed;
+  width: calc(100%);
 }

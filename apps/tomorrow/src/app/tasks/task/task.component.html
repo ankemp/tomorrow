@@ -1,16 +1,18 @@
 @if (taskExists()) {
-  <div tuiCardLarge tuiAppearance="icon">
+  @let t = task()!;
+  <section tuiCardLarge tuiAppearance="icon">
     <header tuiHeader="m">
       <h2 tuiTitle>
-        {{ task()?.title }}
+        {{ t.title }}
 
         <div tuiSubtitle>
+          <!-- TODO: Fix space when wraps -->
           <tui-chip
             size="xs"
             appearance="custom"
-            [style.background-color]="task()!.category | tuiAutoColor"
+            [style.background-color]="t.category | tuiAutoColor"
           >
-            {{ task()?.category }}
+            {{ t.category }}
           </tui-chip>
           <tui-badge
             appearance="secondary-grayscale"
@@ -18,35 +20,158 @@
             size="l"
             class="tui-space_left-1"
           >
-            {{ date() }}
+            {{ t.date | formatDate }}
           </tui-badge>
+          @if (t.completedAt) {
+            <tui-badge
+              appearance="secondary-grayscale"
+              iconStart="@tui.circle-check"
+              size="l"
+              class="tui-space_left-1"
+            >
+              {{ t.completedAt | formatDate }}
+            </tui-badge>
+          }
         </div>
       </h2>
     </header>
-  </div>
+    @if (t.description) {
+      <div>{{ t.description }}</div>
+    }
+    @if (t.location) {
+      <div>
+        <tui-icon icon="@tui.map-pin" />
+        {{ t.location }}
+      </div>
+    }
+    @if (t.duration) {
+      <div>
+        <tui-icon icon="@tui.clock" />
+        {{ duration() }}
+      </div>
+    }
+  </section>
 
-  @if (hasAttachments()) {
-    <div tuiCardLarge>
-      @for (attachment of attachments(); track attachment) {
+  <section tuiCardLarge>
+    <header tuiHeader="xs">
+      <h3 tuiTitle>Subtasks</h3>
+      <div tuiAccessories>
+        <button
+          appearance="action"
+          iconStart="@tui.clipboard-list"
+          tuiIconButton
+          type="button"
+        >
+          Add Subtasks
+        </button>
+      </div>
+    </header>
+    @if (t.subTasks) {
+      @for (subtask of t.subTasks; track $index) {
+        @let isCompleted = !!subtask.completedAt;
+        <div tuiCell>
+          <button
+            appearance="flat"
+            [iconStart]="isCompleted ? '@tui.circle-check' : '@tui.circle'"
+            size="xs"
+            tuiIconButton
+            type="button"
+            [style.border-radius.%]="100"
+            (click)="toggleSubtask(t, $index)"
+          >
+            {{ isCompleted ? 'Undo' : 'Done' }}
+          </button>
+          <div tuiTitle>
+            {{ subtask.title }}
+            @if (isCompleted) {
+              <div tuiSubtitle>{{ subtask.completedAt! | formatDate }}</div>
+            }
+          </div>
+        </div>
+      }
+    }
+  </section>
+
+  <section tuiCardLarge>
+    <header tuiHeader="xs">
+      <h3 tuiTitle>Attachments</h3>
+      <div tuiAccessories>
+        <button
+          appearance="action"
+          iconStart="@tui.paperclip"
+          tuiIconButton
+          type="button"
+        >
+          Add Attachment
+        </button>
+      </div>
+    </header>
+    @if (hasAttachments()) {
+      @for (attachment of attachments(); track $index) {
         @let file = attachment | async;
-        @if (file) {
-          <tui-files>
+        <tui-files [tuiSkeleton]="!file">
+          @if (file) {
             <tui-file
               size="l"
               state="normal"
               [leftContent]="icon"
               [file]="file"
             ></tui-file>
-          </tui-files>
-          <ng-template #icon>
-            @if (file.type.includes('image')) {
-              <tui-icon icon="@tui.image" />
-            } @else {
-              <tui-icon icon="@tui.paperclip" />
-            }
-          </ng-template>
-        }
+            <ng-template #icon>
+              @if (file.type.includes('image')) {
+                <tui-icon icon="@tui.image" />
+              } @else {
+                <tui-icon icon="@tui.paperclip" />
+              }
+            </ng-template>
+          }
+        </tui-files>
       }
-    </div>
-  }
+    }
+  </section>
+
+  <section tuiCardLarge>
+    <header tuiHeader="xs">
+      <h3 tuiTitle>Notes</h3>
+      <div tuiAccessories>
+        <button
+          appearance="action"
+          iconStart="@tui.notebook-pen"
+          tuiIconButton
+          type="button"
+        >
+          Add Note
+        </button>
+      </div>
+    </header>
+    @if (hasNotes()) {
+      <tui-elastic-container>
+        <div style="white-space: pre-line">{{ notes() }}</div>
+        @if (shouldTruncateNotes()) {
+          <button
+            tuiLink
+            type="button"
+            (click)="truncateNotes.set(!truncateNotes())"
+          >
+            Show {{ truncateNotes() ? 'more' : 'less' }}
+          </button>
+        }
+      </tui-elastic-container>
+    }
+  </section>
+
+  <section tuiCardLarge="compact" class="actions" tuiAppearance="floating">
+    <button size="m" tuiButton (click)="toggleTask(t)">
+      Mark {{ t.completedAt ? 'Incomplete' : 'Complete' }}
+    </button>
+    <button
+      size="s"
+      appearance="outline-destructive"
+      iconStart="@tui.trash-2"
+      tuiButton
+      (click)="deleteTask(t)"
+    >
+      Delete Task
+    </button>
+  </section>
 }

@@ -6,6 +6,7 @@ import {
   inject,
   input,
 } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { TuiSwipeActions } from '@taiga-ui/addon-mobile';
 import {
   TuiAppearance,
@@ -25,6 +26,7 @@ import { FormatDatePipe } from '../format-date/format-date.pipe';
   selector: 'tw-task-list-card',
   imports: [
     CommonModule,
+    RouterModule,
     TuiSwipeActions,
     TuiAppearance,
     TuiAutoColorPipe,

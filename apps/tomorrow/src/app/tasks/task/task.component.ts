@@ -10,14 +10,22 @@ import {
   signal,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { TuiAppearance, TuiAutoColorPipe, TuiIcon } from '@taiga-ui/core';
-import { TuiBadge, TuiChip } from '@taiga-ui/kit';
+import {
+  TuiAppearance,
+  TuiAutoColorPipe,
+  TuiButton,
+  TuiIcon,
+} from '@taiga-ui/core';
+import { TuiLink } from '@taiga-ui/core';
+import { TuiBadge, TuiChip, TuiSkeleton } from '@taiga-ui/kit';
 import { TuiFiles } from '@taiga-ui/kit';
-import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
-import { format } from 'date-fns';
+import { TuiElasticContainer } from '@taiga-ui/kit';
+import { TuiCardLarge, TuiCell, TuiHeader } from '@taiga-ui/layout';
 import { file } from 'opfs-tools';
 
 import { Settings, Task, Tasks } from '@tmrw/data-access';
+
+import { FormatDatePipe } from '../_primitives/format-date/format-date.pipe';
 
 @Component({
   selector: 'tw-task',
@@ -25,12 +33,18 @@ import { Settings, Task, Tasks } from '@tmrw/data-access';
     CommonModule,
     TuiAppearance,
     TuiAutoColorPipe,
+    TuiButton,
     TuiIcon,
+    TuiLink,
     TuiBadge,
     TuiChip,
+    TuiSkeleton,
     TuiFiles,
+    TuiElasticContainer,
     TuiCardLarge,
+    TuiCell,
     TuiHeader,
+    FormatDatePipe,
   ],
   templateUrl: './task.component.html',
   styleUrl: './task.component.css',
@@ -44,12 +58,14 @@ export class TaskComponent {
     return !!this.task();
   });
 
-  date = computed(() => {
-    const date = this.task()?.date;
-    if (!date) {
-      return '';
+  duration = computed(() => {
+    const minutes = this.task()?.duration ?? 0;
+    if (minutes >= 60) {
+      const hours = Math.floor(minutes / 60);
+      const remainingMinutes = minutes % 60;
+      return `${hours}h ${remainingMinutes}m`;
     }
-    return `${format(date, 'EEE, d MMM')}, ${format(date, this.settings.dateFnsTimeFormat())}`;
+    return `${minutes}m`;
   });
 
   hasAttachments = computed(() => {
@@ -65,6 +81,32 @@ export class TaskComponent {
         return f;
       })
       .filter(Boolean);
+  });
+
+  hasNotes = computed(() => {
+    return !!this.task()?.notes;
+  });
+
+  truncateNotes = signal(true);
+
+  shouldTruncateNotes = computed(() => {
+    return (this.task()?.notes?.length ?? 0) > 200;
+  });
+
+  notes = computed(() => {
+    const fullNotes = this.task()?.notes || '';
+
+    if (!this.truncateNotes() || fullNotes === '') {
+      return fullNotes;
+    }
+    const threshold = 200;
+    const rest = fullNotes.slice(threshold);
+    const match = rest.match(/[.!?]/);
+    if (match !== null) {
+      const end = threshold + match.index! + 1;
+      return fullNotes.slice(0, end);
+    }
+    return fullNotes.slice(0, threshold) + '...';
   });
 
   constructor(
@@ -90,5 +132,17 @@ export class TaskComponent {
       reader.onerror = reject;
       reader.readAsDataURL(file);
     });
+  }
+
+  toggleSubtask(task: Task, subtaskIndex: number) {
+    Tasks.toggleSubtask(task, subtaskIndex);
+  }
+
+  toggleTask(task: Task) {
+    Tasks.toggleTask(task);
+  }
+
+  deleteTask(task: Task) {
+    Tasks.removeOne({ id: task.id });
   }
 }

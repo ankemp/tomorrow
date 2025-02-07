@@ -27,6 +27,31 @@ class TaskCollection extends Collection<Task> {
     this.updateOne({ id: task.id }, { $set: { completedAt: new Date() } });
   }
 
+  toggleSubtask(task: Task, subtaskIndex: number) {
+    this.updateOne(
+      { id: task.id },
+      {
+        $set: {
+          [`subTasks.${subtaskIndex}.completedAt`]: task.subTasks[subtaskIndex]
+            .completedAt
+            ? null
+            : new Date(),
+        },
+      },
+    );
+  }
+
+  completeSubtask(task: Task, subtaskIndex: number) {
+    this.updateOne(
+      { id: task.id },
+      {
+        $set: {
+          [`subTasks.${subtaskIndex}.completedAt`]: new Date(),
+        },
+      },
+    );
+  }
+
   getTaskById(id: string) {
     return this.findOne({ id });
   }
