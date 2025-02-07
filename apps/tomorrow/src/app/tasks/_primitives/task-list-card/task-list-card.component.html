@@ -19,7 +19,7 @@
   <div tuiFade tuiTitle>
     <span class="title">{{ task().title }}</span>
     <div tuiSubtitle>
-      {{ dateString() }}
+      {{ task().date | formatDate }}
     </div>
   </div>
   @if (showCategory()) {

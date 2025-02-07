@@ -16,9 +16,10 @@ import {
 } from '@taiga-ui/core';
 import { TuiChip, TuiFade } from '@taiga-ui/kit';
 import { TuiCell } from '@taiga-ui/layout';
-import { format, isFuture, isToday, isTomorrow } from 'date-fns';
 
 import { Settings, Task, Tasks } from '@tmrw/data-access';
+
+import { FormatDatePipe } from '../format-date/format-date.pipe';
 
 @Component({
   selector: 'tw-task-list-card',
@@ -33,6 +34,7 @@ import { Settings, Task, Tasks } from '@tmrw/data-access';
     TuiChip,
     TuiFade,
     TuiCell,
+    FormatDatePipe,
   ],
   templateUrl: './task-list-card.component.html',
   styleUrl: './task-list-card.component.css',
@@ -45,17 +47,6 @@ export class TaskListCardComponent {
 
   icon = computed(() => {
     return this.task().completedAt ? '@tui.circle-check' : '@tui.circle';
-  });
-
-  dateString = computed(() => {
-    const date = this.task().date;
-    if (isToday(date)) {
-      return format(date, this.settings.dateFnsTimeFormat());
-    }
-    if (isTomorrow(date)) {
-      return `Tomorrow, ${format(date, this.settings.dateFnsTimeFormat())}`;
-    }
-    return `${format(date, 'EEE, d MMM')}, ${format(date, this.settings.dateFnsTimeFormat())}`;
   });
 
   toggleTask() {
