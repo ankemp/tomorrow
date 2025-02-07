@@ -4,8 +4,10 @@ import {
   Component,
   effect,
   inject,
+  ViewChild,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { TuiAutoFocus } from '@taiga-ui/cdk';
 import {
   TuiAppearance,
   TuiButton,
@@ -14,7 +16,7 @@ import {
   TuiTitle,
 } from '@taiga-ui/core';
 import { TuiAlertService } from '@taiga-ui/core';
-import { TuiAccordion } from '@taiga-ui/experimental';
+import { TuiAccordion, TuiAccordionComponent } from '@taiga-ui/experimental';
 import { TuiCardLarge, TuiForm, TuiHeader } from '@taiga-ui/layout';
 import { TuiTextareaModule } from '@taiga-ui/legacy';
 import { dir, write } from 'opfs-tools';
@@ -32,6 +34,7 @@ import { SubtasksComponent } from '../_formcontrols/subtasks/subtasks.component'
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    TuiAutoFocus,
     TuiAppearance,
     TuiButton,
     TuiLabel,
@@ -69,6 +72,9 @@ export class CreateComponent {
     notes: this.fb.control<string | null>(null),
   });
 
+  @ViewChild(TuiAccordionComponent, { static: true })
+  accordion!: TuiAccordionComponent;
+
   constructor() {
     effect(() => {
       const userId = this.settings.userId();
@@ -98,16 +104,7 @@ export class CreateComponent {
         );
       }
 
-      this.form.reset({
-        title: '',
-        date: null,
-        category: '',
-        location: '',
-        duration: 0,
-        subTasks: [], // reset subTasks to an empty array
-        attachments: [],
-        notes: '',
-      });
+      this.reset();
       this.alerts.open('Task created').subscribe();
     } else {
       // TODO: Handle invalid form, show invalid fields
@@ -115,5 +112,25 @@ export class CreateComponent {
         .open('Invalid form', { appearance: 'primary-destructive' })
         .subscribe();
     }
+  }
+
+  reset() {
+    this.form.reset({
+      title: '',
+      date: null,
+      category: '',
+      location: '',
+      duration: 0,
+      subTasks: [],
+      attachments: [],
+      notes: '',
+    });
+    this.accordion.directives.forEach((directive, index) => {
+      const expand = this.accordion.expands.get(index);
+      if (expand) {
+        expand.expanded = false;
+      }
+      directive.open.set(false);
+    });
   }
 }

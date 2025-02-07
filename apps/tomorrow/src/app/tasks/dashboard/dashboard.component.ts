@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TuiButton } from '@taiga-ui/core';
+import { TuiCardLarge } from '@taiga-ui/layout';
 
 import { Task, Tasks } from '@tmrw/data-access';
 
@@ -23,6 +24,7 @@ import { TaskListHeaderComponent } from '../_primitives/task-list-header/task-li
     CommonModule,
     RouterModule,
     TuiButton,
+    TuiCardLarge,
     CategoryCardComponent,
     TaskListCardComponent,
     TaskListHeaderComponent,

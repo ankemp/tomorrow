@@ -17,7 +17,12 @@
         }
         <tui-textfield>
           <label tuiLabel>Task {{ $index + 1 }}</label>
-          <input formControlName="title" type="text" tuiTextfield />
+          <input
+            tuiAutoFocus
+            formControlName="title"
+            type="text"
+            tuiTextfield
+          />
         </tui-textfield>
         <button
           type="button"

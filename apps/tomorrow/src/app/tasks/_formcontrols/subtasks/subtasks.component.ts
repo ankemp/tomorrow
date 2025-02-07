@@ -15,6 +15,7 @@ import {
   NonNullableFormBuilder,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { TuiAutoFocus, tuiAutoFocusOptionsProvider } from '@taiga-ui/cdk';
 import { TuiButton, TuiLabel, TuiTextfield } from '@taiga-ui/core';
 import { TuiGroup } from '@taiga-ui/core';
 import { map } from 'rxjs';
@@ -26,6 +27,7 @@ import { SubTask } from '@tmrw/data-access';
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    TuiAutoFocus,
     TuiButton,
     TuiLabel,
     TuiTextfield,
@@ -39,6 +41,9 @@ import { SubTask } from '@tmrw/data-access';
       useExisting: forwardRef(() => SubtasksComponent),
       multi: true,
     },
+    tuiAutoFocusOptionsProvider({
+      delay: 100,
+    }),
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -81,6 +86,8 @@ export class SubtasksComponent implements ControlValueAccessor {
       input.forEach((item) => {
         this.formArray.push(this.newTask(item.title, item.completedAt));
       });
+    } else {
+      this.form.setControl('tasks', this.fb.array([this.newTask()]));
     }
   }
   registerOnChange(fn: any): void {
@@ -99,13 +106,14 @@ export class SubtasksComponent implements ControlValueAccessor {
 
   private newTask(task = '', completedAt: Date | null = null) {
     return this.fb.group({
-      task: this.fb.control<string>(task),
+      title: this.fb.control<string>(task),
       completedAt: this.fb.control<Date | null>(completedAt),
     });
   }
 
   addTask() {
     this.formArray.push(this.newTask());
+    // focus on the new task
   }
 
   removeTask(index: number) {

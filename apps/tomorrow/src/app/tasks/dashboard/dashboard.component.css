@@ -1,18 +1,22 @@
 :host {
   display: block;
   margin-bottom: 5.5rem;
+  padding: 1rem;
 }
 
 section {
   display: block;
-  padding: 1rem;
+  width: 100%;
+
+  & + section {
+    margin-top: 1rem;
+  }
 }
 
 .category-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
-  padding: 1rem;
 
   & ::ng-deep tw-category-card > button {
     width: 100%;
@@ -25,15 +29,8 @@ section {
 }
 
 .task-create-container {
-  align-items: center;
   bottom: 0;
-  display: flex;
-  justify-content: center;
-  padding: 1rem;
+  margin-left: -1rem;
+  margin-right: -1rem;
   position: fixed;
-  width: calc(100% - 2rem);
-
-  & button {
-    width: 100%;
-  }
 }

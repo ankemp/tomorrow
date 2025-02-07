@@ -90,14 +90,14 @@ export class DatePickerComponent implements ControlValueAccessor {
   settings = inject(Settings);
   showPresets = input(true);
 
-  datePickerPreset = model<
-    'today' | 'tomorrow' | 'weekend' | 'custom' | null
-  >();
+  datePickerPreset = model<'today' | 'tomorrow' | 'weekend' | 'custom' | null>(
+    null,
+  );
   showDatePicker = computed(() => {
     return !!this.datePickerPreset();
   });
 
-  date = model<Date>();
+  date = model<Date | null>(null);
 
   disabled = signal(false);
 
@@ -141,10 +141,12 @@ export class DatePickerComponent implements ControlValueAccessor {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   private _onTouched = () => {};
 
-  writeValue(input: any): void {
+  writeValue(input: Date | null): void {
     this.date.set(input);
     if (this.showPresets() && !!input) {
       this.datePickerPreset.set('custom');
+    } else if (input === null) {
+      this.datePickerPreset.set(null);
     }
   }
   registerOnChange(fn: any): void {

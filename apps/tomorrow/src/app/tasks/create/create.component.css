@@ -4,8 +4,11 @@
   margin-bottom: 5.5rem;
 }
 
-button[type='submit'] {
+.actions {
+  --t-radius: 0 !important;
+  bottom: 0;
+  margin-left: -1rem;
+  margin-right: -1rem;
   position: fixed;
-  bottom: 1rem;
-  width: calc(100% - 2rem);
+  width: 100%;
 }
