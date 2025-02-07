@@ -79,8 +79,12 @@ export class CreateComponent {
   async onSubmit(event: Event) {
     event.preventDefault();
     if (this.form.valid) {
-      const { attachments, ...formData } = this.form.value;
-      const id = Tasks.insert(formData);
+      const { attachments, subTasks, ...formData } = this.form.value;
+
+      const id = Tasks.insert({
+        ...formData,
+        subtasks: subTasks?.filter((st) => st.title.length),
+      });
       if (attachments && attachments.length > 0) {
         await dir(`/files/${id}`).create();
         await Promise.all(
