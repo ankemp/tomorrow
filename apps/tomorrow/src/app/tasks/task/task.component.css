@@ -1,18 +1,19 @@
 :host {
   display: block;
   margin-bottom: 8.5rem;
-  padding: 0 1rem;
 }
 
 [tuisubtitle] > * + * {
   margin-left: 0.25rem;
 }
 
+.meta {
+  --t-radius: 0 !important;
+}
+
 .actions {
   --t-radius: 0 !important;
   bottom: 0;
-  margin-left: -1rem;
-  margin-right: -1rem;
   position: fixed;
   width: 100%;
 }

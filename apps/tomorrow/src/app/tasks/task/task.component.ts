@@ -14,14 +14,17 @@ import {
   TuiAppearance,
   TuiAutoColorPipe,
   TuiButton,
+  TuiDialogService,
   TuiIcon,
 } from '@taiga-ui/core';
 import { TuiLink } from '@taiga-ui/core';
 import { TuiBadge, TuiChip, TuiSkeleton } from '@taiga-ui/kit';
 import { TuiFiles } from '@taiga-ui/kit';
 import { TuiElasticContainer } from '@taiga-ui/kit';
+import { TUI_CONFIRM } from '@taiga-ui/kit';
 import { TuiCardLarge, TuiCell, TuiHeader } from '@taiga-ui/layout';
 import { file } from 'opfs-tools';
+import { EMPTY, of, switchMap } from 'rxjs';
 
 import { Settings, Task, Tasks } from '@tmrw/data-access';
 
@@ -51,6 +54,7 @@ import { FormatDatePipe } from '../_primitives/format-date/format-date.pipe';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskComponent {
+  private readonly dialogs = inject(TuiDialogService);
   settings = inject(Settings);
   task = signal<Task | null>(null);
 
@@ -111,11 +115,11 @@ export class TaskComponent {
 
   constructor(
     @Inject(PLATFORM_ID) platformId: any,
-    private activatedRoute: ActivatedRoute,
+    activatedRoute: ActivatedRoute,
   ) {
     if (isPlatformBrowser(platformId)) {
       effect(() => {
-        const t = Tasks.getTaskById(this.activatedRoute.snapshot.params['id']);
+        const t = Tasks.getTaskById(activatedRoute.snapshot.params['id']);
         if (t) {
           this.task.set(t);
         } else {
@@ -143,6 +147,22 @@ export class TaskComponent {
   }
 
   deleteTask(task: Task) {
-    Tasks.removeOne({ id: task.id });
+    this.dialogs
+      .open<boolean>(TUI_CONFIRM, {
+        label: 'Confirm Deletion',
+        data: {
+          content: 'Delete this task permanently?',
+          yes: 'Delete',
+          no: 'Cancel',
+        },
+      })
+      .pipe(
+        switchMap((response) => {
+          return response ? of(true) : EMPTY;
+        }),
+      )
+      .subscribe(() => {
+        Tasks.removeOne({ id: task.id });
+      });
   }
 }
