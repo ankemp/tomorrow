@@ -3,8 +3,8 @@
   padding: 1rem;
 }
 
-.task-list-group {
-  padding: 1rem 0;
+.task-list-group + .task-list-group {
+  margin-top: 1rem;
 }
 
 .task-list-grid {

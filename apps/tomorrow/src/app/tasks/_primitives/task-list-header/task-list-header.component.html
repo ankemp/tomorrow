@@ -1,4 +1,7 @@
 <div [tuiHeader]="headerSize()">
+  @if (hasIcon()) {
+    <tui-icon [icon]="icon()!" />
+  }
   <div tuiTitle>
     {{ title() }}
     @if (hasSubtitle()) {

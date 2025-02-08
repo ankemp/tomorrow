@@ -4,4 +4,8 @@
 
 [tuiHeader] {
   align-items: center;
+
+  tui-icon {
+    margin-right: 0.5rem;
+  }
 }

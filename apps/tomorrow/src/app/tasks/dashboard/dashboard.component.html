@@ -9,7 +9,7 @@
 
 @if (hasOverdueTasks()) {
   <section class="task-list-grid">
-    <tw-task-list-header title="Overdue" headerSize="s">
+    <tw-task-list-header title="Overdue" headerSize="s" icon="@tui.clock-9">
       <button
         appearance="flat-grayscale"
         size="m"
@@ -28,7 +28,7 @@
 }
 
 <section class="task-list-grid">
-  <tw-task-list-header title="Today" headerSize="s">
+  <tw-task-list-header title="Today" headerSize="s" icon="@tui.clock-12">
     @if (todaysTasks().length > 0) {
       <button
         appearance="flat-grayscale"
@@ -48,7 +48,11 @@
 </section>
 
 <section class="task-list-grid">
-  <tw-task-list-header title="Upcoming" headerSize="s">
+  <tw-task-list-header
+    title="Upcoming"
+    headerSize="s"
+    icon="@tui.calendar-days"
+  >
     @if (upcomingTasks().length > 0) {
       <button
         appearance="flat-grayscale"

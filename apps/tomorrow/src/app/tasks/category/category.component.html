@@ -1,7 +1,7 @@
 <h2 tuiTitle="m">{{ title() }} tasks</h2>
 
 <div class="task-list-group">
-  <tw-task-list-header title="Overdue" headerSize="xs">
+  <tw-task-list-header title="Overdue" headerSize="xs" icon="@tui.clock-9">
     @if (overdueTasks().length > 0) {
       <button
         appearance="flat-grayscale"
@@ -23,7 +23,7 @@
 </div>
 
 <div class="task-list-group">
-  <tw-task-list-header title="Today" headerSize="xs">
+  <tw-task-list-header title="Today" headerSize="xs" icon="@tui.clock-12">
     @if (todaysTasks().length > 0) {
       <button
         appearance="flat-grayscale"
@@ -45,7 +45,7 @@
 </div>
 
 <div class="task-list-group">
-  <tw-task-list-header title="Tomorrow" headerSize="xs">
+  <tw-task-list-header title="Tomorrow" headerSize="xs" icon="@tui.clock-3">
     @if (tomorrowTasks().length > 0) {
       <button
         appearance="flat-grayscale"
@@ -67,7 +67,7 @@
 </div>
 
 <div class="task-list-group">
-  <tw-task-list-header title="Future" headerSize="xs">
+  <tw-task-list-header title="Future" headerSize="xs" icon="@tui.calendar-days">
     @if (futureTasks().length > 0) {
       <button
         appearance="flat-grayscale"
