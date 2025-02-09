@@ -1,4 +1,9 @@
-<tui-app-bar tuiPlatform="ios">
+<tui-app-bar>
+  @if (showBackButton()) {
+    <button tuiAppBarBack tuiSlot="left" type="button" [routerLink]="['/']">
+      Back
+    </button>
+  }
   <h1 tuiTitle [routerLink]="['/']">
     tmr.w
     <div [tuiSkeleton]="taskCount() === -1" tuiSubtitle>

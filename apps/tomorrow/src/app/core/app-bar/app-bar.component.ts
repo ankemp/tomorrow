@@ -4,14 +4,16 @@ import {
   Component,
   effect,
   Inject,
+  inject,
   PLATFORM_ID,
   signal,
 } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { TuiPlatform } from '@taiga-ui/cdk';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { TuiButton, TuiTitle } from '@taiga-ui/core';
 import { TuiSkeleton } from '@taiga-ui/kit';
 import { TuiAppBar } from '@taiga-ui/layout';
+import { filter, map } from 'rxjs';
 
 import { Tasks } from '@tmrw/data-access';
 
@@ -24,15 +26,21 @@ import { Tasks } from '@tmrw/data-access';
     TuiTitle,
     TuiSkeleton,
     TuiAppBar,
-    TuiPlatform,
   ],
   templateUrl: './app-bar.component.html',
   styleUrl: './app-bar.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppBarComponent {
-  taskCount = signal<number>(-1);
-  showSearch = signal<boolean>(false);
+  private readonly router = inject(Router);
+  readonly taskCount = signal<number>(-1);
+  readonly showSearch = signal<boolean>(false);
+  readonly showBackButton = toSignal(
+    this.router.events.pipe(
+      filter((e) => e instanceof NavigationEnd),
+      map((event) => event.urlAfterRedirects !== '/tasks/dashboard'),
+    ),
+  );
 
   constructor(@Inject(PLATFORM_ID) platformId: any) {
     if (isPlatformBrowser(platformId)) {
