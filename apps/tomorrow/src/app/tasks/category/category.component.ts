@@ -21,6 +21,7 @@ import {
 
 import { Task, Tasks } from '@tmrw/data-access';
 
+import { EmptyStateComponent } from '../_primitives/empty-state/empty-state.component';
 import { TaskListCardComponent } from '../_primitives/task-list-card/task-list-card.component';
 import { TaskListHeaderComponent } from '../_primitives/task-list-header/task-list-header.component';
 
@@ -30,6 +31,7 @@ import { TaskListHeaderComponent } from '../_primitives/task-list-header/task-li
     CommonModule,
     TuiButton,
     TuiTitle,
+    EmptyStateComponent,
     TaskListCardComponent,
     TaskListHeaderComponent,
   ],

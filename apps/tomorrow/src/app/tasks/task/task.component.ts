@@ -29,6 +29,7 @@ import { EMPTY, map, of, switchMap, tap } from 'rxjs';
 
 import { Settings, Task, Tasks } from '@tmrw/data-access';
 
+import { EmptyStateComponent } from '../_primitives/empty-state/empty-state.component';
 import { FormatDatePipe } from '../_primitives/format-date/format-date.pipe';
 
 @Component({
@@ -48,6 +49,7 @@ import { FormatDatePipe } from '../_primitives/format-date/format-date.pipe';
     TuiCardLarge,
     TuiCell,
     TuiHeader,
+    EmptyStateComponent,
     FormatDatePipe,
   ],
   templateUrl: './task.component.html',
@@ -73,6 +75,10 @@ export class TaskComponent {
       return `${hours}h ${remainingMinutes}m`;
     }
     return `${minutes}m`;
+  });
+
+  readonly hasSubTasks = computed(() => {
+    return (this.task()?.subTasks?.length ?? 0) > 0;
   });
 
   readonly hasAttachments = computed(() => {

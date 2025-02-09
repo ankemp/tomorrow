@@ -44,6 +44,8 @@
   </tw-task-list-header>
   @for (task of todaysTasks(); track task.id) {
     <tw-task-list-card [task]="task" />
+  } @empty {
+    <tw-empty-state title="No Tasks Today" />
   }
 </section>
 
@@ -68,6 +70,8 @@
   </tw-task-list-header>
   @for (task of upcomingTasks(); track task.id) {
     <tw-task-list-card [task]="task" />
+  } @empty {
+    <tw-empty-state title="No Upcoming Tasks" />
   }
 </section>
 

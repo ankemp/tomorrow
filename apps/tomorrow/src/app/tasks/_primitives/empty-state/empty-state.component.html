@@ -1,0 +1,22 @@
+<div tuiCell tuiAppearance="neutral">
+  @if (hasIcon()) {
+    <tui-icon [icon]="icon()!" />
+  }
+  <div tuiTitle>
+    <strong>{{ title() }}</strong>
+    @if (hasSubtitle()) {
+      <div tuiSubtitle>{{ subtitle() }}</div>
+    }
+  </div>
+  @if (hasAction()) {
+    <button
+      appearance="action"
+      iconStart="@tui.plus"
+      tuiButton
+      type="button"
+      (click)="actionClicked.emit()"
+    >
+      {{ action() }}
+    </button>
+  }
+</div>

@@ -18,6 +18,8 @@
   <div class="task-list-grid">
     @for (task of overdueTasks(); track task.id) {
       <tw-task-list-card [task]="task" [showCategory]="false" />
+    } @empty {
+      <tw-empty-state title="No Overdue Tasks" />
     }
   </div>
 </div>
@@ -40,6 +42,8 @@
   <div class="task-list-grid">
     @for (task of todaysTasks(); track task.id) {
       <tw-task-list-card [task]="task" [showCategory]="false" />
+    } @empty {
+      <tw-empty-state title="No Tasks Today" />
     }
   </div>
 </div>
@@ -62,6 +66,8 @@
   <div class="task-list-grid">
     @for (task of tomorrowTasks(); track task.id) {
       <tw-task-list-card [task]="task" [showCategory]="false" />
+    } @empty {
+      <tw-empty-state title="No Tasks Tomorrow" />
     }
   </div>
 </div>
@@ -84,6 +90,8 @@
   <div class="task-list-grid">
     @for (task of futureTasks(); track task.id) {
       <tw-task-list-card [task]="task" [showCategory]="false" />
+    } @empty {
+      <tw-empty-state title="No Future Tasks" />
     }
   </div>
 </div>

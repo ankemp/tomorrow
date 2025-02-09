@@ -55,18 +55,20 @@
   <section tuiCardLarge="compact">
     <header tuiHeader="xs">
       <h3 tuiTitle>Subtasks</h3>
-      <div tuiAccessories>
-        <button
-          appearance="action"
-          iconStart="@tui.clipboard-list"
-          tuiIconButton
-          type="button"
-        >
-          Add Subtasks
-        </button>
-      </div>
+      @if (hasSubTasks()) {
+        <div tuiAccessories>
+          <button
+            appearance="action"
+            iconStart="@tui.clipboard-list"
+            tuiIconButton
+            type="button"
+          >
+            Add Subtasks
+          </button>
+        </div>
+      }
     </header>
-    @if (t.subTasks) {
+    @if (hasSubTasks()) {
       @for (subtask of t.subTasks; track $index) {
         @let isCompleted = !!subtask.completedAt;
         <div tuiCell>
@@ -89,22 +91,26 @@
           </div>
         </div>
       }
+    } @else {
+      <tw-empty-state title="No Subtasks" action="Add Subtask" />
     }
   </section>
 
   <section tuiCardLarge="compact">
     <header tuiHeader="xs">
       <h3 tuiTitle>Attachments</h3>
-      <div tuiAccessories>
-        <button
-          appearance="action"
-          iconStart="@tui.paperclip"
-          tuiIconButton
-          type="button"
-        >
-          Add Attachment
-        </button>
-      </div>
+      @if (hasAttachments()) {
+        <div tuiAccessories>
+          <button
+            appearance="action"
+            iconStart="@tui.paperclip"
+            tuiIconButton
+            type="button"
+          >
+            Add Attachment
+          </button>
+        </div>
+      }
     </header>
     <!-- FIXME: Attachments flicker when task obj is updated -->
     @if (hasAttachments()) {
@@ -128,22 +134,26 @@
           }
         </tui-files>
       }
+    } @else {
+      <tw-empty-state title="No Attachments" action="Add Attachment" />
     }
   </section>
 
   <section tuiCardLarge="compact">
     <header tuiHeader="xs">
       <h3 tuiTitle>Notes</h3>
-      <div tuiAccessories>
-        <button
-          appearance="action"
-          iconStart="@tui.notebook-pen"
-          tuiIconButton
-          type="button"
-        >
-          Add Note
-        </button>
-      </div>
+      @if (hasNotes()) {
+        <div tuiAccessories>
+          <button
+            appearance="action"
+            iconStart="@tui.notebook-pen"
+            tuiIconButton
+            type="button"
+          >
+            Add Note
+          </button>
+        </div>
+      }
     </header>
     @if (hasNotes()) {
       <tui-elastic-container>
@@ -158,6 +168,8 @@
           </button>
         }
       </tui-elastic-container>
+    } @else {
+      <tw-empty-state title="No Notes" action="Add Note" />
     }
   </section>
 
