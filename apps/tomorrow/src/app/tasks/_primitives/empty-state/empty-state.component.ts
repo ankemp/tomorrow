@@ -17,14 +17,14 @@ import { TuiCell } from '@taiga-ui/layout';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmptyStateComponent {
-  icon = input<string>();
-  title = input.required<string>();
-  subtitle = input<string>();
-  action = input<string>();
+  readonly icon = input<string>();
+  readonly title = input.required<string>();
+  readonly subtitle = input<string>();
+  readonly action = input<string>();
 
-  actionClicked = output<void>();
+  readonly actionClicked = output<void>();
 
-  hasIcon = computed(() => !!this.icon());
-  hasSubtitle = computed(() => !!this.subtitle());
-  hasAction = computed(() => !!this.action());
+  readonly hasIcon = computed(() => !!this.icon());
+  readonly hasSubtitle = computed(() => !!this.subtitle());
+  readonly hasAction = computed(() => !!this.action());
 }

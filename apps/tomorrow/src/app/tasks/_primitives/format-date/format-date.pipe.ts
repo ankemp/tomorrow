@@ -7,7 +7,7 @@ import { Settings } from '@tmrw/data-access';
   name: 'formatDate',
 })
 export class FormatDatePipe implements PipeTransform {
-  settings = inject(Settings);
+  private readonly settings = inject(Settings);
 
   transform(date: Date): string {
     if (isToday(date)) {

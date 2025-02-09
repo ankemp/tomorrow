@@ -135,5 +135,5 @@ class TimeTransformer extends TuiValueTransformer<
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReminderPreferencesComponent {
-  settings = inject(Settings);
+  readonly settings = inject(Settings);
 }

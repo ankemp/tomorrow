@@ -46,11 +46,11 @@ import { SubtasksComponent } from '../_formcontrols/subtasks/subtasks.component'
     TuiForm,
     TuiHeader,
     TuiTextareaModule,
-    DatePickerComponent,
     CategorySelectorComponent,
-    SubtasksComponent,
+    DatePickerComponent,
     DurationComponent,
     FileUploadComponent,
+    SubtasksComponent,
   ],
   templateUrl: './create.component.html',
   styleUrl: './create.component.css',
@@ -61,7 +61,7 @@ export class CreateComponent {
   private readonly router = inject(Router);
   private readonly alerts = inject(TuiAlertService);
   readonly settings = inject(Settings);
-  form = this.fb.group({
+  readonly form = this.fb.group({
     userId: this.fb.control<string>(''),
     title: this.fb.control<string>('', [Validators.required]),
     date: this.fb.control<Date | null>(null, [Validators.required]),

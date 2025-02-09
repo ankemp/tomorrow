@@ -40,28 +40,28 @@ import { TaskListHeaderComponent } from '../_primitives/task-list-header/task-li
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CategoryComponent {
-  categoryTasks = signal<Task[]>([]);
-  title = signal<string>('');
+  readonly categoryTasks = signal<Task[]>([]);
+  readonly title = signal<string>('');
 
-  overdueTasks = computed(() => {
+  readonly overdueTasks = computed(() => {
     return this.categoryTasks().filter((task) => {
       return isBefore(task.date, endOfYesterday());
     });
   });
 
-  todaysTasks = computed(() => {
+  readonly todaysTasks = computed(() => {
     return this.categoryTasks().filter((task) => {
       return isToday(task.date);
     });
   });
 
-  tomorrowTasks = computed(() => {
+  readonly tomorrowTasks = computed(() => {
     return this.categoryTasks().filter((task) => {
       return isTomorrow(task.date);
     });
   });
 
-  futureTasks = computed(() => {
+  readonly futureTasks = computed(() => {
     return this.categoryTasks().filter((task) => {
       return isAfter(task.date, endOfTomorrow());
     });

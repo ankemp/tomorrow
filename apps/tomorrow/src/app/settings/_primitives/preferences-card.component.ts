@@ -23,6 +23,6 @@ import { TuiCardLarge, TuiCell } from '@taiga-ui/layout';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PreferencesCardComponent {
-  title = input.required<string>();
-  icon = input.required<string>();
+  readonly title = input.required<string>();
+  readonly icon = input.required<string>();
 }

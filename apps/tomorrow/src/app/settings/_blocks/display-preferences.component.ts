@@ -38,7 +38,7 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
 export class DisplayPreferencesComponent {
   readonly darkMode = inject(TUI_DARK_MODE);
 
-  themeIcon = computed(() => {
+  readonly themeIcon = computed(() => {
     return this.darkMode() ? '@tui.sun' : '@tui.moon';
   });
 }

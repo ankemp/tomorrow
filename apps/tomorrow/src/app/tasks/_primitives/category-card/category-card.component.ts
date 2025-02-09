@@ -41,11 +41,11 @@ import { Tasks } from '@tmrw/data-access';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CategoryCardComponent {
-  title = input.required<string>();
-  color = input<string>();
-  icon = input<string>('@tui.star');
+  readonly title = input.required<string>();
+  readonly color = input<string>();
+  readonly icon = input<string>('@tui.star');
 
-  taskCount = signal<number>(-1);
+  readonly taskCount = signal<number>(-1);
 
   constructor(@Inject(PLATFORM_ID) platformId: any) {
     if (isPlatformBrowser(platformId)) {

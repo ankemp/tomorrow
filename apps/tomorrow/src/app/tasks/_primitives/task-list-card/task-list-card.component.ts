@@ -43,11 +43,11 @@ import { FormatDatePipe } from '../format-date/format-date.pipe';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskListCardComponent {
-  settings = inject(Settings);
-  task = input.required<Task>();
-  showCategory = input<boolean>(true);
+  readonly settings = inject(Settings);
+  readonly task = input.required<Task>();
+  readonly showCategory = input<boolean>(true);
 
-  icon = computed(() => {
+  readonly icon = computed(() => {
     return this.task().completedAt ? '@tui.circle-check' : '@tui.circle';
   });
 

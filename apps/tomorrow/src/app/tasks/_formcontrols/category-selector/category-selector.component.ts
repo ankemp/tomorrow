@@ -34,10 +34,10 @@ import { Settings } from '@tmrw/data-access';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CategorySelectorComponent implements ControlValueAccessor {
-  private settings = inject(Settings);
-  category = model<string | null>();
+  private readonly settings = inject(Settings);
+  readonly category = model<string | null>();
 
-  disabled = signal(false);
+  readonly disabled = signal(false);
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   private _onChange = (_: any) => {};

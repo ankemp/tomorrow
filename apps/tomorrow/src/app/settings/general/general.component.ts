@@ -29,5 +29,5 @@ import { SyncPreferencesComponent } from '../_blocks/sync-preferences.component'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GeneralComponent {
-  settings = inject(Settings);
+  readonly settings = inject(Settings);
 }

@@ -87,19 +87,19 @@ class DateTimeTransformer extends TuiValueTransformer<
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatePickerComponent implements ControlValueAccessor {
-  settings = inject(Settings);
-  showPresets = input(true);
+  readonly settings = inject(Settings);
+  readonly showPresets = input(true);
 
-  datePickerPreset = model<'today' | 'tomorrow' | 'weekend' | 'custom' | null>(
-    null,
-  );
-  showDatePicker = computed(() => {
+  readonly datePickerPreset = model<
+    'today' | 'tomorrow' | 'weekend' | 'custom' | null
+  >(null);
+  readonly showDatePicker = computed(() => {
     return !!this.datePickerPreset();
   });
 
-  date = model<Date | null>(null);
+  readonly date = model<Date | null>(null);
 
-  disabled = signal(false);
+  readonly disabled = signal(false);
 
   constructor() {
     effect(() => {

@@ -64,9 +64,9 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SyncPreferencesComponent {
-  settings = inject(Settings);
+  readonly settings = inject(Settings);
 
-  encryptionIcon = computed(() => {
+  readonly encryptionIcon = computed(() => {
     return this.settings.hasEncryptionKey()
       ? '@tui.shield-check'
       : '@tui.shield-x';

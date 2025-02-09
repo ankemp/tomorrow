@@ -31,15 +31,15 @@ import { TuiFiles } from '@taiga-ui/kit';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileUploadComponent implements ControlValueAccessor {
-  accept = input('*/*');
-  maxFileSize = input();
-  files = model<File[]>([]);
+  readonly accept = input('*/*');
+  readonly maxFileSize = input();
+  readonly files = model<File[]>([]);
 
-  hasFiles = computed(() => {
+  readonly hasFiles = computed(() => {
     return this.files().length > 0;
   });
 
-  disabled = signal(false);
+  readonly disabled = signal(false);
 
   constructor() {
     effect(() => {

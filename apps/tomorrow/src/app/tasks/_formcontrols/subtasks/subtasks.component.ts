@@ -50,9 +50,9 @@ import { SubTask } from '@tmrw/data-access';
 export class SubtasksComponent implements ControlValueAccessor {
   private fb = inject(NonNullableFormBuilder);
 
-  createOnly = input(true);
+  readonly createOnly = input(true);
 
-  form = this.fb.group({
+  readonly form = this.fb.group({
     tasks: this.fb.array([
       this.fb.group({
         title: this.fb.control<string>(''),
@@ -81,8 +81,8 @@ export class SubtasksComponent implements ControlValueAccessor {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   private _onTouched = () => {};
 
-  writeValue(input: SubTask[]): void {
-    if (input.length > 0) {
+  writeValue(input: SubTask[] | null): void {
+    if (input && input.length > 0) {
       input.forEach((item) => {
         this.formArray.push(this.newTask(item.title, item.completedAt));
       });

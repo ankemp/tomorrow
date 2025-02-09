@@ -16,11 +16,11 @@ import { TuiHeader } from '@taiga-ui/layout';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskListHeaderComponent {
-  icon = input<string>();
-  title = input.required<string>();
-  subtitle = input<string>();
-  headerSize = input<TuiHeader['size']>('m');
+  readonly icon = input<string>();
+  readonly title = input.required<string>();
+  readonly subtitle = input<string>();
+  readonly headerSize = input<TuiHeader['size']>('m');
 
-  hasIcon = computed(() => !!this.icon());
-  hasSubtitle = computed(() => !!this.subtitle());
+  readonly hasIcon = computed(() => !!this.icon());
+  readonly hasSubtitle = computed(() => !!this.subtitle());
 }

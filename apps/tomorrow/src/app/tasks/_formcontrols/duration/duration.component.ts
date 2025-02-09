@@ -31,9 +31,9 @@ import { TuiInputSliderModule } from '@taiga-ui/legacy';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DurationComponent implements ControlValueAccessor {
-  duration = model();
+  readonly duration = model();
 
-  disabled = signal(false);
+  readonly disabled = signal(false);
 
   constructor() {
     effect(() => {

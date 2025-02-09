@@ -15,7 +15,7 @@ import { AppBarComponent } from './core/app-bar/app-bar.component';
 })
 export class AppComponent {
   readonly darkMode = inject(TUI_DARK_MODE);
-  settings = inject(Settings);
+  readonly settings = inject(Settings);
 
   constructor(@Inject(PLATFORM_ID) platformId: any) {
     if (isPlatformBrowser(platformId)) {
