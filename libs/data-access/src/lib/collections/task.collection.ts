@@ -68,6 +68,18 @@ class TaskCollection extends Collection<Task> {
     );
   }
 
+  getTodaysIncompleteTasks() {
+    return this.find(
+      {
+        date: { $gte: startOfToday(), $lt: endOfToday() },
+        completedAt: null,
+      },
+      {
+        sort: { date: 1 },
+      },
+    );
+  }
+
   getTodaysTasks() {
     return this.find(
       {

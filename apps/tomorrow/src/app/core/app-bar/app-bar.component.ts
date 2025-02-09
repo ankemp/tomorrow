@@ -37,7 +37,7 @@ export class AppBarComponent {
   constructor(@Inject(PLATFORM_ID) platformId: any) {
     if (isPlatformBrowser(platformId)) {
       effect((onCleanup) => {
-        const c = Tasks.getTodaysTasks();
+        const c = Tasks.getTodaysIncompleteTasks();
         this.taskCount.set(c.count());
         onCleanup(() => {
           c.cleanup();
