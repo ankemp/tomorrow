@@ -2,7 +2,12 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TuiTime, TuiValueTransformer } from '@taiga-ui/cdk';
-import { TUI_TIME_VALUE_TRANSFORMER, TuiDataListWrapper } from '@taiga-ui/kit';
+import { TuiAutoColorPipe } from '@taiga-ui/core';
+import {
+  TUI_TIME_VALUE_TRANSFORMER,
+  TuiChip,
+  TuiDataListWrapper,
+} from '@taiga-ui/kit';
 import {
   TuiInputTimeModule,
   tuiInputTimeOptionsProvider,
@@ -27,11 +32,14 @@ class TimeTransformer extends TuiValueTransformer<
   }
 }
 
+// TODO: Add default reminder time-from-now if today
 @Component({
   selector: 'tw-reminder-preferences',
   imports: [
     CommonModule,
     FormsModule,
+    TuiAutoColorPipe,
+    TuiChip,
     TuiDataListWrapper,
     TuiInputTimeModule,
     TuiTextfieldControllerModule,
@@ -60,6 +68,34 @@ class TimeTransformer extends TuiValueTransformer<
           >
             Choose a time
           </tui-input-time>
+        </div>
+        <div tuiLabel>
+          Default Reminder Category
+          <tui-select
+            [ngModel]="settings.defaultReminderCategory()"
+            (ngModelChange)="settings.updateDefaultReminderCategory($event)"
+            [valueContent]="reminderValueTemplate"
+          >
+            Select Category
+            <tui-data-list-wrapper
+              *tuiDataList
+              [items]="[null, 'Work', 'Personal', 'Shopping', 'Health']"
+              [itemContent]="reminderValueTemplate"
+            />
+            <ng-template #reminderValueTemplate let-item>
+              @if (item) {
+                <tui-chip
+                  size="xs"
+                  appearance="custom"
+                  [style.background-color]="item | tuiAutoColor"
+                >
+                  {{ item }}
+                </tui-chip>
+              } @else if (item === null) {
+                No Default
+              }
+            </ng-template>
+          </tui-select>
         </div>
         <div tuiLabel>
           Start of Week

@@ -18,6 +18,7 @@ import { SettingsState } from '../models/settings.state';
 
 const initialState: SettingsState = {
   defaultReminderTime: '08:00',
+  defaultReminderCategory: null,
   startOfWeek: 'Sunday',
   timeFormat: '12h',
   locale: 'en-US', // TODO: Get from browser(?)
@@ -53,6 +54,9 @@ export const Settings = signalStore(
   withMethods((store) => ({
     updateDefaultReminderTime(defaultReminderTime: string): void {
       patchState(store, { defaultReminderTime });
+    },
+    updateDefaultReminderCategory(defaultReminderCategory: string): void {
+      patchState(store, { defaultReminderCategory });
     },
     updateTimeFormat(timeFormat: string): void {
       patchState(store, { timeFormat });

@@ -4,6 +4,7 @@ import {
   Component,
   effect,
   forwardRef,
+  inject,
   model,
   signal,
 } from '@angular/core';
@@ -15,6 +16,8 @@ import {
 import { TuiAutoColorPipe } from '@taiga-ui/core';
 import { TuiChip } from '@taiga-ui/kit';
 import { TuiRadio } from '@taiga-ui/kit';
+
+import { Settings } from '@tmrw/data-access';
 
 @Component({
   selector: 'tw-category-selector',
@@ -31,7 +34,8 @@ import { TuiRadio } from '@taiga-ui/kit';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CategorySelectorComponent implements ControlValueAccessor {
-  category = model<string>();
+  private settings = inject(Settings);
+  category = model<string | null>();
 
   disabled = signal(false);
 
@@ -46,8 +50,15 @@ export class CategorySelectorComponent implements ControlValueAccessor {
     });
   }
 
-  writeValue(input: string): void {
-    this.category.set(input);
+  writeValue(input: string | null): void {
+    if (input) {
+      this.category.set(input);
+    } else {
+      const defaultCategory = this.settings.defaultReminderCategory();
+      if (defaultCategory) {
+        this.category.set(defaultCategory);
+      }
+    }
   }
   registerOnChange(fn: any): void {
     this._onChange = fn;

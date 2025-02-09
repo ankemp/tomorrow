@@ -65,7 +65,7 @@ export class CreateComponent {
     userId: this.fb.control<string>(''),
     title: this.fb.control<string>('', [Validators.required]),
     date: this.fb.control<Date | null>(null, [Validators.required]),
-    category: this.fb.control<string>('', [Validators.required]),
+    category: this.fb.control<string | null>(null, [Validators.required]),
     description: this.fb.control<string>(''),
     location: this.fb.control<string>(''),
     duration: this.fb.control<number>(0),
