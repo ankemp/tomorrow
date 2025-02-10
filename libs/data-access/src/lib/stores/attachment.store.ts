@@ -13,12 +13,16 @@ interface AttachmentState {
   taskId: string;
   attachments: string[];
   files: File[];
+  fsQuota: number;
+  fsUsage: number;
 }
 
 const initialState: AttachmentState = {
   taskId: '',
   attachments: [],
   files: [],
+  fsQuota: 0,
+  fsUsage: 0,
 };
 
 export const Attachments = signalStore(
@@ -29,8 +33,15 @@ export const Attachments = signalStore(
       equal: (a, b) => a === b,
     }),
     fileCount: computed(() => state.files().length),
+    fsUsagePercent: computed(() =>
+      state.fsQuota() > 0 ? (state.fsUsage() / state.fsQuota()) * 100 : 0,
+    ),
   })),
   withMethods((store) => ({
+    async getQuota() {
+      const estimate = await navigator.storage.estimate();
+      patchState(store, { fsQuota: estimate.quota, fsUsage: estimate.usage });
+    },
     dispose() {
       patchState(store, initialState);
     },
@@ -59,6 +70,7 @@ export const Attachments = signalStore(
   withHooks({
     onInit(store) {
       effect(async () => {
+        store.getQuota();
         if (store.hasAttachments()) {
           const attachments = store.attachments();
           const path = store.storagePath();

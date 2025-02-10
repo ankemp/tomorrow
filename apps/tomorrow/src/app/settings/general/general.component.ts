@@ -6,6 +6,7 @@ import { TuiCardLarge, TuiCell } from '@taiga-ui/layout';
 
 import { Settings } from '@tmrw/data-access';
 
+import { DevicePreferencesComponent } from '../_blocks/device-preferences.component';
 import { DisplayPreferencesComponent } from '../_blocks/display-preferences.component';
 import { NotificationPreferencesComponent } from '../_blocks/notification-preferences.component';
 import { ReminderPreferencesComponent } from '../_blocks/reminder-preferences.component';
@@ -19,6 +20,7 @@ import { SyncPreferencesComponent } from '../_blocks/sync-preferences.component'
     TuiAvatar,
     TuiCardLarge,
     TuiCell,
+    DevicePreferencesComponent,
     DisplayPreferencesComponent,
     NotificationPreferencesComponent,
     ReminderPreferencesComponent,
