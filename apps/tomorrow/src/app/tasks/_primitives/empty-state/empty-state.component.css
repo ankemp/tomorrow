@@ -2,10 +2,6 @@
   display: block;
 }
 
-[tuiCell] {
-  max-inline-size: 25rem;
-
-  button {
-    inline-size: unset;
-  }
+[tuiCell] button {
+  inline-size: unset;
 }
