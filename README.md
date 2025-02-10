@@ -43,18 +43,15 @@ The easiest way to run tmr.w is using Docker. Follow these steps:
 1.  **Pull the Docker image:**
 
     ```bash
-    docker pull YOUR_DOCKER_IMAGE_NAME_HERE
+    docker pull ankemp/tomorrow:latest
     ```
-
-    - **TODO:** Replace `YOUR_DOCKER_IMAGE_NAME_HERE` with the actual name of your Docker image from your container registry (e.g., Docker Hub, GitHub Container Registry, etc.).
 
 2.  **Run the Docker container:**
 
     ```bash
-    docker run -d -p 8080:PORT -e PORT=8080 -e DB_PATH=/data/tmr_w.db -v host_data_volume:/data YOUR_DOCKER_IMAGE_NAME_HERE
+    docker run -d -p 8080:PORT -e PORT=8080 -e DB_PATH=/data/tmr_w.db -v host_data_volume:/data tomorrow:latest
     ```
 
-    - **TODO:** Replace `YOUR_DOCKER_IMAGE_NAME_HERE` again with your Docker image name.
     - **Port Mapping:** The `-p 8080:PORT` part maps port `8080` on your host machine to the port that tmr.w uses inside the container. The container's internal port is configured by the `PORT` environment variable (see "Configuration" below). You can change `8080` on the host side if you need to use a different port.
     - **Data Persistence:** `-v host_data_volume:/data` mounts a volume. **You must replace `host_data_volume` with a path on your host machine where you want to store the tmr.w database file** (e.g., `$HOME/tmr_w_data` or `./tmr_w_data`). This ensures your data persists even if you stop or remove the Docker container. If you don't provide this volume, your data will be lost when the container is removed.
 
