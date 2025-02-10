@@ -39,8 +39,10 @@ export const Attachments = signalStore(
   })),
   withMethods((store) => ({
     async getQuota() {
-      const estimate = await navigator.storage.estimate();
-      patchState(store, { fsQuota: estimate.quota, fsUsage: estimate.usage });
+      if ('storage' in navigator) {
+        const estimate = await navigator.storage.estimate();
+        patchState(store, { fsQuota: estimate.quota, fsUsage: estimate.usage });
+      }
     },
     dispose() {
       patchState(store, initialState);
@@ -56,6 +58,7 @@ export const Attachments = signalStore(
       const d = await dir(path);
       if (await d.exists()) {
         await d.remove();
+        await d.create();
       } else {
         await d.create();
       }
@@ -74,6 +77,7 @@ export const Attachments = signalStore(
         if (store.hasAttachments()) {
           const attachments = store.attachments();
           const path = store.storagePath();
+          console.log(await dir(path).children());
           const files = await Promise.all(
             attachments
               .map((attachment) => file(`${path}/${attachment}`))
