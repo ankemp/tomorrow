@@ -16,4 +16,9 @@
   bottom: 0;
   position: fixed;
   width: 100%;
+
+  .group {
+    display: flex;
+    justify-content: space-between;
+  }
 }

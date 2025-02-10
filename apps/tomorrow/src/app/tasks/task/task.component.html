@@ -174,17 +174,33 @@
   </section>
 
   <section tuiCardLarge="compact" class="actions" tuiAppearance="floating">
-    <button size="m" tuiButton (click)="toggleTask(t)">
-      Mark {{ t.completedAt ? 'Incomplete' : 'Complete' }}
-    </button>
-    <button
-      size="s"
-      appearance="outline-destructive"
-      iconStart="@tui.trash-2"
-      tuiButton
-      (click)="deleteTask(t)"
-    >
-      Delete Task
-    </button>
+    <div class="group">
+      <button
+        style="width: calc(100% - 56px - 1rem)"
+        tuiButton
+        (click)="toggleTask(t)"
+      >
+        Mark {{ t.completedAt ? 'Incomplete' : 'Complete' }}
+      </button>
+      <button
+        [tuiDropdownMobile]="t.title"
+        appearance="secondary-grayscale"
+        iconStart="@tui.ellipsis"
+        tuiIconButton
+        type="button"
+        [tuiAppearanceState]="menuOpen() ? 'active' : null"
+        [tuiDropdown]="dropdown"
+        [(tuiDropdownOpen)]="menuOpen"
+      >
+        Menu
+      </button>
+      <ng-template #dropdown>
+        <tui-data-list>
+          <tui-opt-group>
+            <button tuiOption (click)="deleteTask(t)">Delete Task</button>
+          </tui-opt-group>
+        </tui-data-list>
+      </ng-template>
+    </div>
   </section>
 }

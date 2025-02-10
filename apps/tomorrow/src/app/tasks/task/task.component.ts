@@ -6,16 +6,20 @@ import {
   effect,
   Inject,
   inject,
+  model,
   PLATFORM_ID,
   signal,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { TuiDropdownMobile } from '@taiga-ui/addon-mobile';
 import {
   TuiAlertService,
   TuiAppearance,
   TuiAutoColorPipe,
   TuiButton,
+  TuiDataList,
   TuiDialogService,
+  TuiDropdown,
   TuiIcon,
 } from '@taiga-ui/core';
 import { TuiLink } from '@taiga-ui/core';
@@ -36,9 +40,13 @@ import { FormatDatePipe } from '../_primitives/format-date/format-date.pipe';
   selector: 'tw-task',
   imports: [
     CommonModule,
+    RouterModule,
+    TuiDropdownMobile,
     TuiAppearance,
     TuiAutoColorPipe,
     TuiButton,
+    TuiDropdown,
+    TuiDataList,
     TuiIcon,
     TuiLink,
     TuiBadge,
@@ -61,6 +69,8 @@ export class TaskComponent {
   private readonly dialogs = inject(TuiDialogService);
   private readonly alerts = inject(TuiAlertService);
   readonly settings = inject(Settings);
+
+  readonly menuOpen = model(false);
   readonly task = signal<Task | null>(null);
 
   readonly taskExists = computed(() => {
