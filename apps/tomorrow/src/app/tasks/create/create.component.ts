@@ -99,7 +99,7 @@ export class CreateComponent {
       });
       if (attachments && attachments.length > 0) {
         this.attachmentsStore.init({ id });
-        await this.attachmentsStore.addAttachments(attachments);
+        await this.attachmentsStore.setAttachments(attachments);
         Tasks.updateOne(
           { id },
           { $set: { attachments: attachments.map((file) => file.name) } },

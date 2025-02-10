@@ -9,11 +9,6 @@ import {
 } from '@ngrx/signals';
 import { dir, file, write } from 'opfs-tools';
 
-interface Task {
-  id: string;
-  attachments: string[];
-}
-
 interface AttachmentState {
   taskId: string;
   attachments: string[];
@@ -45,10 +40,12 @@ export const Attachments = signalStore(
     setFiles(files: File[]) {
       patchState(store, { files });
     },
-    async addAttachments(attachments: File[]) {
+    async setAttachments(attachments: File[]) {
       const path = store.storagePath();
       const d = await dir(path);
-      if (!(await d.exists())) {
+      if (await d.exists()) {
+        await d.remove();
+      } else {
         await d.create();
       }
       await Promise.all(
