@@ -112,26 +112,22 @@
         </div>
       }
     </header>
-    <!-- FIXME: Attachments flicker when task obj is updated -->
     @if (hasAttachments()) {
       @for (attachment of attachments(); track $index) {
-        @let file = attachment | async;
-        <tui-files [tuiSkeleton]="!file">
-          @if (file) {
-            <tui-file
-              size="l"
-              state="normal"
-              [leftContent]="icon"
-              [file]="file"
-            ></tui-file>
-            <ng-template #icon>
-              @if (file.type.includes('image')) {
-                <tui-icon icon="@tui.image" />
-              } @else {
-                <tui-icon icon="@tui.paperclip" />
-              }
-            </ng-template>
-          }
+        <tui-files>
+          <tui-file
+            size="l"
+            state="normal"
+            [leftContent]="icon"
+            [file]="attachment"
+          ></tui-file>
+          <ng-template #icon>
+            @if (attachment.type.includes('image')) {
+              <tui-icon icon="@tui.image" />
+            } @else {
+              <tui-icon icon="@tui.paperclip" />
+            }
+          </ng-template>
         </tui-files>
       }
     } @else {

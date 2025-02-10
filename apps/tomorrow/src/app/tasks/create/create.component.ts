@@ -20,9 +20,8 @@ import { TuiAlertService } from '@taiga-ui/core';
 import { TuiAccordion, TuiAccordionComponent } from '@taiga-ui/experimental';
 import { TuiCardLarge, TuiForm, TuiHeader } from '@taiga-ui/layout';
 import { TuiTextareaModule } from '@taiga-ui/legacy';
-import { dir, write } from 'opfs-tools';
 
-import { Settings, SubTask, Tasks } from '@tmrw/data-access';
+import { Attachments, Settings, SubTask, Tasks } from '@tmrw/data-access';
 
 import { CategorySelectorComponent } from '../_formcontrols/category-selector/category-selector.component';
 import { DatePickerComponent } from '../_formcontrols/date-picker/date-picker.component';
@@ -52,6 +51,7 @@ import { SubtasksComponent } from '../_formcontrols/subtasks/subtasks.component'
     FileUploadComponent,
     SubtasksComponent,
   ],
+  providers: [Attachments],
   templateUrl: './create.component.html',
   styleUrl: './create.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -61,6 +61,7 @@ export class CreateComponent {
   private readonly router = inject(Router);
   private readonly alerts = inject(TuiAlertService);
   readonly settings = inject(Settings);
+  readonly attachmentsStore = inject(Attachments);
   readonly form = this.fb.group({
     userId: this.fb.control<string>(''),
     title: this.fb.control<string>('', [Validators.required]),
@@ -78,9 +79,12 @@ export class CreateComponent {
   readonly accordion!: TuiAccordionComponent;
 
   constructor() {
-    effect(() => {
+    effect((onCleanup) => {
       const userId = this.settings.userId();
       this.form.get('userId')?.setValue(userId);
+      onCleanup(() => {
+        this.attachmentsStore.dispose();
+      });
     });
   }
 
@@ -94,12 +98,8 @@ export class CreateComponent {
         subtasks: subTasks?.filter((st) => st.title.length),
       });
       if (attachments && attachments.length > 0) {
-        await dir(`/files/${id}`).create();
-        await Promise.all(
-          attachments.map((file) =>
-            write(`/files/${id}/${file.name}`, file.stream()),
-          ),
-        );
+        this.attachmentsStore.init({ id });
+        await this.attachmentsStore.addAttachments(attachments);
         Tasks.updateOne(
           { id },
           { $set: { attachments: attachments.map((file) => file.name) } },

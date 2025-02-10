@@ -23,15 +23,14 @@ import {
   TuiIcon,
 } from '@taiga-ui/core';
 import { TuiLink } from '@taiga-ui/core';
-import { TuiBadge, TuiChip, TuiSkeleton } from '@taiga-ui/kit';
+import { TuiBadge, TuiChip } from '@taiga-ui/kit';
 import { TuiFiles } from '@taiga-ui/kit';
 import { TuiElasticContainer } from '@taiga-ui/kit';
 import { TUI_CONFIRM } from '@taiga-ui/kit';
 import { TuiCardLarge, TuiCell, TuiHeader } from '@taiga-ui/layout';
-import { file } from 'opfs-tools';
 import { EMPTY, map, of, switchMap, tap } from 'rxjs';
 
-import { Settings, Task, Tasks } from '@tmrw/data-access';
+import { Attachments, Settings, Task, Tasks } from '@tmrw/data-access';
 
 import { EmptyStateComponent } from '../_primitives/empty-state/empty-state.component';
 import { FormatDatePipe } from '../_primitives/format-date/format-date.pipe';
@@ -51,7 +50,6 @@ import { FormatDatePipe } from '../_primitives/format-date/format-date.pipe';
     TuiLink,
     TuiBadge,
     TuiChip,
-    TuiSkeleton,
     TuiFiles,
     TuiElasticContainer,
     TuiCardLarge,
@@ -60,6 +58,7 @@ import { FormatDatePipe } from '../_primitives/format-date/format-date.pipe';
     EmptyStateComponent,
     FormatDatePipe,
   ],
+  providers: [Attachments],
   templateUrl: './task.component.html',
   styleUrl: './task.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -69,6 +68,7 @@ export class TaskComponent {
   private readonly dialogs = inject(TuiDialogService);
   private readonly alerts = inject(TuiAlertService);
   readonly settings = inject(Settings);
+  readonly attachmentsStore = inject(Attachments);
 
   readonly menuOpen = model(false);
   readonly task = signal<Task | null>(null);
@@ -91,20 +91,9 @@ export class TaskComponent {
     return (this.task()?.subTasks?.length ?? 0) > 0;
   });
 
-  readonly hasAttachments = computed(() => {
-    return (this.task()?.attachments?.length ?? 0) > 0;
-  });
+  readonly hasAttachments = this.attachmentsStore.hasAttachments;
 
-  readonly attachments = computed(() => {
-    return this.task()!
-      .attachments.map(async (attachment) => {
-        const f = await file(
-          `files/${this.task()?.id}/${attachment}`,
-        ).getOriginFile();
-        return f;
-      })
-      .filter(Boolean);
-  });
+  readonly attachments = this.attachmentsStore.files;
 
   readonly hasNotes = computed(() => {
     return !!this.task()?.notes;
@@ -137,13 +126,17 @@ export class TaskComponent {
     activatedRoute: ActivatedRoute,
   ) {
     if (isPlatformBrowser(platformId)) {
-      effect(() => {
+      effect((onCleanup) => {
         const t = Tasks.getTaskById(activatedRoute.snapshot.params['id']);
         if (t) {
           this.task.set(t);
+          this.attachmentsStore.init(t);
         } else {
           // TODO: Redirect to 404
         }
+        onCleanup(() => {
+          this.attachmentsStore.dispose();
+        });
       });
     }
   }
