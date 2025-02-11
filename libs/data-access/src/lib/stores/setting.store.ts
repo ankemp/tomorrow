@@ -49,6 +49,18 @@ export const Settings = signalStore(
       const key = state._encryptionKey();
       return key ? JSON.parse(key) : null;
     }),
+    qrCodeString: computed(() => {
+      const key = state._encryptionKey();
+      const userId = state.userId();
+      if (!key || !userId) {
+        return null;
+      }
+      return JSON.stringify({
+        key: JSON.parse(key),
+        userId,
+        createdAt: Date.now(),
+      });
+    }),
     hasEncryptionKey: computed(() => !!state._encryptionKey()),
   })),
   withMethods((store) => ({

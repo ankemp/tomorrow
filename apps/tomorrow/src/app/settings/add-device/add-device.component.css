@@ -1,3 +1,14 @@
 :host {
   display: block;
 }
+
+.qr-code,
+.connection-steps {
+  margin: 1rem;
+}
+
+.qr-code {
+  align-items: center !important;
+  display: flex;
+  justify-content: center;
+}

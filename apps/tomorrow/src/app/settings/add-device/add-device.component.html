@@ -1,1 +1,44 @@
-<p>add-device works!</p>
+<section tuiCardLarge>
+  <header tuiHeader>
+    <div tuiTitle="m">
+      Add Device
+      <span tuiSubtitle>Scan this QR code with your new device</span>
+    </div>
+  </header>
+</section>
+
+<section tuiCardLarge class="qr-code" tuiAppearance="neutral">
+  @if (!loadingQRCodeFailed()) {
+    <img
+      style="width: 212px; height: 212px"
+      [tuiSkeleton]="loadingQRCode()"
+      [src]="dataUri()"
+      alt="QR Code"
+    />
+  } @else {
+    <!-- TODO: Handle failed QR code load -->
+  }
+</section>
+
+<section
+  tuiCardLarge
+  class="connection-steps"
+  tuiConnected
+  tuiAppearance="neutral"
+>
+  <header tuiHeader="xs">
+    <div tuiTitle>How to connect</div>
+  </header>
+  <div tuiCell>
+    <tui-avatar appearance="primary">1</tui-avatar>
+    <div tuiTitle>Open the app on your new device</div>
+  </div>
+  <div tuiCell>
+    <tui-avatar appearance="primary">2</tui-avatar>
+    <div tuiTitle>Go to Settings → Sync with Existing</div>
+  </div>
+  <div tuiCell>
+    <tui-avatar appearance="primary">3</tui-avatar>
+    <div tuiTitle>Point your camera at this QR code</div>
+  </div>
+</section>
