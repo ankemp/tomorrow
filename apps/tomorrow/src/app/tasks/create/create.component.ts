@@ -95,7 +95,7 @@ export class CreateComponent {
 
       const id = Tasks.insert({
         ...formData,
-        subtasks: subTasks?.filter((st) => st.title.length),
+        subTasks: subTasks?.filter((st) => st.title.length),
       });
       if (attachments && attachments.length > 0) {
         this.attachmentsStore.init({ id });
