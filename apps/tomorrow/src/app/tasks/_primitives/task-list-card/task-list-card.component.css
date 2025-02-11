@@ -1,5 +1,7 @@
 :host {
+  box-sizing: border-box;
   display: block;
+  max-width: calc(100vw - 2rem);
 }
 
 .completed .title {
