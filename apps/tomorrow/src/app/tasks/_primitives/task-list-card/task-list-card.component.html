@@ -16,8 +16,8 @@
   >
     {{ task().completedAt ? 'Undo' : 'Done' }}
   </button>
-  <div tuiTitle tuiFade tuiFadeOffset="0.25rem">
-    <span class="title">{{ task().title }}</span>
+  <div tuiTitle>
+    <span class="title" tuiFade>{{ task().title }}</span>
     <div tuiSubtitle>
       {{ task().date | formatDate }}
     </div>

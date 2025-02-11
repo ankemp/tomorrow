@@ -2,6 +2,10 @@
   display: block;
 }
 
+[tuiCell] {
+  margin: unset !important;
+}
+
 [tuiCell] button {
   inline-size: unset;
 }
