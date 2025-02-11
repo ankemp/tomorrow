@@ -18,13 +18,13 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { TuiAutoFocus } from '@taiga-ui/cdk';
 import {
+  TuiAlertService,
   TuiAppearance,
   TuiButton,
   TuiLabel,
   TuiTextfield,
   TuiTitle,
 } from '@taiga-ui/core';
-import { TuiAlertService } from '@taiga-ui/core';
 import { TuiAccordion, TuiAccordionComponent } from '@taiga-ui/experimental';
 import { TuiBadgeNotification } from '@taiga-ui/kit';
 import { TuiCardLarge, TuiForm, TuiHeader } from '@taiga-ui/layout';

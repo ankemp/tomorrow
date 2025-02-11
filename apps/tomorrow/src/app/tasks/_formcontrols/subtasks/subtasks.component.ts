@@ -16,8 +16,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { TuiAutoFocus, tuiAutoFocusOptionsProvider } from '@taiga-ui/cdk';
-import { TuiButton, TuiLabel, TuiTextfield } from '@taiga-ui/core';
-import { TuiGroup } from '@taiga-ui/core';
+import { TuiButton, TuiGroup, TuiLabel, TuiTextfield } from '@taiga-ui/core';
 import { map } from 'rxjs';
 
 import { SubTask } from '@tmrw/data-access';

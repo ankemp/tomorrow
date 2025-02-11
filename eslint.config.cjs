@@ -1,5 +1,6 @@
 const nx = require('@nx/eslint-plugin');
 const simpleImportSort = require('eslint-plugin-simple-import-sort');
+const esImport = require('eslint-plugin-import');
 
 module.exports = [
   ...nx.configs['flat/base'],
@@ -8,6 +9,7 @@ module.exports = [
   {
     plugins: {
       'simple-import-sort': simpleImportSort,
+      import: esImport,
     },
   },
   {
@@ -46,6 +48,9 @@ module.exports = [
         },
       ],
       'simple-import-sort/exports': 'error',
+      'import/first': 'error',
+      'import/newline-after-import': 'error',
+      'import/no-duplicates': 'error',
     },
   },
 ];

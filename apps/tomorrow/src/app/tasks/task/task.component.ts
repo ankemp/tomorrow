@@ -21,12 +21,15 @@ import {
   TuiDialogService,
   TuiDropdown,
   TuiIcon,
+  TuiLink,
 } from '@taiga-ui/core';
-import { TuiLink } from '@taiga-ui/core';
-import { TuiBadge, TuiChip } from '@taiga-ui/kit';
-import { TuiFiles } from '@taiga-ui/kit';
-import { TuiElasticContainer } from '@taiga-ui/kit';
-import { TUI_CONFIRM } from '@taiga-ui/kit';
+import {
+  TUI_CONFIRM,
+  TuiBadge,
+  TuiChip,
+  TuiElasticContainer,
+  TuiFiles,
+} from '@taiga-ui/kit';
 import { TuiCardLarge, TuiCell, TuiHeader } from '@taiga-ui/layout';
 import { EMPTY, map, of, switchMap, tap } from 'rxjs';
 

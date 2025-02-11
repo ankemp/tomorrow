@@ -14,8 +14,7 @@ import {
   NG_VALUE_ACCESSOR,
 } from '@angular/forms';
 import { TuiAutoColorPipe } from '@taiga-ui/core';
-import { TuiChip } from '@taiga-ui/kit';
-import { TuiRadio } from '@taiga-ui/kit';
+import { TuiChip, TuiRadio } from '@taiga-ui/kit';
 
 import { Settings } from '@tmrw/data-access';
 

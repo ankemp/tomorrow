@@ -11,9 +11,9 @@ import {
 import {
   TuiInputTimeModule,
   tuiInputTimeOptionsProvider,
+  TuiSelectModule,
   TuiTextfieldControllerModule,
 } from '@taiga-ui/legacy';
-import { TuiSelectModule } from '@taiga-ui/legacy';
 
 import { Settings } from '@tmrw/data-access';
 

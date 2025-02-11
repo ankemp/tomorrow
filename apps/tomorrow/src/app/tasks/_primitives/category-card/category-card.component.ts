@@ -13,10 +13,13 @@ import {
   signal,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { TuiAppearance, TuiSurface, TuiTitle } from '@taiga-ui/core';
-import { TuiAutoColorPipe } from '@taiga-ui/core';
-import { TuiSkeleton } from '@taiga-ui/kit';
-import { TuiAvatar } from '@taiga-ui/kit';
+import {
+  TuiAppearance,
+  TuiAutoColorPipe,
+  TuiSurface,
+  TuiTitle,
+} from '@taiga-ui/core';
+import { TuiAvatar, TuiSkeleton } from '@taiga-ui/kit';
 import { TuiCardLarge, TuiCell } from '@taiga-ui/layout';
 
 import { Tasks } from '@tmrw/data-access';
