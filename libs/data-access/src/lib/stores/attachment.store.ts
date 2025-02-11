@@ -29,10 +29,8 @@ export const Attachments = signalStore(
   withState<AttachmentState>(initialState),
   withComputed((state) => ({
     hasAttachments: computed(() => state.attachments().length > 0),
-    storagePath: computed(() => `/files/${state.taskId()}`, {
-      equal: (a, b) => a === b,
-    }),
-    fileCount: computed(() => state.files().length),
+    fileCount: computed(() => state.attachments().length),
+    storagePath: computed(() => `/files/${state.taskId()}`),
     fsUsagePercent: computed(() =>
       state.fsQuota() > 0 ? (state.fsUsage() / state.fsQuota()) * 100 : 0,
     ),
