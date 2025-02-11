@@ -61,7 +61,7 @@
             appearance="action"
             iconStart="@tui.clipboard-list"
             tuiIconButton
-            type="button"
+            (click)="navigateToEditWithAccordion(2)"
           >
             Add Subtasks
           </button>
@@ -92,7 +92,11 @@
         </div>
       }
     } @else {
-      <tw-empty-state title="No Subtasks" action="Add Subtask" />
+      <tw-empty-state
+        title="No Subtasks"
+        action="Add Subtask"
+        (actionClicked)="navigateToEditWithAccordion(2)"
+      />
     }
   </section>
 
@@ -105,7 +109,7 @@
             appearance="action"
             iconStart="@tui.paperclip"
             tuiIconButton
-            type="button"
+            (click)="navigateToEditWithAccordion(3)"
           >
             Add Attachment
           </button>
@@ -113,25 +117,33 @@
       }
     </header>
     @if (hasAttachments()) {
-      @for (attachment of attachments(); track $index) {
-        <tui-files>
-          <tui-file
-            size="l"
-            state="normal"
-            [leftContent]="icon"
-            [file]="attachment"
-          ></tui-file>
-          <ng-template #icon>
-            @if (attachment.type.includes('image')) {
-              <tui-icon icon="@tui.image" />
-            } @else {
-              <tui-icon icon="@tui.paperclip" />
-            }
-          </ng-template>
-        </tui-files>
-      }
+      <tui-files>
+        @for (attachment of attachments(); track $index) {
+          @if (attachment) {
+            <tui-file
+              size="l"
+              state="normal"
+              [leftContent]="icon"
+              [file]="attachment"
+            />
+            <ng-template #icon>
+              @if (attachment.type.includes('image')) {
+                <tui-icon icon="@tui.image" />
+              } @else {
+                <tui-icon icon="@tui.paperclip" />
+              }
+            </ng-template>
+          } @else {
+            <!-- TODO: Create view to handle if a file is missing/errored -->
+          }
+        }
+      </tui-files>
     } @else {
-      <tw-empty-state title="No Attachments" action="Add Attachment" />
+      <tw-empty-state
+        title="No Attachments"
+        action="Add Attachment"
+        (actionClicked)="navigateToEditWithAccordion(3)"
+      />
     }
   </section>
 
@@ -144,7 +156,7 @@
             appearance="action"
             iconStart="@tui.notebook-pen"
             tuiIconButton
-            type="button"
+            (click)="navigateToEditWithAccordion(4)"
           >
             Add Note
           </button>
@@ -165,7 +177,11 @@
         }
       </tui-elastic-container>
     } @else {
-      <tw-empty-state title="No Notes" action="Add Note" />
+      <tw-empty-state
+        title="No Notes"
+        action="Add Note"
+        (actionClicked)="navigateToEditWithAccordion(4)"
+      />
     }
   </section>
 
@@ -193,6 +209,7 @@
       <ng-template #dropdown>
         <tui-data-list>
           <tui-opt-group>
+            <button tuiOption [routerLink]="['./edit']">Edit Task</button>
             <button tuiOption (click)="deleteTask(t)">Delete Task</button>
           </tui-opt-group>
         </tui-data-list>

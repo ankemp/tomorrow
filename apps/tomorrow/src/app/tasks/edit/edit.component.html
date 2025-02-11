@@ -1,0 +1,103 @@
+<form tuiForm="m" [formGroup]="form" (ngSubmit)="onSubmit($event)">
+  <div tuiAppearance="floating" tuiCardLarge="compact">
+    <header tuiHeader>
+      <h2 tuiTitle>New Task</h2>
+    </header>
+
+    <tui-textfield>
+      <label tuiLabel>Add title</label>
+      <input
+        tuiAutoFocus
+        formControlName="title"
+        placeholder="Add title"
+        tuiTextfield
+      />
+    </tui-textfield>
+
+    <tw-date-picker formControlName="date" />
+
+    <tw-category-selector formControlName="category" />
+
+    <tui-textarea
+      #description
+      style="min-block-size: 3.75rem"
+      formControlName="description"
+      [expandable]="description.focused"
+    >
+      Add description
+    </tui-textarea>
+  </div>
+
+  <tui-accordion #accordion [closeOthers]="false">
+    <button iconStart="@tui.map-pin" tuiAccordion>
+      <span>Location</span>
+      @if (!!form.get('duration')?.value) {
+        <tui-badge-notification tuiAppearance="primary" size="xs" />
+      }
+    </button>
+    <tui-expand>
+      <ng-container *tuiItem>
+        <tui-textfield>
+          <label tuiLabel>Location</label>
+          <input
+            formControlName="location"
+            placeholder="Add location"
+            tuiTextfield
+          />
+        </tui-textfield>
+      </ng-container>
+    </tui-expand>
+    <button iconStart="@tui.clock" tuiAccordion>
+      <span>Duration</span>
+      @if (!!form.get('duration')?.value) {
+        <tui-badge-notification tuiAppearance="primary" size="xs" />
+      }
+    </button>
+    <tui-expand>
+      <ng-container *tuiItem>
+        <tw-duration formControlName="duration" />
+      </ng-container>
+    </tui-expand>
+    <button iconStart="@tui.clipboard-list" tuiAccordion>
+      <span>Subtasks</span>
+      @if (!!form.get('subTasks')?.value?.length) {
+        <tui-badge-notification tuiAppearance="primary" size="xs" />
+      }
+    </button>
+    <tui-expand>
+      <ng-container *tuiItem>
+        <tw-subtasks formControlName="subTasks" />
+      </ng-container>
+    </tui-expand>
+    <button iconStart="@tui.paperclip" tuiAccordion>
+      <span>Attachments</span>
+      @if (!!form.get('attachments')?.value?.length) {
+        <tui-badge-notification tuiAppearance="primary" size="xs" />
+      }
+    </button>
+    <tui-expand>
+      <ng-container *tuiItem>
+        <tw-file-upload formControlName="attachments" />
+      </ng-container>
+    </tui-expand>
+    <button iconStart="@tui.notebook-pen" tuiAccordion>
+      <span>Notes</span>
+      @if (!!form.get('notes')?.value) {
+        <tui-badge-notification tuiAppearance="primary" size="xs" />
+      }
+    </button>
+    <tui-expand>
+      <ng-container *tuiItem>
+        <tui-textarea formControlName="notes" [expandable]="true">
+          Notes
+        </tui-textarea>
+      </ng-container>
+    </tui-expand>
+  </tui-accordion>
+
+  <div tuiCardLarge="compact" class="actions">
+    <button size="l" type="submit" [disabled]="form.invalid" tuiButton>
+      Update Task
+    </button>
+  </div>
+</form>

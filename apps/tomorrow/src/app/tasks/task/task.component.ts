@@ -150,6 +150,12 @@ export class TaskComponent {
     });
   }
 
+  navigateToEditWithAccordion(index: number) {
+    this.router.navigate(['/tasks', this.task()?.id, 'edit'], {
+      queryParams: { openAccordion: index },
+    });
+  }
+
   toggleSubtask(task: Task, subtaskIndex: number) {
     Tasks.toggleSubtask(task, subtaskIndex);
   }
@@ -170,6 +176,7 @@ export class TaskComponent {
       .open<boolean>(TUI_CONFIRM, {
         label: 'Confirm Deletion',
         data: {
+          appearance: 'destructive',
           content: 'Delete this task permanently?',
           yes: 'Delete',
           no: 'Cancel',
