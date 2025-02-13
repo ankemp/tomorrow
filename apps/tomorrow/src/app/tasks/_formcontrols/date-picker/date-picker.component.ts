@@ -29,7 +29,7 @@ import { Settings } from '@tmrw/data-access';
 
 class DateTimeTransformer extends TuiValueTransformer<
   [TuiDay | null, TuiTime | null],
-  Date
+  Date | null
 > {
   fromControlValue(controlValue: Date | null): [TuiDay | null, TuiTime | null] {
     if (!controlValue) {
@@ -41,9 +41,13 @@ class DateTimeTransformer extends TuiValueTransformer<
     return [day, time];
   }
 
-  toControlValue([day, time]: [TuiDay | null, TuiTime | null]): Date {
-    if (!day) {
-      return new Date('');
+  toControlValue(value: [TuiDay | null, TuiTime | null]) {
+    if (!value) {
+      return null;
+    }
+    const [day, time] = value;
+    if (!day || !time) {
+      return null;
     }
 
     const date = day.toLocalNativeDate();
@@ -78,9 +82,7 @@ class DateTimeTransformer extends TuiValueTransformer<
     },
     {
       provide: TUI_FIRST_DAY_OF_WEEK,
-      useFactory: () => {
-        return inject(Settings).tuiFirstDayOfWeek();
-      },
+      useFactory: () => inject(Settings).tuiFirstDayOfWeek(),
     },
     tuiDateFormatProvider({ mode: 'MDY', separator: '/' }),
   ],
@@ -105,7 +107,7 @@ export class DatePickerComponent implements ControlValueAccessor {
     effect(() => {
       const preset = this.datePickerPreset();
       const defaultReminderTime = this.settings.defaultReminderTime();
-      const currentDate = new Date();
+      const today = new Date();
       const [hours, minutes] = defaultReminderTime
         ? defaultReminderTime.split(':').map(Number)
         : [0, 0];
@@ -118,16 +120,16 @@ export class DatePickerComponent implements ControlValueAccessor {
 
       switch (preset) {
         case 'today':
-          this.date.set(set(currentDate, dateValues));
+          this.date.set(set(today, dateValues));
           break;
         case 'tomorrow':
-          this.date.set(set(addDays(currentDate, 1), dateValues));
+          this.date.set(set(addDays(today, 1), dateValues));
           break;
         case 'weekend':
-          this.date.set(set(nextSaturday(currentDate), dateValues));
+          this.date.set(set(nextSaturday(today), dateValues));
           break;
         case 'custom':
-          this.date.set(set(currentDate, dateValues));
+          this.date.set(set(today, dateValues));
           break;
       }
     });

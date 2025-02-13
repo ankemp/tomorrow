@@ -80,8 +80,47 @@ EncryptedTask.init(
   },
 );
 
+export class User extends Model<
+  InferAttributes<User>,
+  InferCreationAttributes<User>
+> {
+  declare id: string;
+  declare devices: string[];
+  declare theme: string;
+  declare defaultReminderTime: string;
+  declare defaultReminderCategory: string;
+  declare startOfWeek: string;
+  declare timeFormat: string;
+  declare locale: string;
+}
+
+User.init(
+  {
+    id: {
+      type: DataTypes.STRING,
+      primaryKey: true,
+    },
+    devices: {
+      type: DataTypes.JSON,
+    },
+    theme: {
+      type: DataTypes.STRING,
+    },
+    defaultReminderTime: { type: DataTypes.STRING },
+    defaultReminderCategory: { type: DataTypes.STRING },
+    startOfWeek: { type: DataTypes.STRING },
+    timeFormat: { type: DataTypes.STRING },
+    locale: { type: DataTypes.STRING },
+  },
+  {
+    sequelize,
+    paranoid: true,
+  },
+);
+
 await PlainTask.sync();
 await EncryptedTask.sync();
+await User.sync();
 
 apiRouter.post('/tasks', async (req, res) => {
   if (req.body.encrypted) {
@@ -133,6 +172,26 @@ apiRouter.get('/tasks/user/:userId', (req, res) => {
 apiRouter.delete('/tasks/user/:userId', async (req, res) => {
   const userId = req.params.userId;
   await PlainTask.destroy({ where: { userId }, force: true });
+  res.sendStatus(200);
+});
+
+apiRouter.get('/user/:userId', async (req, res) => {
+  const userId = req.params.userId;
+  const exclude = ['createdAt', 'updatedAt', 'deletedAt'];
+  User.findOne({
+    attributes: { exclude },
+    where: { id: userId },
+  }).then((user) => res.json(user));
+});
+
+apiRouter.post('/user/:userId', async (req, res) => {
+  await User.upsert(req.body.settings);
+  res.sendStatus(200);
+});
+
+apiRouter.delete('/user/:userId', async (req, res) => {
+  const userId = req.params.userId;
+  await User.destroy({ where: { id: userId } });
   res.sendStatus(200);
 });
 
