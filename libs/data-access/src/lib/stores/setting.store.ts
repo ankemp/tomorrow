@@ -136,14 +136,12 @@ export const Settings = signalStore(
 function pushUserSettings(http: HttpClient, settings: SettingsState) {
   return firstValueFrom(
     http
-      .post<void>(`user/${settings.userId}`, {
-        settings: {
-          defaultReminderTime: settings.defaultReminderTime,
-          defaultReminderCategory: settings.defaultReminderCategory,
-          startOfWeek: settings.startOfWeek,
-          timeFormat: settings.timeFormat,
-          locale: settings.locale,
-        },
+      .post<void>(`api/users/${settings.userId}`, {
+        defaultReminderTime: settings.defaultReminderTime,
+        defaultReminderCategory: settings.defaultReminderCategory,
+        startOfWeek: settings.startOfWeek,
+        timeFormat: settings.timeFormat,
+        locale: settings.locale,
       })
       .pipe(
         catchError((error) => {
@@ -156,7 +154,7 @@ function pushUserSettings(http: HttpClient, settings: SettingsState) {
 
 function getUserSettings(http: HttpClient, userId: string) {
   return firstValueFrom(
-    http.get(`user/${userId}`).pipe(
+    http.get(`api/users/${userId}`).pipe(
       map((settings) => settings as Partial<SettingsState>),
       catchError((error) => {
         console.error('Failed to get user settings', error);

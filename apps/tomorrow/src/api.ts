@@ -85,8 +85,8 @@ export class User extends Model<
   InferCreationAttributes<User>
 > {
   declare id: string;
-  declare devices: string[];
-  declare theme: string;
+  // declare devices: string[];
+  // declare theme: string;
   declare defaultReminderTime: string;
   declare defaultReminderCategory: string;
   declare startOfWeek: string;
@@ -100,12 +100,12 @@ User.init(
       type: DataTypes.STRING,
       primaryKey: true,
     },
-    devices: {
-      type: DataTypes.JSON,
-    },
-    theme: {
-      type: DataTypes.STRING,
-    },
+    // devices: {
+    //   type: DataTypes.JSON,
+    // },
+    // theme: {
+    //   type: DataTypes.STRING,
+    // },
     defaultReminderTime: { type: DataTypes.STRING },
     defaultReminderCategory: { type: DataTypes.STRING },
     startOfWeek: { type: DataTypes.STRING },
@@ -175,7 +175,7 @@ apiRouter.delete('/tasks/user/:userId', async (req, res) => {
   res.sendStatus(200);
 });
 
-apiRouter.get('/user/:userId', async (req, res) => {
+apiRouter.get('/users/:userId', async (req, res) => {
   const userId = req.params.userId;
   const exclude = ['createdAt', 'updatedAt', 'deletedAt'];
   User.findOne({
@@ -184,12 +184,14 @@ apiRouter.get('/user/:userId', async (req, res) => {
   }).then((user) => res.json(user));
 });
 
-apiRouter.post('/user/:userId', async (req, res) => {
-  await User.upsert(req.body.settings);
-  res.sendStatus(200);
+apiRouter.post('/users/:userId', async (req, res) => {
+  const userId = req.params.userId;
+  const settings = req.body;
+  await User.upsert({ ...settings, id: userId });
+  res.json({ success: true });
 });
 
-apiRouter.delete('/user/:userId', async (req, res) => {
+apiRouter.delete('/users/:userId', async (req, res) => {
   const userId = req.params.userId;
   await User.destroy({ where: { id: userId } });
   res.sendStatus(200);
