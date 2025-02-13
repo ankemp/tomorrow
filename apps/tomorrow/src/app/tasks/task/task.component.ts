@@ -180,10 +180,9 @@ export class TaskComponent {
         switchMap((response) => {
           return response ? of(true) : EMPTY;
         }),
-        map(() => {
-          return Tasks.removeOne({ id: task.id });
-        }),
         tap(() => {
+          this.attachmentsStore.clearAttachments();
+          Tasks.removeOne({ id: task.id });
           this.router.navigate(['/tasks']);
         }),
         switchMap(() => {
