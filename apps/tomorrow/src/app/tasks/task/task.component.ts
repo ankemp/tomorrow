@@ -155,7 +155,7 @@ export class TaskComponent {
   }
 
   toggleTask(task: Task) {
-    const isCompleted = task.completedAt !== null;
+    const isCompleted = !!task.completedAt;
     Tasks.toggleTask(task);
     this.alerts
       .open(isCompleted ? 'Task marked incomplete' : 'Task completed', {
