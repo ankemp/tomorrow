@@ -17,6 +17,7 @@ import { generateSymmetricKey } from '@tmrw/encryption';
 
 import { Tasks } from '../collections/task.collection';
 import { SettingsState } from '../models/settings.state';
+import { parseUserAgent } from '../utils/user-agent-parser';
 // import { syncManager } from '../sync-manager';
 
 const initialState: SettingsState = {
@@ -27,7 +28,9 @@ const initialState: SettingsState = {
   timeFormat: '12h',
   locale: 'en-US', // TODO: Get from browser(?)
   userId: null,
+  deviceId: null,
   remoteSync: false,
+  syncDevices: {},
   encryption: false,
   _encryptionKey: null,
 };
@@ -57,6 +60,7 @@ export const Settings = signalStore(
       return key ? JSON.parse(key) : null;
     }),
     qrCodeString: computed(() => {
+      const encryption = state.encryption();
       const key = state._encryptionKey();
       const userId = state.userId();
       if (!key || !userId) {
@@ -65,10 +69,39 @@ export const Settings = signalStore(
       return JSON.stringify({
         key: JSON.parse(key),
         userId,
+        encryption,
         createdAt: Date.now(),
       });
     }),
     hasEncryptionKey: computed(() => !!state._encryptionKey()),
+    syncDevicesList: computed(() => {
+      const deviceId = state.deviceId();
+      const devices = state.syncDevices();
+      return Object.entries(devices).map(([id, userAgent]) => {
+        const { os, deviceType, browser, browserVersion } =
+          parseUserAgent(userAgent);
+        const thisDevice = id === deviceId;
+        let icon = '@tui.material.device-unknown';
+        if (os === 'Android') {
+          icon = '@tui.material.outlined.android';
+        } else if (os === 'iOS') {
+          icon = '@tui.material.outlined.ios';
+        } else if (os === 'Windows' || os === 'macOS' || os === 'Linux') {
+          icon = '@tui.laptop';
+        }
+        return {
+          id,
+          thisDevice,
+          userAgent,
+          label: `${deviceType} ${os} ${browser} ${browserVersion}`,
+          os,
+          type: deviceType,
+          icon,
+          browser,
+          browserVersion,
+        };
+      });
+    }),
   })),
   withMethods((store) => ({
     updateDefaultReminderTime(defaultReminderTime: string): void {
@@ -83,6 +116,13 @@ export const Settings = signalStore(
     updateStartOfWeek(startOfWeek: string): void {
       patchState(store, { startOfWeek });
     },
+    setDeviceId(): void {
+      const deviceId = window.crypto.randomUUID();
+      patchState(store, {
+        deviceId: deviceId,
+        syncDevices: { [deviceId]: navigator.userAgent },
+      });
+    },
     async updateRemoteSync(remoteSync: boolean): Promise<void> {
       const state = getState(store);
       if (remoteSync && !state.userId) {
@@ -95,6 +135,7 @@ export const Settings = signalStore(
         const exportedKey = await window.crypto.subtle.exportKey('jwk', key);
         patchState(store, { _encryptionKey: JSON.stringify(exportedKey) });
       }
+      // TODO: If user disables remote sync, we need to remove this device from the list on the server
       patchState(store, {
         remoteSync,
         encryption: remoteSync === false ? false : state.encryption,
@@ -119,6 +160,10 @@ export const Settings = signalStore(
           patchState(store, settings);
           if (settings.remoteSync && settings.userId) {
             getUserSettings(store.http, settings.userId);
+            // TODO: After we get the user settings, we should update the store.
+          }
+          if (!settings.deviceId) {
+            store.setDeviceId();
           }
         }
         effect(() => {
@@ -137,6 +182,7 @@ function pushUserSettings(http: HttpClient, settings: SettingsState) {
   return firstValueFrom(
     http
       .post<void>(`api/users/${settings.userId}`, {
+        syncDevices: settings.syncDevices,
         defaultReminderTime: settings.defaultReminderTime,
         defaultReminderCategory: settings.defaultReminderCategory,
         startOfWeek: settings.startOfWeek,

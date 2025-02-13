@@ -85,7 +85,7 @@ export class User extends Model<
   InferCreationAttributes<User>
 > {
   declare id: string;
-  // declare devices: string[];
+  declare syncDevices: string[];
   // declare theme: string;
   declare defaultReminderTime: string;
   declare defaultReminderCategory: string;
@@ -100,9 +100,9 @@ User.init(
       type: DataTypes.STRING,
       primaryKey: true,
     },
-    // devices: {
-    //   type: DataTypes.JSON,
-    // },
+    syncDevices: {
+      type: DataTypes.JSON,
+    },
     // theme: {
     //   type: DataTypes.STRING,
     // },
@@ -187,8 +187,23 @@ apiRouter.get('/users/:userId', async (req, res) => {
 apiRouter.post('/users/:userId', async (req, res) => {
   const userId = req.params.userId;
   const settings = req.body;
-  await User.upsert({ ...settings, id: userId });
-  res.json({ success: true });
+  User.findOrBuild({ where: { id: userId } })
+    .then(([user]) => {
+      for (const key in settings) {
+        // TODO: Fix this any
+        user.set(key as any, settings[key]);
+        if (key === 'syncDevices') {
+          user.set('syncDevices', {
+            ...user.get().syncDevices,
+            ...settings.syncDevices,
+          });
+        }
+      }
+      return user.save();
+    })
+    .finally(() => {
+      res.status(200).json({ success: true });
+    });
 });
 
 apiRouter.delete('/users/:userId', async (req, res) => {

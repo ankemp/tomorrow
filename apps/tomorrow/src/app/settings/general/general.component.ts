@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { TuiAppearance } from '@taiga-ui/core';
-import { TuiAvatar } from '@taiga-ui/kit';
+import { RouterModule } from '@angular/router';
+import { TuiAppearance, TuiAutoColorPipe } from '@taiga-ui/core';
+import { TuiAvatar, TuiAvatarLabeled } from '@taiga-ui/kit';
 import { TuiCardLarge, TuiCell } from '@taiga-ui/layout';
 
 import { Settings } from '@tmrw/data-access';
@@ -16,8 +17,11 @@ import { SyncPreferencesComponent } from '../_blocks/sync-preferences.component'
   selector: 'tw-general',
   imports: [
     CommonModule,
+    RouterModule,
     TuiAppearance,
+    TuiAutoColorPipe,
     TuiAvatar,
+    TuiAvatarLabeled,
     TuiCardLarge,
     TuiCell,
     DevicePreferencesComponent,

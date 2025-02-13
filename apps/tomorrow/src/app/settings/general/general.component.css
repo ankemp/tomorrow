@@ -7,3 +7,17 @@
   gap: 1rem;
   padding: 1rem;
 }
+
+.device-grid {
+  align-items: stretch;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(3, 1fr);
+
+  [tuicell] {
+    height: 100%;
+    justify-content: center;
+    margin-left: 0;
+    margin-right: 0;
+  }
+}

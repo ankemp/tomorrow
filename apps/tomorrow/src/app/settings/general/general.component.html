@@ -1,16 +1,42 @@
 <section class="settings-grid">
-  <div tuiCardLarge tuiCell tuiAppearance="floating">
-    <tui-avatar appearance="primary" src="@tui.user" />
+  <div tuiCardLarge tuiAppearance="floating">
+    <div tuiCell>
+      <tui-avatar appearance="primary" src="@tui.user" />
+      @if (settings.remoteSync()) {
+        <h2 tuiTitle>
+          Remote User
+          <div tuiSubtitle>Sync is enabled</div>
+        </h2>
+      } @else {
+        <h2 tuiTitle>
+          Local User
+          <div tuiSubtitle>Sync not enabled</div>
+        </h2>
+      }
+    </div>
     @if (settings.remoteSync()) {
-      <h2 tuiTitle>
-        Remote User
-        <div tuiSubtitle>Sync is enabled</div>
-      </h2>
-    } @else {
-      <h2 tuiTitle>
-        Local User
-        <div tuiSubtitle>Sync not enabled</div>
-      </h2>
+      <div class="device-grid">
+        @for (device of settings.syncDevicesList(); track device.id) {
+          <div tuiCell [tuiAppearance]="device.thisDevice ? 'info' : 'glass'">
+            <tui-avatar-labeled [label]="device.label">
+              <tui-avatar
+                [src]="device.icon"
+                [style.background]="device.id | tuiAutoColor"
+              />
+            </tui-avatar-labeled>
+          </div>
+        }
+        <a
+          tuiButton
+          tuiCell
+          tuiAppearance="secondary"
+          [routerLink]="['/settings/add-device']"
+        >
+          <tui-avatar-labeled label="Sync to new device">
+            <tui-avatar src="@tui.plus" />
+          </tui-avatar-labeled>
+        </a>
+      </div>
     }
   </div>
 
