@@ -57,4 +57,11 @@ export const appRoutes: Route[] = [
         (m) => m.AddDeviceComponent,
       ),
   },
+  {
+    path: 'settings/connect-device',
+    loadComponent: () =>
+      import('./settings/connect-device/connect-device.component').then(
+        (m) => m.ConnectDeviceComponent,
+      ),
+  },
 ];

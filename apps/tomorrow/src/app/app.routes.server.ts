@@ -14,6 +14,10 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Server,
   },
   {
+    path: 'settings/connect-device',
+    renderMode: RenderMode.Client,
+  },
+  {
     path: '**', // All other routes will be rendered on the server (SSR)
     renderMode: RenderMode.Server,
   },

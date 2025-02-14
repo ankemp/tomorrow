@@ -1,0 +1,78 @@
+<section tuiCardLarge>
+  <header tuiHeader>
+    <div tuiTitle="m">
+      Connect Device
+      <span tuiSubtitle>
+        Point your camera at the QR code on the other device
+      </span>
+    </div>
+  </header>
+</section>
+
+<section tuiCardLarge>
+  <div
+    class="scanner-container"
+    [class.loading]="isLoading() && !activeDevice()"
+  >
+    <ngx-scanner-qrcode
+      [config]="{
+        vibrate: 0,
+        isBeep: false,
+        isMasked: false,
+      }"
+      [tuiSkeleton]="isLoading() && !activeDevice()"
+    />
+    <tui-icon
+      class="scanner-icon"
+      [class.scanned]="foundData()"
+      [icon]="foundData() ? '@tui.check' : '@tui.scan-line'"
+    />
+  </div>
+
+  @if (!backDevice() && deviceCount() > 1) {
+    <!-- TODO: improve UX of this notification -->
+    <tui-notification size="l" appearance="negative">
+      <div tuiTitle>
+        Rear camera not found
+        <button tuiButton type="button" (click)="toggleCamera()">
+          Switch camera
+        </button>
+      </div>
+    </tui-notification>
+  }
+
+  <button
+    appearance="primary"
+    tuiButton
+    (click)="importUser(parsedData()!)"
+    [disabled]="!foundData()"
+  >
+    Link this device
+  </button>
+</section>
+
+<section
+  tuiCardLarge
+  class="connection-steps"
+  tuiConnected
+  tuiAppearance="neutral"
+>
+  <header tuiHeader="xs">
+    <div tuiTitle>How to connect</div>
+  </header>
+  <div tuiCell>
+    <tui-avatar appearance="primary">1</tui-avatar>
+    <div tuiTitle>Point your camera at the QR code on the other device</div>
+  </div>
+  <div tuiCell>
+    <tui-avatar appearance="primary">2</tui-avatar>
+    <div tuiTitle>Make sure the code is fully visible in the viewfinder</div>
+  </div>
+  <div tuiCell>
+    <tui-avatar appearance="primary">3</tui-avatar>
+    <div tuiTitle>Press 'Link this device' when prompted</div>
+  </div>
+  <tui-notification appearance="info" size="s">
+    If the code doesn't scan, try adjusting the distance or lighting
+  </tui-notification>
+</section>

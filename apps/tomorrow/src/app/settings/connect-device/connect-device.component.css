@@ -1,0 +1,33 @@
+:host {
+  display: block;
+}
+
+.scanner-container {
+  position: relative;
+
+  &:not(.loading) {
+    .scanner-icon {
+      display: block;
+    }
+  }
+  .scanner-icon {
+    display: none;
+    height: 12rem;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 12rem;
+    opacity: 0.65;
+    &.scanned {
+      opacity: 1;
+      &::after {
+        color: var(--tui-status-positive);
+      }
+    }
+  }
+}
+
+.connection-steps {
+  margin: 0 1rem 1rem;
+}
