@@ -1,12 +1,18 @@
 import express from 'express';
 
-import { addSseClient, notifyUser, removeSseClient } from './helpers';
+import { Task } from '@tmrw/data-access';
+
+import {
+  addSseClient,
+  dispatchSignalDBChange,
+  removeSseClient,
+} from './helpers';
 import { EncryptedTask, PlainTask, User } from './models';
 
 const apiRouter = express.Router();
 
 // SSE endpoint
-apiRouter.get('/events/user/:userId', (req, res) => {
+apiRouter.get('/tasks/events/user/:userId', (req, res) => {
   const { userId } = req.params;
   res.writeHead(200, {
     'Content-Type': 'text/event-stream',
@@ -32,8 +38,13 @@ apiRouter.post('/tasks', async (req, res) => {
     await PlainTask.create(req.body.content);
   }
   const userId = req.body.content?.userId || req.body.userId;
-  if (userId)
-    notifyUser(userId, 'task-updated', { action: 'created', id: req.body.id });
+  if (userId) {
+    dispatchSignalDBChange<Task>(userId, 'task-updated', {
+      added: [req.body.content],
+      modified: [],
+      removed: [],
+    });
+  }
   res.sendStatus(200);
 });
 
@@ -47,8 +58,13 @@ apiRouter.put('/tasks', async (req, res) => {
     await PlainTask.update(req.body.content, { where: { id: req.body.id } });
   }
   const userId = req.body.content?.userId || req.body.userId;
-  if (userId)
-    notifyUser(userId, 'task-updated', { action: 'updated', id: req.body.id });
+  if (userId) {
+    dispatchSignalDBChange(userId, 'task-updated', {
+      added: [],
+      modified: [req.body.content],
+      removed: [],
+    });
+  }
   res.sendStatus(200);
 });
 
@@ -59,8 +75,13 @@ apiRouter.delete('/tasks', async (req, res) => {
     await PlainTask.destroy({ where: { id: req.body.id } });
   }
   const userId = req.body.userId;
-  if (userId)
-    notifyUser(userId, 'task-updated', { action: 'deleted', id: req.body.id });
+  if (userId) {
+    dispatchSignalDBChange<Task>(userId, 'task-updated', {
+      added: [],
+      modified: [],
+      removed: [req.body.content],
+    });
+  }
   res.sendStatus(200);
 });
 
@@ -119,7 +140,7 @@ apiRouter.post('/users/:userId', async (req, res) => {
       return user.save();
     })
     .finally(() => {
-      notifyUser(userId, 'user-updated', { updated: true });
+      // TODO: Add SSE signal(?)
       res.status(200).json({ success: true });
     });
 });
@@ -127,7 +148,7 @@ apiRouter.post('/users/:userId', async (req, res) => {
 apiRouter.delete('/users/:userId', async (req, res) => {
   const userId = req.params.userId;
   await User.destroy({ where: { id: userId } });
-  notifyUser(userId, 'user-updated', { deleted: true });
+  // TODO: Add SSE signal(?)
   res.sendStatus(200);
 });
 

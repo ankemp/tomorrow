@@ -19,11 +19,6 @@ export class AppComponent {
 
   constructor(@Inject(PLATFORM_ID) platformId: any) {
     if (isPlatformBrowser(platformId)) {
-      if (this.settings.remoteSync()) {
-        syncManager.startAll();
-      } else {
-        syncManager.pauseAll();
-      }
       effect(() => {
         if (this.settings.remoteSync()) {
           syncManager.startAll();

@@ -15,7 +15,6 @@ function getSettings(): SettingsState {
 }
 
 export const syncManager = new SyncManager({
-  // reactivityAdapter: angularReactivityAdapter,
   autostart: false,
   persistenceAdapter: (name) => createIndexedDBAdapter(name),
   pull: async ({ apiPath }, { lastFinishedSyncStart }) => {
@@ -95,11 +94,39 @@ export const syncManager = new SyncManager({
         const response = await fetch(apiPath, {
           method: 'DELETE',
           headers: HEADERS,
-          body: JSON.stringify({ id: item.id, encrypted: settings.encryption }),
+          body: JSON.stringify({
+            id: item.id,
+            content: item,
+            encrypted: settings.encryption,
+          }),
         });
         if (response.status >= 400 && response.status <= 499) return;
         await response.text();
       }),
     );
+  },
+  registerRemoteChange: ({ apiPath }, onChange) => {
+    const settings = getSettings();
+    const eventSource = new EventSource(
+      `${apiPath}/tasks/events/user/${settings.userId}`,
+    );
+
+    eventSource.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        onChange(data);
+      } catch (err) {
+        console.error('Failed to parse remote change event data', err);
+      }
+    };
+
+    eventSource.onerror = (err) => {
+      console.error('Error with remote change EventSource', err);
+      eventSource.close();
+    };
+
+    return () => {
+      eventSource.close();
+    };
   },
 });

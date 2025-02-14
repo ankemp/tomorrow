@@ -1,8 +1,13 @@
+import { Changeset } from '@signaldb/core/index';
 import express from 'express';
 
 const sseClients = new Map<string, express.Response[]>();
 
-export function notifyUser(userId: string, event: string, data: object) {
+export function dispatchSignalDBChange<T>(
+  userId: string,
+  event: string,
+  data: Changeset<T>,
+) {
   (sseClients.get(userId) || []).forEach((res) => {
     res.write(`event: ${event}\n`);
     res.write(`data: ${JSON.stringify(data)}\n\n`);
