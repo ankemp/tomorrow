@@ -9,9 +9,13 @@ import {
 
 import type { SubTask, Task } from '@tmrw/data-access';
 
+const isDevMode =
+  !process.env['NODE_ENV'] || process.env['NODE_ENV'] === 'development';
+
 const sequelize = new Sequelize({
   storage: process.env['DB_PATH'] || ':memory:',
   dialect: 'sqlite',
+  logging: isDevMode ? console.log : false,
 });
 
 export class PlainTask

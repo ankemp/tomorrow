@@ -103,6 +103,10 @@ export const Attachments = signalStore(
       }
       patchState(store, { attachments: [], files: [] });
     },
+    async clearStorage() {
+      await dir('/files').remove();
+      await this.getQuota();
+    },
   })),
   withHooks({
     onInit(store) {

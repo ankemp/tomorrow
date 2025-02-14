@@ -31,7 +31,7 @@ import {
   TuiFiles,
 } from '@taiga-ui/kit';
 import { TuiCardLarge, TuiCell, TuiHeader } from '@taiga-ui/layout';
-import { EMPTY, map, of, switchMap, tap } from 'rxjs';
+import { EMPTY, of, switchMap, tap } from 'rxjs';
 
 import { Attachments, Settings, Task, Tasks } from '@tmrw/data-access';
 
@@ -177,9 +177,7 @@ export class TaskComponent {
         },
       })
       .pipe(
-        switchMap((response) => {
-          return response ? of(true) : EMPTY;
-        }),
+        switchMap((response) => (response ? of(true) : EMPTY)),
         tap(() => {
           this.attachmentsStore.clearAttachments();
           Tasks.removeOne({ id: task.id });
