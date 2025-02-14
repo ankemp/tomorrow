@@ -12,3 +12,11 @@ export type SettingsState = {
   encryption: boolean;
   _encryptionKey: string | null;
 };
+
+export interface QRCodeData {
+  use: 'tomorrow';
+  key: JsonWebKey;
+  userId: string;
+  encryption: boolean;
+  createdAt: number;
+}

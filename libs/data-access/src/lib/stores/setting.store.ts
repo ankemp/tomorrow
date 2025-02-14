@@ -16,7 +16,7 @@ import { catchError, EMPTY, firstValueFrom, map } from 'rxjs';
 import { generateSymmetricKey } from '@tmrw/encryption';
 
 import { Tasks } from '../collections/task.collection';
-import { SettingsState } from '../models/settings.state';
+import { QRCodeData, SettingsState } from '../models/settings.state';
 import { parseUserAgent } from '../utils/user-agent-parser';
 // import { syncManager } from '../sync-manager';
 
@@ -67,11 +67,12 @@ export const Settings = signalStore(
         return null;
       }
       return JSON.stringify({
+        use: 'tomorrow',
         key: JSON.parse(key),
         userId,
         encryption,
         createdAt: Date.now(),
-      });
+      } satisfies QRCodeData);
     }),
     hasEncryptionKey: computed(() => !!state._encryptionKey()),
     syncDevicesList: computed(() => {
@@ -150,6 +151,14 @@ export const Settings = signalStore(
     setLastSynced(): void {
       patchState(store, { lastSyncTime: Date.now() });
     },
+    importUser({ userId, encryption, key }: QRCodeData): void {
+      patchState(store, {
+        userId,
+        _encryptionKey: JSON.stringify(key),
+        remoteSync: true,
+        encryption,
+      });
+    },
   })),
   withHooks({
     onInit(store) {
@@ -159,12 +168,16 @@ export const Settings = signalStore(
           const settings = JSON.parse(settingsString) as SettingsState;
           patchState(store, settings);
           if (settings.remoteSync && settings.userId) {
-            getUserSettings(store.http, settings.userId);
-            // TODO: After we get the user settings, we should update the store.
+            // TODO: investigate potential race condition here
+            // Seems like getting/pushing the settings are acting a bit wonky
+            getUserSettings(store.http, settings.userId).then(
+              (userSettings) => {
+                patchState(store, userSettings);
+              },
+            );
           }
-          if (!settings.deviceId) {
-            store.setDeviceId();
-          }
+        } else {
+          store.setDeviceId();
         }
         effect(() => {
           const state = getState(store);

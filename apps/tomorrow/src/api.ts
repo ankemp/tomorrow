@@ -191,12 +191,13 @@ apiRouter.post('/users/:userId', async (req, res) => {
     .then(([user]) => {
       for (const key in settings) {
         // TODO: Fix this any
-        user.set(key as any, settings[key]);
         if (key === 'syncDevices') {
           user.set('syncDevices', {
-            ...user.get().syncDevices,
+            ...(user.get('syncDevices') ?? {}),
             ...settings.syncDevices,
           });
+        } else {
+          user.set(key as any, settings[key]);
         }
       }
       return user.save();
