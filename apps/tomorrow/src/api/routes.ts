@@ -66,13 +66,21 @@ apiRouter.delete('/tasks', async (req, res) => {
 
 apiRouter.get('/tasks/user/:userId', (req, res) => {
   const exclude = ['createdAt', 'updatedAt', 'deletedAt'];
+  const lastFinishedSyncStart = req.query['since'];
+  const whereClause = {
+    userId: req.params.userId,
+    updatedAt: lastFinishedSyncStart
+      ? { $gte: new Date(lastFinishedSyncStart as string) }
+      : undefined,
+  };
+
   if (req.query['encrypted'] === 'true') {
-    EncryptedTask.findAll({ attributes: { exclude } }).then((tasks) =>
-      res.json(tasks),
+    EncryptedTask.findAll({ attributes: { exclude }, where: whereClause }).then(
+      (tasks) => res.json(tasks),
     );
   } else {
-    PlainTask.findAll({ attributes: { exclude } }).then((tasks) =>
-      res.json(tasks),
+    PlainTask.findAll({ attributes: { exclude }, where: whereClause }).then(
+      (tasks) => res.json(tasks),
     );
   }
 });
