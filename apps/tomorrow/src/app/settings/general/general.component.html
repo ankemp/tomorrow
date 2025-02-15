@@ -8,6 +8,14 @@
             Remote User
             <div tuiSubtitle>Sync is enabled</div>
           </h2>
+          <button
+            iconStart="@tui.refresh-cw"
+            tuiIconButton
+            (click)="forceSync()"
+            [loading]="syncManager.isSyncing()"
+          >
+            Force Sync
+          </button>
         } @else {
           <h2 tuiTitle>
             Local User

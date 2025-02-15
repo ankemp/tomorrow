@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import {
+  TuiAlertService,
   TuiAppearance,
   TuiAutoColorPipe,
   TuiButton,
@@ -12,10 +13,11 @@ import {
   TuiAvatarLabeled,
   TuiBadge,
   TuiBadgedContent,
+  TuiButtonLoading,
 } from '@taiga-ui/kit';
 import { TuiCardLarge, TuiCell } from '@taiga-ui/layout';
 
-import { Settings } from '@tmrw/data-access';
+import { Settings, syncManager } from '@tmrw/data-access';
 
 import { DevicePreferencesComponent } from '../_blocks/device-preferences.component';
 import { DisplayPreferencesComponent } from '../_blocks/display-preferences.component';
@@ -36,6 +38,7 @@ import { SyncPreferencesComponent } from '../_blocks/sync-preferences.component'
     TuiAvatarLabeled,
     TuiBadge,
     TuiBadgedContent,
+    TuiButtonLoading,
     TuiCardLarge,
     TuiCell,
     DevicePreferencesComponent,
@@ -50,4 +53,16 @@ import { SyncPreferencesComponent } from '../_blocks/sync-preferences.component'
 })
 export class GeneralComponent {
   readonly settings = inject(Settings);
+  readonly alerts = inject(TuiAlertService);
+  readonly syncManager = syncManager;
+
+  async forceSync() {
+    await syncManager.syncAll();
+    this.alerts
+      .open('All data synced', {
+        appearance: 'success',
+        icon: '@tui.check-circle',
+      })
+      .subscribe();
+  }
 }
