@@ -108,7 +108,7 @@ export const syncManager = new SyncManager({
   registerRemoteChange: ({ apiPath }, onChange) => {
     const settings = getSettings();
     const eventSource = new EventSource(
-      `${apiPath}/tasks/events/user/${settings.userId}`,
+      `${apiPath}/events/user/${settings.userId}`,
     );
 
     eventSource.onmessage = (event) => {
