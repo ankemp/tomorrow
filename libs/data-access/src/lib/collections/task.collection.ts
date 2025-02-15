@@ -12,7 +12,11 @@ class TaskCollection extends Collection<Task> {
       name: 'task',
       reactivity: angularReactivityAdapter,
       persistence: createIndexedDBAdapter('tasks'),
-      indices: [createIndex('title'), createIndex('date')],
+      indices: [
+        createIndex('title'),
+        createIndex('date'),
+        createIndex('description'),
+      ],
     });
   }
 
