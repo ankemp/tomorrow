@@ -41,14 +41,27 @@
     </tui-notification>
   }
 
-  <button
-    appearance="primary"
-    tuiButton
-    (click)="importUser(parsedData()!)"
-    [disabled]="!foundData()"
-  >
-    Link this device
-  </button>
+  <div tuiGroup [collapsed]="false">
+    <button
+      appearance="primary"
+      tuiButton
+      (click)="importUser(parsedData()!)"
+      [disabled]="!foundData()"
+    >
+      Link this device
+    </button>
+    @if (foundData()) {
+      <button
+        style="max-width: 5rem"
+        appearance="outline-destructive"
+        iconStart="@tui.rotate-ccw"
+        tuiIconButton
+        (click)="resetData()"
+      >
+        Scan Again
+      </button>
+    }
+  </div>
 </section>
 
 <section

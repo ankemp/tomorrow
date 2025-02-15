@@ -14,13 +14,21 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import {
+  TuiAlertService,
   TuiAppearance,
   TuiButton,
+  TuiDialogService,
+  TuiGroup,
   TuiIcon,
   TuiNotification,
   TuiTitle,
 } from '@taiga-ui/core';
-import { TuiAvatar, TuiConnected, TuiSkeleton } from '@taiga-ui/kit';
+import {
+  TUI_CONFIRM,
+  TuiAvatar,
+  TuiConnected,
+  TuiSkeleton,
+} from '@taiga-ui/kit';
 import { TuiCardLarge, TuiCell, TuiHeader } from '@taiga-ui/layout';
 import {
   LOAD_WASM,
@@ -29,9 +37,18 @@ import {
   ScannerQRCodeDevice,
   ScannerQRCodeSymbolType,
 } from 'ngx-scanner-qrcode';
-import { debounceTime, distinctUntilKeyChanged, filter, map } from 'rxjs';
+import {
+  debounceTime,
+  distinctUntilKeyChanged,
+  EMPTY,
+  filter,
+  map,
+  of,
+  switchMap,
+  tap,
+} from 'rxjs';
 
-import { QRCodeData, Settings } from '@tmrw/data-access';
+import { QRCodeData, Settings, Tasks } from '@tmrw/data-access';
 
 LOAD_WASM().subscribe();
 
@@ -41,6 +58,7 @@ LOAD_WASM().subscribe();
     CommonModule,
     TuiAppearance,
     TuiButton,
+    TuiGroup,
     TuiIcon,
     TuiNotification,
     TuiTitle,
@@ -58,6 +76,8 @@ LOAD_WASM().subscribe();
 })
 export class ConnectDeviceComponent implements AfterViewInit {
   private readonly router = inject(Router);
+  private readonly dialogs = inject(TuiDialogService);
+  private readonly alerts = inject(TuiAlertService);
   readonly settings = inject(Settings);
   readonly isStarted = signal(false);
   readonly isLoading = signal(true);
@@ -140,8 +160,36 @@ export class ConnectDeviceComponent implements AfterViewInit {
     this.activeDevice.set(this.devices()[nextIndex]);
   }
 
+  resetData() {
+    this.data.set('');
+    this.scanner.play();
+  }
+
   importUser(data: QRCodeData) {
-    this.settings.importUser(data);
-    this.router.navigate(['/settings']);
+    this.dialogs
+      .open<boolean>(TUI_CONFIRM, {
+        label: 'Confirm Device Sync',
+        data: {
+          content: 'Syncing will replace all tasks on this device. Proceed?',
+          yes: 'Confirm Sync',
+          no: 'Cancel',
+        },
+      })
+      .pipe(
+        switchMap((response) => (response ? of(true) : EMPTY)),
+        tap(() => {
+          this.settings.importUser(data);
+          Tasks.removeMany({ date: { $ne: null } });
+          // TODO: Remove all files.
+          this.router.navigate(['/settings']);
+        }),
+        switchMap(() => {
+          return this.alerts.open('Device synced successfully', {
+            appearance: 'success',
+            icon: '@tui.check-circle',
+          });
+        }),
+      )
+      .subscribe();
   }
 }

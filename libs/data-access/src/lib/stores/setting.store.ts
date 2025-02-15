@@ -82,7 +82,7 @@ export const Settings = signalStore(
         const { os, deviceType, browser, browserVersion } =
           parseUserAgent(userAgent);
         const thisDevice = id === deviceId;
-        let icon = '@tui.material.device-unknown';
+        let icon = '@tui.material.outlined.device_unknown';
         if (os === 'Android') {
           icon = '@tui.material.outlined.android';
         } else if (os === 'iOS') {
