@@ -186,7 +186,7 @@ export class ConnectDeviceComponent implements AfterViewInit {
         switchMap(() => {
           return this.alerts.open('Device synced successfully', {
             appearance: 'success',
-            icon: '@tui.check-circle',
+            icon: '@tui.material.outlined.cloud_sync',
           });
         }),
       )
