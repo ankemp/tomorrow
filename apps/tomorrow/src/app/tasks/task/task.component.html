@@ -54,7 +54,9 @@
 
   <section tuiCardLarge="compact">
     <header tuiHeader="xs">
-      <h3 tuiTitle>Subtasks</h3>
+      <h3 tuiTitle>
+        Subtasks ({{ subTaskCompletedCount() }}/{{ subTaskCount() }})
+      </h3>
       @if (hasSubTasks()) {
         <div tuiAccessories>
           <button
@@ -69,6 +71,14 @@
       }
     </header>
     @if (hasSubTasks()) {
+      <progress
+        style="margin-top: -0.75rem"
+        tuiProgressBar
+        [max]="subTaskCount()"
+        [segments]="subTaskCount()"
+        [value]="subTaskCompletedCount()"
+        size="m"
+      ></progress>
       @for (subtask of t.subTasks; track $index) {
         @let isCompleted = !!subtask.completedAt;
         <div tuiCell>
@@ -102,7 +112,7 @@
 
   <section tuiCardLarge="compact">
     <header tuiHeader="xs">
-      <h3 tuiTitle>Attachments</h3>
+      <h3 tuiTitle>Attachments ({{ attachmentCount() }})</h3>
       @if (hasAttachments()) {
         <div tuiAccessories>
           <button

@@ -29,6 +29,7 @@ import {
   TuiChip,
   TuiElasticContainer,
   TuiFiles,
+  TuiProgress,
 } from '@taiga-ui/kit';
 import { TuiCardLarge, TuiCell, TuiHeader } from '@taiga-ui/layout';
 import { EMPTY, of, switchMap, tap } from 'rxjs';
@@ -54,6 +55,7 @@ import { FormatDatePipe } from '../_primitives/format-date/format-date.pipe';
     TuiBadge,
     TuiChip,
     TuiFiles,
+    TuiProgress,
     TuiElasticContainer,
     TuiCardLarge,
     TuiCell,
@@ -94,9 +96,41 @@ export class TaskComponent {
     return (this.task()?.subTasks?.length ?? 0) > 0;
   });
 
+  readonly subTaskCount = computed(() => {
+    if (this.hasSubTasks()) {
+      return this.task()!.subTasks!.length;
+    }
+    return 0;
+  });
+
+  readonly subTaskCompletedCount = computed(() => {
+    if (this.hasSubTasks()) {
+      return this.task()!.subTasks!.filter((t) => !!t.completedAt).length;
+    }
+    return 0;
+  });
+
+  readonly subTasksPercentComplete = computed(() => {
+    if (this.hasSubTasks()) {
+      const total = this.task()!.subTasks!.length;
+      const completed = this.task()!.subTasks!.filter(
+        (t) => !!t.completedAt,
+      ).length;
+      return (completed / total) * 100;
+    }
+    return 0;
+  });
+
   readonly hasAttachments = this.attachmentsStore.hasAttachments;
 
   readonly attachments = this.attachmentsStore.files;
+
+  readonly attachmentCount = computed(() => {
+    if (this.hasAttachments()) {
+      return this.attachments().length;
+    }
+    return 0;
+  });
 
   readonly hasNotes = computed(() => {
     return !!this.task()?.notes;
