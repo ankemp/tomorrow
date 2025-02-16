@@ -1,0 +1,66 @@
+<ng-template #bar>
+  <tui-app-bar>
+    <button tuiButton tuiSlot="left" type="button" (click)="search.close()">
+      Close
+    </button>
+    Search tasks
+  </tui-app-bar>
+  <input
+    placeholder="Search tasks"
+    tuiSearch
+    type="search"
+    class="input"
+    [ngModel]="search.query()"
+    (ngModelChange)="search.setQuery($event)"
+  />
+</ng-template>
+<ng-template
+  [tuiSheetDialog]="search.isOpen()"
+  [tuiSheetDialogOptions]="{ label: bar, bar: false }"
+  (tuiSheetDialogChange)="search.setIsOpen($event)"
+>
+  <!-- <div class="favorites">
+    <tui-avatar-labeled
+      *ngFor="let item of items | slice: 0 : 6"
+      [label]="item.name"
+    >
+      <tui-avatar [src]="item.avatar | tuiFallbackSrc: '@tui.user' | async" />
+    </tui-avatar-labeled>
+  </div> -->
+  <div class="results">
+    @for (task of results(); track task.id) {
+      <div
+        tuiCell
+        tuiAppearance="neutral"
+        [class.completed]="task.completedAt"
+        style="white-space: nowrap"
+        tabindex="0"
+        (click)="goToTask(task.id)"
+        (keydown.enter)="goToTask(task.id)"
+        (keydown.space)="goToTask(task.id)"
+      >
+        <div tuiTitle>
+          <span class="title" tuiFade>{{ task.title }}</span>
+          <div tuiSubtitle>
+            {{ task.date | formatDate: true }}
+          </div>
+        </div>
+        <tui-chip
+          size="xs"
+          appearance="custom"
+          [style.background-color]="task.category | tuiAutoColor"
+        >
+          {{ task.category }}
+        </tui-chip>
+        <button
+          appearance="action"
+          tuiIconButton
+          iconStart="@tui.chevron-right"
+          [routerLink]="['/tasks/', task.id]"
+        >
+          Open Task
+        </button>
+      </div>
+    }
+  </div>
+</ng-template>

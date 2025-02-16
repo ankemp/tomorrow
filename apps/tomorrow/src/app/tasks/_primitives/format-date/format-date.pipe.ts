@@ -9,12 +9,14 @@ import { Settings } from '@tmrw/data-access';
 export class FormatDatePipe implements PipeTransform {
   private readonly settings = inject(Settings);
 
-  transform(date: Date): string {
-    if (isToday(date)) {
-      return format(date, this.settings.dateFnsTimeFormat());
-    }
-    if (isTomorrow(date)) {
-      return `Tomorrow, ${format(date, this.settings.dateFnsTimeFormat())}`;
+  transform(date: Date, alwaysUseFullFormat = false): string {
+    if (!alwaysUseFullFormat) {
+      if (isToday(date)) {
+        return format(date, this.settings.dateFnsTimeFormat());
+      }
+      if (isTomorrow(date)) {
+        return `Tomorrow, ${format(date, this.settings.dateFnsTimeFormat())}`;
+      }
     }
     return `${format(date, 'EEE, d MMM')}, ${format(date, this.settings.dateFnsTimeFormat())}`;
   }

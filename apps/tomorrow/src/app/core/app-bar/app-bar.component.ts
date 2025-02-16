@@ -15,7 +15,7 @@ import { TuiSkeleton } from '@taiga-ui/kit';
 import { TuiAppBar } from '@taiga-ui/layout';
 import { filter, map } from 'rxjs';
 
-import { Tasks } from '@tmrw/data-access';
+import { Search, Tasks } from '@tmrw/data-access';
 
 @Component({
   selector: 'tw-app-bar',
@@ -33,8 +33,8 @@ import { Tasks } from '@tmrw/data-access';
 })
 export class AppBarComponent {
   private readonly router = inject(Router);
+  readonly search = inject(Search);
   readonly taskCount = signal<number>(-1);
-  readonly showSearch = signal<boolean>(false);
   readonly showBackButton = toSignal(
     this.router.events.pipe(
       filter((e) => e instanceof NavigationEnd),

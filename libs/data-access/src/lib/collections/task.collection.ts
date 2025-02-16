@@ -56,6 +56,20 @@ class TaskCollection extends Collection<Task> {
     );
   }
 
+  searchTasks(query: string) {
+    return this.find(
+      {
+        $or: [
+          { title: { $regex: query, $options: 'i' } },
+          { description: { $regex: query, $options: 'i' } },
+        ],
+      },
+      {
+        sort: { date: 1 },
+      },
+    );
+  }
+
   getTaskById(id: string) {
     return this.findOne({ id });
   }

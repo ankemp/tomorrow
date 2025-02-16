@@ -6,9 +6,10 @@ import { TUI_DARK_MODE, TuiRoot } from '@taiga-ui/core';
 import { Settings, syncManager } from '@tmrw/data-access';
 
 import { AppBarComponent } from './core/app-bar/app-bar.component';
+import { SearchComponent } from './core/search/search.component';
 
 @Component({
-  imports: [RouterModule, TuiRoot, AppBarComponent],
+  imports: [RouterModule, TuiRoot, AppBarComponent, SearchComponent],
   selector: 'tw-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
