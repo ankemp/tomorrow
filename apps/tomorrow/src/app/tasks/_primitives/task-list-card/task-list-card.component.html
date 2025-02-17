@@ -2,7 +2,7 @@
 <div
   tuiCell
   tuiSurface="neutral"
-  [class.completed]="task().completedAt"
+  [class.completed]="task().completedAt && strikeThrough()"
   style="white-space: nowrap"
 >
   <button

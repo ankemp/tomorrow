@@ -46,6 +46,7 @@ export class TaskListCardComponent {
   readonly settings = inject(Settings);
   readonly task = input.required<Task>();
   readonly showCategory = input<boolean>(true);
+  readonly strikeThrough = input<boolean>(true);
 
   readonly icon = computed(() => {
     return this.task().completedAt ? '@tui.circle-check' : '@tui.circle';
