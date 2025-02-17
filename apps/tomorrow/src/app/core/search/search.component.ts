@@ -8,6 +8,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { TuiSheetDialog } from '@taiga-ui/addon-mobile';
+import { TuiAutoFocus } from '@taiga-ui/cdk';
 import {
   TuiAppearance,
   TuiAutoColorPipe,
@@ -30,6 +31,7 @@ import { FormatDatePipe } from '../../tasks/_primitives/format-date/format-date.
     FormsModule,
     RouterModule,
     TuiSheetDialog,
+    TuiAutoFocus,
     TuiAppearance,
     TuiAutoColorPipe,
     TuiButton,
