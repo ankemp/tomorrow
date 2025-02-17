@@ -61,6 +61,20 @@
           Open Task
         </button>
       </div>
+    } @empty {
+      <tui-block-status
+        class="no-results"
+        tuiAppearance="neutral"
+        [card]="true"
+      >
+        <tui-icon icon="@tui.search" tuiSlot="top" />
+        @if (search.query()) {
+          <h4>No results found</h4>
+          Try searching for different keywords
+        } @else {
+          Enter keywords to find tasks
+        }
+      </tui-block-status>
     }
   </div>
 </ng-template>

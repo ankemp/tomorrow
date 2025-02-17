@@ -17,7 +17,7 @@ import {
   TuiTitle,
 } from '@taiga-ui/core';
 import { TuiChip, TuiFade } from '@taiga-ui/kit';
-import { TuiAppBar, TuiCell } from '@taiga-ui/layout';
+import { TuiAppBar, TuiBlockStatus, TuiCell } from '@taiga-ui/layout';
 
 import { Search } from '@tmrw/data-access';
 
@@ -39,6 +39,7 @@ import { FormatDatePipe } from '../../tasks/_primitives/format-date/format-date.
     TuiChip,
     TuiFade,
     TuiAppBar,
+    TuiBlockStatus,
     TuiCell,
     FormatDatePipe,
   ],
