@@ -1,4 +1,4 @@
-<div tuiCell tuiAppearance="neutral">
+<div tuiCell tuiAppearance="neutral" [tuiSkeleton]="skeleton()">
   @if (hasIcon()) {
     <tui-icon [icon]="icon()!" />
   }

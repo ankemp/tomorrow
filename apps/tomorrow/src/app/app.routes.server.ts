@@ -6,10 +6,6 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Server,
   },
   {
-    path: 'tasks/*',
-    renderMode: RenderMode.Client,
-  },
-  {
     path: 'tasks/new',
     renderMode: RenderMode.Server,
   },

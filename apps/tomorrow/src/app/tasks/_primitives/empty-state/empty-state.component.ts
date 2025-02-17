@@ -7,11 +7,20 @@ import {
   output,
 } from '@angular/core';
 import { TuiAppearance, TuiButton, TuiIcon, TuiTitle } from '@taiga-ui/core';
+import { TuiSkeleton } from '@taiga-ui/kit';
 import { TuiCell } from '@taiga-ui/layout';
 
 @Component({
   selector: 'tw-empty-state',
-  imports: [CommonModule, TuiAppearance, TuiButton, TuiIcon, TuiTitle, TuiCell],
+  imports: [
+    CommonModule,
+    TuiAppearance,
+    TuiButton,
+    TuiIcon,
+    TuiTitle,
+    TuiSkeleton,
+    TuiCell,
+  ],
   templateUrl: './empty-state.component.html',
   styleUrl: './empty-state.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,6 +30,7 @@ export class EmptyStateComponent {
   readonly title = input.required<string>();
   readonly subtitle = input<string>();
   readonly action = input<string>();
+  readonly skeleton = input<boolean>(false);
 
   readonly actionClicked = output<void>();
 

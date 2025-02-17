@@ -39,7 +39,7 @@ export class DashboardComponent {
   readonly overDueTasks = signal<Task[]>([]);
   readonly todaysTasks = signal<Task[]>([]);
   readonly upcomingTasks = signal<Task[]>([]);
-
+  readonly isReady = Tasks.isReady();
   readonly hasOverdueTasks = computed(() => this.overDueTasks().length > 0);
 
   constructor(@Inject(PLATFORM_ID) platformId: any) {

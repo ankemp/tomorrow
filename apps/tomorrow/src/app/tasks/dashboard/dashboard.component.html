@@ -45,7 +45,10 @@
   @for (task of todaysTasks(); track task.id) {
     <tw-task-list-card [task]="task" />
   } @empty {
-    <tw-empty-state title="No Tasks Today" />
+    <tw-empty-state
+      title="No Tasks Today"
+      [skeleton]="(isReady | async) === null"
+    />
   }
 </section>
 
@@ -71,7 +74,10 @@
   @for (task of upcomingTasks(); track task.id) {
     <tw-task-list-card [task]="task" />
   } @empty {
-    <tw-empty-state title="No Upcoming Tasks" />
+    <tw-empty-state
+      title="No Upcoming Tasks"
+      [skeleton]="(isReady | async) === null"
+    />
   }
 </section>
 
