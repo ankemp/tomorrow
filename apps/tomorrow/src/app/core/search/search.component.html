@@ -33,7 +33,6 @@
       <div
         tuiCell
         tuiAppearance="neutral"
-        [class.completed]="task.completedAt"
         style="white-space: nowrap"
         tabindex="0"
         (click)="goToTask(task.id)"
@@ -45,6 +44,12 @@
           <div tuiSubtitle>
             {{ task.date | formatDate: true }}
           </div>
+          @if (task.completedAt) {
+            <div class="completed" tuiSubtitle>
+              <tui-icon icon="@tui.check" />
+              {{ task.completedAt | formatDate: true }}
+            </div>
+          }
         </div>
         <tui-chip
           size="xs"
