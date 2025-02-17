@@ -14,6 +14,7 @@ import {
   TuiBadge,
   TuiBadgedContent,
   TuiButtonLoading,
+  TuiSkeleton,
 } from '@taiga-ui/kit';
 import { TuiCardLarge, TuiCell } from '@taiga-ui/layout';
 
@@ -39,6 +40,7 @@ import { SyncPreferencesComponent } from '../_blocks/sync-preferences.component'
     TuiBadge,
     TuiBadgedContent,
     TuiButtonLoading,
+    TuiSkeleton,
     TuiCardLarge,
     TuiCell,
     DevicePreferencesComponent,

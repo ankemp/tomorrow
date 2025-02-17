@@ -1,6 +1,6 @@
 <section class="settings-grid">
-  @defer {
-    <div tuiCardLarge tuiAppearance="floating">
+  <div tuiCardLarge tuiAppearance="floating">
+    @defer {
       <div tuiCell>
         <tui-avatar appearance="primary" src="@tui.user" />
         @if (settings.remoteSync()) {
@@ -67,8 +67,10 @@
           Link device
         </a>
       }
-    </div>
-  }
+    } @placeholder {
+      <div tuiCell tuiSkeleton style="height: 115px"></div>
+    }
+  </div>
 
   <tw-notification-preferences />
 
