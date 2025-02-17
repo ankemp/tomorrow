@@ -128,9 +128,6 @@ export class DatePickerComponent implements ControlValueAccessor {
         case 'weekend':
           this.date.set(set(nextSaturday(today), dateValues));
           break;
-        case 'custom':
-          this.date.set(set(today, dateValues));
-          break;
       }
     });
     effect(() => {
