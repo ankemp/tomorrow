@@ -70,8 +70,10 @@
       >
         <tui-icon icon="@tui.search" tuiSlot="top" />
         @if (search.query()) {
-          <h4>No results found</h4>
-          Try searching for different keywords
+          <ng-container>
+            <h4>No results found</h4>
+            Try searching for different keywords
+          </ng-container>
         } @else {
           Enter keywords to find tasks
         }
