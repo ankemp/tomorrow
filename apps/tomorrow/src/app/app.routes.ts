@@ -25,6 +25,13 @@ export const appRoutes: Route[] = [
           ),
       },
       {
+        path: 'completed',
+        loadComponent: () =>
+          import('./tasks/completed/completed.component').then(
+            (m) => m.CompletedComponent,
+          ),
+      },
+      {
         path: 'new',
         loadComponent: () =>
           import('./tasks/create/create.component').then(
