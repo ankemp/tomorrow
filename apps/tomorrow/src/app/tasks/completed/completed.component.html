@@ -1,1 +1,16 @@
-<p>completed works!</p>
+<h2 tuiTitle="m">Completed tasks</h2>
+
+<div class="task-list-group">
+  <tw-task-list-header title="Today" headerSize="xs" icon="@tui.clock-12" />
+  <div class="task-list-grid">
+    @for (task of todaysTasks(); track task.id) {
+      <tw-task-list-card [task]="task" [showCategory]="false" />
+    } @empty {
+      <tw-empty-state title="No Tasks Today" />
+    }
+  </div>
+</div>
+
+<!-- TODO: Yesterday -->
+
+<!-- TODO: Older -->

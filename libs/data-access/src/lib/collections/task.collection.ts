@@ -74,6 +74,17 @@ class TaskCollection extends Collection<Task> {
     return this.findOne({ id });
   }
 
+  getCompletedTasks() {
+    return this.find(
+      {
+        completedAt: { $ne: null },
+      },
+      {
+        sort: { completedAt: -1 },
+      },
+    );
+  }
+
   getOverdueTasks() {
     return this.find(
       {
