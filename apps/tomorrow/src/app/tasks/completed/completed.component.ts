@@ -9,14 +9,7 @@ import {
   signal,
 } from '@angular/core';
 import { TuiTitle } from '@taiga-ui/core';
-import {
-  endOfTomorrow,
-  endOfYesterday,
-  isAfter,
-  isBefore,
-  isToday,
-  isTomorrow,
-} from 'date-fns';
+import { isAfter, isFuture, isToday, isYesterday } from 'date-fns';
 
 import { Task, Tasks } from '@tmrw/data-access';
 
@@ -38,11 +31,48 @@ import { TaskListHeaderComponent } from '../_primitives/task-list-header/task-li
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CompletedComponent {
+  readonly isReady = Tasks.isReady();
   readonly completedTasks = signal<Task[]>([]);
+
+  readonly olderTasks = computed(() => {
+    const older = this.completedTasks().filter((task) => {
+      return (
+        !isToday(task.date) && !isYesterday(task.date) && !isFuture(task.date)
+      );
+    });
+    const grouped = Object.groupBy(older, (task) => {
+      return task.date.toDateString();
+    });
+    return Object.entries(grouped)
+      .map(([date, tasks]) => {
+        return {
+          date,
+          tasks: tasks as Task[],
+        };
+      })
+      .toSorted((a, b) => {
+        return isAfter(a.date, b.date) ? 1 : -1;
+      });
+  });
+
+  readonly futureTasks = computed(() => {
+    return this.completedTasks().filter((task) => {
+      return !isToday(task.date) && isFuture(task.date);
+    });
+  });
+  readonly hasFutureTasks = computed(() => {
+    return this.futureTasks().length > 0;
+  });
 
   readonly todaysTasks = computed(() => {
     return this.completedTasks().filter((task) => {
       return isToday(task.date);
+    });
+  });
+
+  readonly yesterdaysTasks = computed(() => {
+    return this.completedTasks().filter((task) => {
+      return isYesterday(task.date);
     });
   });
 
