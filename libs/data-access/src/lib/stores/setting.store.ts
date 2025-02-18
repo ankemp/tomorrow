@@ -159,6 +159,14 @@ export const Settings = signalStore(
         encryption,
       });
     },
+    resetUser() {
+      patchState(store, {
+        userId: window.crypto.randomUUID(),
+        _encryptionKey: null,
+        remoteSync: false,
+        encryption: false,
+      });
+    },
   })),
   withHooks({
     onInit(store) {

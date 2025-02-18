@@ -11,7 +11,7 @@ import { TuiCell } from '@taiga-ui/layout';
 import { NgMathPipesModule } from 'ngx-pipes';
 import { EMPTY, of, switchMap, tap } from 'rxjs';
 
-import { Attachments } from '@tmrw/data-access';
+import { Attachments, Settings } from '@tmrw/data-access';
 
 import { PreferencesCardComponent } from '../_primitives/preferences-card.component';
 
@@ -54,6 +54,14 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
       >
         Clear device data
       </button>
+      <button
+        appearance="secondary-destructive"
+        size="s"
+        tuiButton
+        (click)="resetUser()"
+      >
+        Reset User Scope
+      </button>
     </tw-preferences-card>
   `,
   styleUrl: './styles.css',
@@ -63,6 +71,7 @@ export class DevicePreferencesComponent {
   private readonly dialogs = inject(TuiDialogService);
   private readonly alerts = inject(TuiAlertService);
   readonly attachmentsStore = inject(Attachments);
+  readonly settingsStore = inject(Settings);
 
   clearStorage() {
     this.dialogs
@@ -84,6 +93,32 @@ export class DevicePreferencesComponent {
           return this.alerts.open('Data deleted', {
             appearance: 'destructive',
             icon: '@tui.trash-2',
+          });
+        }),
+      )
+      .subscribe();
+  }
+
+  resetUser() {
+    this.dialogs
+      .open<boolean>(TUI_CONFIRM, {
+        label: 'Reset User Scope',
+        data: {
+          appearance: 'destructive',
+          content: 'Reset user scope, and leave sync group?',
+          yes: 'Reset',
+          no: 'Cancel',
+        },
+      })
+      .pipe(
+        switchMap((response) => (response ? of(true) : EMPTY)),
+        tap(() => {
+          // this.attachmentsStore.clearStorage();
+        }),
+        switchMap(() => {
+          return this.alerts.open('Scope reset', {
+            appearance: 'destructive',
+            icon: '@tui.rotate-ccw',
           });
         }),
       )
