@@ -10,6 +10,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   ControlValueAccessor,
   FormArray,
+  FormControl,
   FormGroup,
   NG_VALUE_ACCESSOR,
   NonNullableFormBuilder,
@@ -52,12 +53,12 @@ export class SubtasksComponent implements ControlValueAccessor {
   readonly createOnly = input(true);
 
   readonly form = this.fb.group({
-    tasks: this.fb.array([
-      this.fb.group({
-        title: this.fb.control<string>(''),
-        completedAt: this.fb.control<Date | null>(null),
-      }),
-    ]),
+    tasks: this.fb.array<
+      FormGroup<{
+        title: FormControl<string>;
+        completedAt: FormControl<Date | null>;
+      }>
+    >([]),
   });
 
   get formArray() {
@@ -85,6 +86,7 @@ export class SubtasksComponent implements ControlValueAccessor {
       input.forEach((item) => {
         this.formArray.push(this.newTask(item.title, item.completedAt));
       });
+      this.formArray.push(this.newTask());
     } else {
       this.form.setControl('tasks', this.fb.array([this.newTask()]));
     }
@@ -112,7 +114,6 @@ export class SubtasksComponent implements ControlValueAccessor {
 
   addTask() {
     this.formArray.push(this.newTask());
-    // focus on the new task
   }
 
   removeTask(index: number) {
