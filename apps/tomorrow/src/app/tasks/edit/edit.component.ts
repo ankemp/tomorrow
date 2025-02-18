@@ -172,6 +172,7 @@ export class EditComponent implements AfterViewInit {
             description: task.description,
             location: task.location,
             duration: task.duration,
+            notes: task.notes,
             subTasks: subTasks?.filter((st) => st.title?.length),
             attachments: attachments?.map((file) => file.name),
           },
