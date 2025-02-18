@@ -28,6 +28,11 @@ section {
   gap: 1rem;
 }
 
+.view-completed-container {
+  display: flex;
+  justify-content: center;
+}
+
 .task-create-container {
   bottom: 0;
   margin-left: -1rem;

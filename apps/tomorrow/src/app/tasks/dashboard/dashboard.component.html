@@ -81,6 +81,17 @@
   }
 </section>
 
+<section class="view-completed-container">
+  <a
+    appearance="action-grayscale"
+    tuiButton
+    iconStart="@tui.history"
+    [routerLink]="['/tasks', 'completed']"
+  >
+    View Completed Tasks
+  </a>
+</section>
+
 <section tuiCardLarge="compact" class="task-create-container">
   <button tuiButton [routerLink]="['../', 'new']">New Task</button>
 </section>
