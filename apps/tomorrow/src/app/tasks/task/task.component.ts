@@ -139,18 +139,23 @@ export class TaskComponent {
   });
 
   readonly truncateNotes = signal(true);
+  private readonly truncateThreshold = 200;
 
   readonly shouldTruncateNotes = computed(() => {
-    return (this.task()?.notes?.length ?? 0) > 200;
+    return (this.task()?.notes?.length ?? 0) > this.truncateThreshold;
   });
 
   readonly notes = computed(() => {
     const fullNotes = this.task()?.notes || '';
 
-    if (!this.truncateNotes() || fullNotes === '') {
+    if (
+      !this.shouldTruncateNotes() ||
+      !this.truncateNotes() ||
+      fullNotes === ''
+    ) {
       return fullNotes;
     }
-    const threshold = 200;
+    const threshold = this.truncateThreshold;
     const rest = fullNotes.slice(threshold);
     const match = rest.match(/[.!?]/);
     if (match !== null) {
