@@ -92,6 +92,10 @@
   </a>
 </section>
 
-<section tuiCardLarge="compact" class="task-create-container">
-  <button tuiButton [routerLink]="['../', 'new']">New Task</button>
-</section>
+<tw-action-bar-portal>
+  <ng-template #actionBar>
+    <button style="width: 100%" tuiButton [routerLink]="['../', 'new']">
+      New Task
+    </button>
+  </ng-template>
+</tw-action-bar-portal>

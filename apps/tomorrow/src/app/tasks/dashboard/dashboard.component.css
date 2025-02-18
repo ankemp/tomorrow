@@ -1,6 +1,5 @@
 :host {
   display: block;
-  margin-bottom: 5.5rem;
   padding: 1rem;
 }
 
@@ -31,11 +30,4 @@ section {
 .view-completed-container {
   display: flex;
   justify-content: center;
-}
-
-.task-create-container {
-  bottom: 0;
-  margin-left: -1rem;
-  margin-right: -1rem;
-  position: fixed;
 }

@@ -36,6 +36,7 @@ import { EMPTY, of, switchMap, tap } from 'rxjs';
 
 import { Attachments, Settings, Task, Tasks } from '@tmrw/data-access';
 
+import { ActionBarComponent } from '../../core/action-bar/action-bar-portal.component';
 import { EmptyStateComponent } from '../_primitives/empty-state/empty-state.component';
 import { FormatDatePipe } from '../_primitives/format-date/format-date.pipe';
 
@@ -60,6 +61,7 @@ import { FormatDatePipe } from '../_primitives/format-date/format-date.pipe';
     TuiCardLarge,
     TuiCell,
     TuiHeader,
+    ActionBarComponent,
     EmptyStateComponent,
     FormatDatePipe,
   ],

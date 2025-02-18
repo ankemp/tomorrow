@@ -1,6 +1,5 @@
 :host {
   display: block;
-  margin-bottom: 8.5rem;
 }
 
 [tuisubtitle] > * + * {
@@ -11,14 +10,7 @@
   --t-radius: 0 !important;
 }
 
-.actions {
-  --t-radius: 0 !important;
-  bottom: 0;
-  position: fixed;
-  width: 100%;
-
-  .group {
-    display: flex;
-    justify-content: space-between;
-  }
+.action-group {
+  display: flex;
+  justify-content: space-between;
 }

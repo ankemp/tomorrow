@@ -195,35 +195,37 @@
     }
   </section>
 
-  <section tuiCardLarge="compact" class="actions" tuiAppearance="floating">
-    <div class="group">
-      <button
-        style="width: calc(100% - 56px - 1rem)"
-        tuiButton
-        (click)="toggleTask(t)"
-      >
-        Mark {{ t.completedAt ? 'Incomplete' : 'Complete' }}
-      </button>
-      <button
-        [tuiDropdownMobile]="t.title"
-        appearance="secondary-grayscale"
-        iconStart="@tui.ellipsis"
-        tuiIconButton
-        type="button"
-        [tuiAppearanceState]="menuOpen() ? 'active' : null"
-        [tuiDropdown]="dropdown"
-        [(tuiDropdownOpen)]="menuOpen"
-      >
-        Menu
-      </button>
-      <ng-template #dropdown>
-        <tui-data-list>
-          <tui-opt-group>
-            <button tuiOption [routerLink]="['./edit']">Edit Task</button>
-            <button tuiOption (click)="deleteTask(t)">Delete Task</button>
-          </tui-opt-group>
-        </tui-data-list>
-      </ng-template>
-    </div>
-  </section>
+  <tw-action-bar-portal>
+    <ng-template #actionBar>
+      <div class="action-group">
+        <button
+          style="width: calc(100% - 56px - 1rem)"
+          tuiButton
+          (click)="toggleTask(t)"
+        >
+          Mark {{ t.completedAt ? 'Incomplete' : 'Complete' }}
+        </button>
+        <button
+          [tuiDropdownMobile]="t.title"
+          appearance="secondary-grayscale"
+          iconStart="@tui.ellipsis"
+          tuiIconButton
+          type="button"
+          [tuiAppearanceState]="menuOpen() ? 'active' : null"
+          [tuiDropdown]="dropdown"
+          [(tuiDropdownOpen)]="menuOpen"
+        >
+          Menu
+        </button>
+        <ng-template #dropdown>
+          <tui-data-list>
+            <tui-opt-group>
+              <button tuiOption [routerLink]="['./edit']">Edit Task</button>
+              <button tuiOption (click)="deleteTask(t)">Delete Task</button>
+            </tui-opt-group>
+          </tui-data-list>
+        </ng-template>
+      </div>
+    </ng-template>
+  </tw-action-bar-portal>
 }

@@ -10,10 +10,10 @@ import {
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TuiButton } from '@taiga-ui/core';
-import { TuiCardLarge } from '@taiga-ui/layout';
 
 import { Task, Tasks } from '@tmrw/data-access';
 
+import { ActionBarComponent } from '../../core/action-bar/action-bar-portal.component';
 import { CategoryCardComponent } from '../_primitives/category-card/category-card.component';
 import { EmptyStateComponent } from '../_primitives/empty-state/empty-state.component';
 import { TaskListCardComponent } from '../_primitives/task-list-card/task-list-card.component';
@@ -25,7 +25,7 @@ import { TaskListHeaderComponent } from '../_primitives/task-list-header/task-li
     CommonModule,
     RouterModule,
     TuiButton,
-    TuiCardLarge,
+    ActionBarComponent,
     CategoryCardComponent,
     EmptyStateComponent,
     TaskListCardComponent,

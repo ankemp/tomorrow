@@ -1,7 +1,6 @@
 :host {
   display: block;
   padding: 1rem;
-  margin-bottom: 5.5rem;
 }
 
 [tuiaccordion] > span {
@@ -9,10 +8,8 @@
 }
 
 .actions {
-  --t-radius: 0 !important;
-  bottom: 0;
-  margin-left: -1rem;
-  margin-right: -1rem;
-  position: fixed;
   width: 100%;
+  button {
+    width: 100%;
+  }
 }
