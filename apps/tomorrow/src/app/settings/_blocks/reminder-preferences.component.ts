@@ -56,10 +56,10 @@ class TimeTransformer extends TuiValueTransformer<
     }),
   ],
   template: `
-    <tw-preferences-card title="Reminder" icon="@tui.clock">
+    <tw-preferences-card title="Task" icon="@tui.clock">
       <div class="switch-container">
         <div tuiLabel>
-          Default Reminder Time
+          Default Task Time
           <tui-input-time
             [ngModel]="settings.defaultReminderTime()"
             [mode]="settings.tuiTimeFormat()"
@@ -70,7 +70,7 @@ class TimeTransformer extends TuiValueTransformer<
           </tui-input-time>
         </div>
         <div tuiLabel>
-          Default Reminder Category
+          Default Task Category
           <tui-select
             [ngModel]="settings.defaultReminderCategory()"
             (ngModelChange)="settings.updateDefaultReminderCategory($event)"
