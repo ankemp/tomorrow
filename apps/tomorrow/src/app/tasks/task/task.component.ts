@@ -194,7 +194,32 @@ export class TaskComponent {
   }
 
   toggleSubtask(task: Task, subtaskIndex: number) {
+    const completedCount = task.subTasks.filter((t) => t.completedAt).length;
+    const subTaskAlreadyCompleted =
+      !!task.subTasks.at(subtaskIndex)?.completedAt;
     Tasks.toggleSubtask(task, subtaskIndex);
+    if (
+      !subTaskAlreadyCompleted &&
+      completedCount + 1 === task.subTasks.length &&
+      !task.completedAt
+    ) {
+      this.dialogs
+        .open<boolean>(TUI_CONFIRM, {
+          label: 'Complete Task?',
+          data: {
+            content: `All subtasks are complete. Mark "${task.title}" as complete?`,
+            yes: 'Mark Complete',
+            no: 'Cancel',
+          },
+        })
+        .pipe(
+          switchMap((response) => (response ? of(true) : EMPTY)),
+          tap(() => {
+            this.toggleTask(task);
+          }),
+        )
+        .subscribe();
+    }
   }
 
   toggleTask(task: Task) {
