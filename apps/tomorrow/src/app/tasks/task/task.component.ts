@@ -203,22 +203,26 @@ export class TaskComponent {
       completedCount + 1 === task.subTasks.length &&
       !task.completedAt
     ) {
-      this.dialogs
-        .open<boolean>(TUI_CONFIRM, {
-          label: 'Complete Task?',
-          data: {
-            content: `All subtasks are complete. Mark "${task.title}" as complete?`,
-            yes: 'Mark Complete',
-            no: 'Cancel',
-          },
-        })
-        .pipe(
-          switchMap((response) => (response ? of(true) : EMPTY)),
-          tap(() => {
-            this.toggleTask(task);
-          }),
-        )
-        .subscribe();
+      if (this.settings.autoCompleteTasks() === 'ask') {
+        this.dialogs
+          .open<boolean>(TUI_CONFIRM, {
+            label: 'Complete Task?',
+            data: {
+              content: `All subtasks are complete. Mark "${task.title}" as complete?`,
+              yes: 'Mark Complete',
+              no: 'Cancel',
+            },
+          })
+          .pipe(
+            switchMap((response) => (response ? of(true) : EMPTY)),
+            tap(() => {
+              this.toggleTask(task);
+            }),
+          )
+          .subscribe();
+      } else if (this.settings.autoCompleteTasks() === 'always') {
+        this.toggleTask(task);
+      }
     }
   }
 

@@ -26,6 +26,7 @@ const initialState: SettingsState = {
   defaultReminderCategory: null,
   startOfWeek: 'Sunday',
   timeFormat: '12h',
+  autoCompleteTasks: 'ask',
   locale: 'en-US', // TODO: Get from browser(?)
   userId: null,
   deviceId: null,
@@ -116,6 +117,11 @@ export const Settings = signalStore(
     },
     updateStartOfWeek(startOfWeek: string): void {
       patchState(store, { startOfWeek });
+    },
+    updateAutoCompleteTasks(
+      autoCompleteTasks: 'always' | 'never' | 'ask',
+    ): void {
+      patchState(store, { autoCompleteTasks });
     },
     setDeviceId(): void {
       const deviceId = window.crypto.randomUUID();
@@ -208,6 +214,7 @@ function pushUserSettings(http: HttpClient, settings: SettingsState) {
         defaultReminderCategory: settings.defaultReminderCategory,
         startOfWeek: settings.startOfWeek,
         timeFormat: settings.timeFormat,
+        autoCompleteTasks: settings.autoCompleteTasks,
         locale: settings.locale,
       })
       .pipe(

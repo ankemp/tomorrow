@@ -128,6 +128,24 @@ class TimeTransformer extends TuiValueTransformer<
             <tui-data-list-wrapper *tuiDataList [items]="['12h', '24h']" />
           </tui-select>
         </div>
+        <div tuiLabel>
+          Complete Tasks When Subtasks are Done
+          <tui-select
+            [ngModel]="settings.autoCompleteTasks()"
+            (ngModelChange)="settings.updateAutoCompleteTasks($event)"
+            [valueContent]="autoCompleteTasksValueTemplate"
+          >
+            Select Option
+            <tui-data-list-wrapper
+              *tuiDataList
+              [items]="['always', 'never', 'ask']"
+              [itemContent]="autoCompleteTasksValueTemplate"
+            />
+            <ng-template #autoCompleteTasksValueTemplate let-item>
+              <span style="text-transform: capitalize;">{{ item }}</span>
+            </ng-template>
+          </tui-select>
+        </div>
       </div>
     </tw-preferences-card>
   `,

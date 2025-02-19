@@ -88,6 +88,7 @@ export class User extends Model<
   declare defaultReminderCategory: string;
   declare startOfWeek: string;
   declare timeFormat: string;
+  declare autoCompleteTasks: 'always' | 'never' | 'ask';
   declare locale: string;
 }
 
@@ -100,6 +101,10 @@ User.init(
     defaultReminderCategory: { type: DataTypes.STRING },
     startOfWeek: { type: DataTypes.STRING },
     timeFormat: { type: DataTypes.STRING },
+    autoCompleteTasks: {
+      type: DataTypes.STRING,
+      validate: { isIn: [['always', 'never', 'ask']] },
+    },
     locale: { type: DataTypes.STRING },
   },
   {
