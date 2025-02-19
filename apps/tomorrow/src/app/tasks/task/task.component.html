@@ -220,8 +220,19 @@
         <ng-template #dropdown>
           <tui-data-list>
             <tui-opt-group>
-              <button tuiOption [routerLink]="['./edit']">Edit Task</button>
-              <button tuiOption (click)="deleteTask(t)">Delete Task</button>
+              <div tuiOption tuiGroup [collapsed]="true">
+                <button
+                  appearance="outline-destructive"
+                  iconStart="@tui.trash"
+                  tuiButton
+                  (click)="deleteTask(t)"
+                >
+                  Delete
+                </button>
+                <a appearance="outline" tuiButton [routerLink]="['./edit']">
+                  Edit Task
+                </a>
+              </div>
             </tui-opt-group>
           </tui-data-list>
         </ng-template>

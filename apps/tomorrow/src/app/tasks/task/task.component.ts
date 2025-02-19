@@ -20,6 +20,7 @@ import {
   TuiDataList,
   TuiDialogService,
   TuiDropdown,
+  TuiGroup,
   TuiIcon,
   TuiLink,
 } from '@taiga-ui/core';
@@ -50,6 +51,7 @@ import { FormatDatePipe } from '../_primitives/format-date/format-date.pipe';
     TuiAutoColorPipe,
     TuiButton,
     TuiDropdown,
+    TuiGroup,
     TuiDataList,
     TuiIcon,
     TuiLink,
