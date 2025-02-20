@@ -4,8 +4,8 @@
       Back
     </button>
   }
-  <h1 tuiTitle [routerLink]="['/']">
-    tmr.w
+  <div tuiTitle [routerLink]="['/']">
+    <img src="assets/logo.svg" alt="tmr.w" />
     <div [tuiSkeleton]="taskCount() === -1" tuiSubtitle>
       {{
         taskCount()
@@ -17,7 +17,7 @@
               }
       }}
     </div>
-  </h1>
+  </div>
 
   <button
     type="button"
