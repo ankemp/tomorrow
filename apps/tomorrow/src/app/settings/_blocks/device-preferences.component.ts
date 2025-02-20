@@ -105,7 +105,7 @@ export class DevicePreferencesComponent {
         label: 'Reset User Scope',
         data: {
           appearance: 'destructive',
-          content: 'Reset user scope, and leave sync group?',
+          content: `Reset user scope, and leave sync group?<br />This will not delete any task data.`,
           yes: 'Reset',
           no: 'Cancel',
         },
@@ -113,7 +113,6 @@ export class DevicePreferencesComponent {
       .pipe(
         switchMap((response) => (response ? of(true) : EMPTY)),
         tap(() => {
-          // this.attachmentsStore.clearStorage();
           this.settingsStore.resetUser();
         }),
         switchMap(() => {
