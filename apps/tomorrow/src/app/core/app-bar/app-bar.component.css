@@ -3,5 +3,6 @@
 }
 
 .logo {
-  max-height: 28px;
+  height: 24px;
+  width: auto;
 }

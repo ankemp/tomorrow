@@ -4,18 +4,20 @@
       Back
     </button>
   }
-  <div tuiTitle [routerLink]="['/']">
+  <div>
     <img class="logo" src="assets/logo.svg" alt="tmr.w" />
-    <div [tuiSkeleton]="taskCount() === -1" tuiSubtitle>
-      {{
-        taskCount()
-          | i18nPlural
-            : {
-                '=0': 'You have no tasks today',
-                '=1': 'You have one task today',
-                other: 'You have # tasks today',
-              }
-      }}
+    <div tuiTitle>
+      <div [tuiSkeleton]="taskCount() === -1" tuiSubtitle>
+        {{
+          taskCount()
+            | i18nPlural
+              : {
+                  '=0': 'You have no tasks today',
+                  '=1': 'You have one task today',
+                  other: 'You have # tasks today',
+                }
+        }}
+      </div>
     </div>
   </div>
 
