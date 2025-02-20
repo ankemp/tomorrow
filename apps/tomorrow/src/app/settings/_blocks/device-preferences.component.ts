@@ -114,9 +114,10 @@ export class DevicePreferencesComponent {
         switchMap((response) => (response ? of(true) : EMPTY)),
         tap(() => {
           // this.attachmentsStore.clearStorage();
+          this.settingsStore.resetUser();
         }),
         switchMap(() => {
-          return this.alerts.open('Scope reset', {
+          return this.alerts.open('User scope reset', {
             appearance: 'destructive',
             icon: '@tui.rotate-ccw',
           });
