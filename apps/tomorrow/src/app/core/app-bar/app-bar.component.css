@@ -1,3 +1,7 @@
 :host {
   display: block;
 }
+
+.logo {
+  max-height: 28px;
+}

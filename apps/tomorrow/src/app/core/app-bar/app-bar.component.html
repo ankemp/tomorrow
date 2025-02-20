@@ -5,7 +5,7 @@
     </button>
   }
   <div tuiTitle [routerLink]="['/']">
-    <img src="assets/logo.svg" alt="tmr.w" />
+    <img class="logo" src="assets/logo.svg" alt="tmr.w" />
     <div [tuiSkeleton]="taskCount() === -1" tuiSubtitle>
       {{
         taskCount()
