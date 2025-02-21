@@ -1,11 +1,13 @@
 <tui-root [attr.tuiTheme]="darkMode() ? 'dark' : null">
   <div class="tw-app-root">
-    <div class="tw-app-container">
-      <tw-app-bar />
+    <tui-scrollbar class="tw-app-container">
+      <header tuiElasticSticky>
+        <tw-app-bar />
+      </header>
       <tw-search />
 
       <router-outlet></router-outlet>
-    </div>
+    </tui-scrollbar>
     <tw-action-bar />
   </div>
 </tui-root>

@@ -1,7 +1,18 @@
 import { isPlatformBrowser } from '@angular/common';
-import { Component, effect, Inject, inject, PLATFORM_ID } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  effect,
+  Inject,
+  inject,
+  PLATFORM_ID,
+  ViewChild,
+} from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { TUI_DARK_MODE, TuiRoot } from '@taiga-ui/core';
+import { TuiElasticSticky } from '@taiga-ui/addon-mobile';
+import { tuiClamp } from '@taiga-ui/cdk';
+import { TUI_DARK_MODE, TuiRoot, TuiScrollbar } from '@taiga-ui/core';
+import { distinctUntilChanged, map, Observable, startWith } from 'rxjs';
 
 import { Settings, syncManager } from '@tmrw/data-access';
 
@@ -12,7 +23,9 @@ import { SearchComponent } from './core/search/search.component';
 @Component({
   imports: [
     RouterModule,
+    TuiElasticSticky,
     TuiRoot,
+    TuiScrollbar,
     ActionBarComponent,
     AppBarComponent,
     SearchComponent,
@@ -36,4 +49,6 @@ export class AppComponent {
       });
     }
   }
+
+  // TODO: Animate the app bar when scrolling, reduce height of logo, potentially replace with only circle icon(?)
 }

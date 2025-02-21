@@ -1,5 +1,7 @@
 :host {
   display: block;
+  /* TODO: Fade in shadow when scrolled */
+  /* box-shadow: var(--tui-shadow-small); */
 }
 
 .logo {

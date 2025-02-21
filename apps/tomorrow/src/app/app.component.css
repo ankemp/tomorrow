@@ -6,12 +6,16 @@
   display: flex;
   flex-direction: column;
   height: 100svh;
-  overflow: hidden;
 }
 
 .tw-app-container {
   /* margin: 0 auto; */
   /* max-width: 80rem; */
   flex-grow: 1;
-  overflow-y: auto;
+
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
 }
