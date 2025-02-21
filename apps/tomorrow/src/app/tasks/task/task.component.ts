@@ -178,7 +178,7 @@ export class TaskComponent {
           this.task.set(t);
           this.attachmentsStore.init(t);
         } else {
-          // TODO: Redirect to 404
+          this.router.navigate(['/tasks/404']);
         }
         onCleanup(() => {
           this.attachmentsStore.dispose();

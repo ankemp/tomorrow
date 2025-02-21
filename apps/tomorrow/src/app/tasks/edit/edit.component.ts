@@ -102,7 +102,7 @@ export class EditComponent implements AfterViewInit {
           this.attachmentsStore.init(t);
           this.setFormData(t);
         } else {
-          // TODO: Redirect to 404
+          this.router.navigate(['/tasks/404']);
         }
       });
     }

@@ -1,0 +1,7 @@
+<tui-block-status tuiAppearance="neutral" [card]="true">
+  <img tuiSlot="top" src="assets/task-not-found.png" alt="Task not found art" />
+  <h4>Task Not Found</h4>
+  The task you're looking for could not be found. Try searching for it or
+  browsing your task list.
+  <a tuiButton [routerLink]="['/tasks', 'new']"> New Task </a>
+</tui-block-status>
