@@ -1,23 +1,14 @@
 import { isPlatformBrowser } from '@angular/common';
-import {
-  AfterViewInit,
-  Component,
-  effect,
-  Inject,
-  inject,
-  PLATFORM_ID,
-  ViewChild,
-} from '@angular/core';
+import { Component, effect, Inject, inject, PLATFORM_ID } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TuiElasticSticky } from '@taiga-ui/addon-mobile';
-import { tuiClamp } from '@taiga-ui/cdk';
 import { TUI_DARK_MODE, TuiRoot, TuiScrollbar } from '@taiga-ui/core';
-import { distinctUntilChanged, map, Observable, startWith } from 'rxjs';
 
 import { Settings, syncManager } from '@tmrw/data-access';
 
 import { ActionBarComponent } from './core/action-bar/action-bar.component';
 import { AppBarComponent } from './core/app-bar/app-bar.component';
+import { Context } from './core/context.store';
 import { SearchComponent } from './core/search/search.component';
 
 @Component({
@@ -37,6 +28,7 @@ import { SearchComponent } from './core/search/search.component';
 export class AppComponent {
   readonly darkMode = inject(TUI_DARK_MODE);
   readonly settings = inject(Settings);
+  readonly context = inject(Context);
 
   constructor(@Inject(PLATFORM_ID) platformId: any) {
     if (isPlatformBrowser(platformId)) {

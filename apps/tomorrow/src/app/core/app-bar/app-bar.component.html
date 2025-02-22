@@ -48,3 +48,8 @@
     Settings
   </a>
 </tui-app-bar>
+@if (context.isOffline() && settings.remoteSync()) {
+  <tui-notification @tuiSlideInBottom size="s" appearance="warning">
+    Offline. Changes will sync automatically.
+  </tui-notification>
+}

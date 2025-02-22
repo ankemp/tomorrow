@@ -10,12 +10,19 @@ import {
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
-import { TuiButton, TuiTitle } from '@taiga-ui/core';
+import {
+  TuiButton,
+  TuiNotification,
+  tuiSlideInBottom,
+  TuiTitle,
+} from '@taiga-ui/core';
 import { TuiSkeleton } from '@taiga-ui/kit';
 import { TuiAppBar } from '@taiga-ui/layout';
 import { filter, map } from 'rxjs';
 
-import { Search, Tasks } from '@tmrw/data-access';
+import { Search, Settings, Tasks } from '@tmrw/data-access';
+
+import { Context } from '../context.store';
 
 @Component({
   selector: 'tw-app-bar',
@@ -23,6 +30,7 @@ import { Search, Tasks } from '@tmrw/data-access';
     CommonModule,
     RouterModule,
     TuiButton,
+    TuiNotification,
     TuiTitle,
     TuiSkeleton,
     TuiAppBar,
@@ -30,10 +38,13 @@ import { Search, Tasks } from '@tmrw/data-access';
   templateUrl: './app-bar.component.html',
   styleUrl: './app-bar.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [tuiSlideInBottom],
 })
 export class AppBarComponent {
   private readonly router = inject(Router);
   readonly search = inject(Search);
+  readonly settings = inject(Settings);
+  readonly context = inject(Context);
   readonly taskCount = signal<number>(-1);
   readonly showBackButton = toSignal(
     this.router.events.pipe(

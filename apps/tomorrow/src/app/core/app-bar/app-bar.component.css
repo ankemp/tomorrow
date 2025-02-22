@@ -8,3 +8,12 @@
   height: 24px;
   width: auto;
 }
+
+tui-app-bar {
+  z-index: 2;
+}
+
+tui-notification {
+  z-index: 1;
+  border-radius: unset !important;
+}
