@@ -5,6 +5,7 @@ import {
   TuiButton,
   TuiDialogService,
   TuiIcon,
+  TuiLink,
 } from '@taiga-ui/core';
 import { TUI_CONFIRM, TuiProgress, TuiProgressLabel } from '@taiga-ui/kit';
 import { TuiCell } from '@taiga-ui/layout';
@@ -13,6 +14,7 @@ import { EMPTY, of, switchMap, tap } from 'rxjs';
 
 import { Attachments, Settings } from '@tmrw/data-access';
 
+import { version } from '../../../environments/version';
 import { PreferencesCardComponent } from '../_primitives/preferences-card.component';
 
 @Component({
@@ -21,6 +23,7 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
     CommonModule,
     TuiButton,
     TuiIcon,
+    TuiLink,
     TuiProgress,
     TuiProgressLabel,
     TuiCell,
@@ -44,6 +47,12 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
         <div tuiTitle>
           {{ attachmentsStore.fsUsage() | bytes: 2 }} of
           {{ attachmentsStore.fsQuota() | bytes: 0 }}
+        </div>
+      </div>
+      <div tuiCell>
+        <div tuiLabel>
+          App Version:
+          <a tuiLink [href]="versionUrl" target="_blank">{{ version }}</a>
         </div>
       </div>
       <button
@@ -72,6 +81,13 @@ export class DevicePreferencesComponent {
   private readonly alerts = inject(TuiAlertService);
   readonly attachmentsStore = inject(Attachments);
   readonly settingsStore = inject(Settings);
+  readonly version = version;
+  get versionUrl() {
+    if (this.version === 'DEV') {
+      return 'https://github.com/ankemp/tomorrow';
+    }
+    return `https://github.com/ankemp/tomorrow/commit/${this.version}`;
+  }
 
   clearStorage() {
     this.dialogs

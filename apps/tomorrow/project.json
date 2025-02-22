@@ -8,19 +8,14 @@
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:application",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "dependsOn": ["update-version"],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/apps/tomorrow",
         "index": "apps/tomorrow/src/index.html",
         "browser": "apps/tomorrow/src/main.ts",
-        "externalDependencies": [
-          "sequelize"
-        ],
-        "polyfills": [
-          "zone.js"
-        ],
+        "externalDependencies": ["sequelize"],
+        "polyfills": ["zone.js"],
         "tsConfig": "apps/tomorrow/tsconfig.app.json",
         "assets": [
           {
@@ -72,7 +67,13 @@
             }
           ],
           "outputHashing": "all",
-          "serviceWorker": "apps/tomorrow/ngsw-config.json"
+          "serviceWorker": "apps/tomorrow/ngsw-config.json",
+          "fileReplacements": [
+            {
+              "replace": "apps/tomorrow/src/environments/version.ts",
+              "with": "apps/tomorrow/src/environments/version.prod.ts"
+            }
+          ]
         },
         "development": {
           "optimization": false,
@@ -115,9 +116,7 @@
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": [
-        "{workspaceRoot}/coverage/{projectRoot}"
-      ],
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
         "jestConfig": "apps/tomorrow/jest.config.ts"
       }
@@ -130,10 +129,14 @@
         "spa": true
       }
     },
+    "update-version": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node scripts/update-version.js"
+      }
+    },
     "docker-build": {
-      "dependsOn": [
-        "build"
-      ],
+      "dependsOn": ["build"],
       "command": "docker build -f apps/tomorrow/Dockerfile . -t tomorrow -t ankemp/tomorrow -t registry.magicbean.us/tomorrow"
     }
   }

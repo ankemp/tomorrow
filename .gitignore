@@ -4,6 +4,7 @@
 dist
 tmp
 out-tsc
+apps/tomorrow/src/environments/version.prod.ts
 
 # dependencies
 node_modules
