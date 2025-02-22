@@ -74,6 +74,7 @@ export class CategoryComponent {
     this.title.set(activatedRoute.snapshot.params['slug']);
     if (isPlatformBrowser(platformId)) {
       effect((onCleanup) => {
+        // TODO: Move filtering to the Tasks service instead of using computed
         const c = Tasks.getByCategory(this.title());
         this.categoryTasks.set(c.fetch());
         onCleanup(() => {

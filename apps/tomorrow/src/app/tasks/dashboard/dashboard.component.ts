@@ -64,23 +64,6 @@ export class DashboardComponent {
     }
   }
 
-  createTask() {
-    const randomTitle = `Task ${Math.floor(Math.random() * 1000)}`;
-    const randomDate = new Date(
-      Date.now() + Math.floor(Math.random() * 8) * 24 * 60 * 60 * 1000,
-    );
-    const categories = ['Work', 'Personal', 'Health', 'Shopping'];
-    const randomCategory =
-      categories[Math.floor(Math.random() * categories.length)];
-
-    Tasks.insert({
-      title: randomTitle,
-      date: randomDate,
-      category: randomCategory,
-      completedAt: null,
-    });
-  }
-
   completeAll(tasks: Task[]) {
     tasks.forEach((task) => {
       Tasks.completeTask(task);

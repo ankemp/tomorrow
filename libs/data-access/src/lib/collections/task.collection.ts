@@ -1,3 +1,4 @@
+import { isDevMode } from '@angular/core';
 import angularReactivityAdapter from '@signaldb/angular';
 import { Collection, createIndex } from '@signaldb/core';
 import createIndexedDBAdapter from '@signaldb/indexeddb';
@@ -178,6 +179,34 @@ class TaskCollection extends Collection<Task> {
 }
 
 export const Tasks = new TaskCollection();
+
+function createRandomTask() {
+  const randomTitle = `Task ${Math.floor(Math.random() * 1000)}`;
+  const randomDate = new Date(
+    Date.now() + Math.floor(Math.random() * 8) * 24 * 60 * 60 * 1000,
+  );
+  const categories = ['Work', 'Personal', 'Health', 'Shopping'];
+  const randomCategory =
+    categories[Math.floor(Math.random() * categories.length)];
+
+  return {
+    title: randomTitle,
+    date: randomDate,
+    category: randomCategory,
+    completedAt: null,
+  };
+}
+
+if (isDevMode() && typeof window !== 'undefined') {
+  (window as any).createRandomTasks = (count: number) => {
+    const tasks = [];
+    for (let i = 0; i < count; i++) {
+      tasks.push(createRandomTask());
+    }
+    console.log('inserting tasks', tasks);
+    Tasks.insertMany(tasks);
+  };
+}
 
 syncManager.addCollection(Tasks, {
   name: 'tasks',
