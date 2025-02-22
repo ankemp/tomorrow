@@ -7,6 +7,26 @@
 
 <!-- TODO: Add bulk management with https://taiga-ui.dev/components/actions-bar -->
 
+@if (hasPinnedTasks()) {
+  <section class="task-list-grid">
+    <tw-task-list-header title="Pinned" headerSize="s" icon="@tui.pin">
+      <!-- <button
+        appearance="flat-grayscale"
+        size="m"
+        tuiIconButton
+        iconStart="@tui.check-check"
+        type="button"
+        (click)="completeAll(pinnedTasks())"
+      >
+        Complete All
+      </button> -->
+    </tw-task-list-header>
+    @for (task of pinnedTasks(); track task.id) {
+      <tw-task-list-card [task]="task" [fullDateFormat]="true" />
+    }
+  </section>
+}
+
 @if (hasOverdueTasks()) {
   <section class="task-list-grid">
     <tw-task-list-header title="Overdue" headerSize="s" icon="@tui.clock-9">

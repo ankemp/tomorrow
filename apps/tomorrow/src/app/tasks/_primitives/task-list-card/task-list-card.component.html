@@ -12,14 +12,14 @@
     tuiIconButton
     type="button"
     [style.border-radius.%]="100"
-    (click)="toggleTask()"
+    (click)="toggleTask(task())"
   >
     {{ task().completedAt ? 'Undo' : 'Done' }}
   </button>
   <div tuiTitle>
     <span class="title" tuiFade>{{ task().title }}</span>
     <div tuiSubtitle>
-      {{ task().date | formatDate }}
+      {{ task().date | formatDate: fullDateFormat() }}
     </div>
   </div>
   @if (showCategory()) {

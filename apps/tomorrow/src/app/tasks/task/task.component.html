@@ -34,6 +34,11 @@
           }
         </div>
       </h2>
+      <div tuiAccessories>
+        @if (t.pinned) {
+          <tui-icon icon="@tui.pin" />
+        }
+      </div>
     </header>
     @if (t.description) {
       <div>{{ t.description }}</div>
@@ -218,23 +223,32 @@
           Menu
         </button>
         <ng-template #dropdown>
-          <tui-data-list>
-            <tui-opt-group>
-              <div tuiOption tuiGroup [collapsed]="true">
-                <button
-                  appearance="outline-destructive"
-                  iconStart="@tui.trash"
-                  tuiButton
-                  (click)="deleteTask(t)"
-                >
-                  Delete
-                </button>
-                <a appearance="outline" tuiButton [routerLink]="['./edit']">
-                  Edit Task
-                </a>
-              </div>
-            </tui-opt-group>
-          </tui-data-list>
+          <div class="action-grid">
+            <button
+              appearance="secondary-destructive"
+              iconStart="@tui.trash"
+              tuiButton
+              (click)="deleteTask(t)"
+            >
+              Delete Task
+            </button>
+            <button
+              appearance="secondary-grayscale"
+              [iconStart]="t.pinned ? '@tui.pin-off' : '@tui.pin'"
+              tuiButton
+              (click)="pinTask(t)"
+            >
+              {{ t.pinned ? 'Unpin' : 'Pin' }} Task
+            </button>
+            <a
+              appearance="secondary"
+              iconStart="@tui.pencil"
+              tuiButton
+              [routerLink]="['./edit']"
+            >
+              Edit Task
+            </a>
+          </div>
         </ng-template>
       </div>
     </ng-template>

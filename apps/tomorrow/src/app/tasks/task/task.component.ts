@@ -237,6 +237,17 @@ export class TaskComponent {
       .subscribe();
   }
 
+  pinTask(task: Task) {
+    Tasks.pinTask(task);
+    this.menuOpen.set(false);
+    this.alerts
+      .open(task.pinned ? 'Task unpinned' : 'Task pinned', {
+        appearance: task.pinned ? 'destructive' : 'success',
+        icon: task.pinned ? '@tui.pin-off' : '@tui.pin',
+      })
+      .subscribe();
+  }
+
   deleteTask(task: Task) {
     this.dialogs
       .open<boolean>(TUI_CONFIRM, {

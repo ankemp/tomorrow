@@ -10,6 +10,7 @@ export interface Task extends BaseModel {
   date: Date;
   category: string;
   description: string | null;
+  pinned: boolean;
   completedAt: Date | null;
   location: string | null;
   duration: number | null;

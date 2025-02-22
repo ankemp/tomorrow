@@ -36,15 +36,19 @@ import { TaskListHeaderComponent } from '../_primitives/task-list-header/task-li
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent {
+  readonly pinnedTasks = signal<Task[]>([]);
   readonly overDueTasks = signal<Task[]>([]);
   readonly todaysTasks = signal<Task[]>([]);
   readonly upcomingTasks = signal<Task[]>([]);
   readonly isReady = Tasks.isReady();
+  readonly hasPinnedTasks = computed(() => this.pinnedTasks().length > 0);
   readonly hasOverdueTasks = computed(() => this.overDueTasks().length > 0);
 
   constructor(@Inject(PLATFORM_ID) platformId: any) {
     if (isPlatformBrowser(platformId)) {
       effect((onCleanup) => {
+        const pt = Tasks.getPinnedTasks();
+        this.pinnedTasks.set(pt.fetch());
         const ot = Tasks.getOverdueTasks();
         this.overDueTasks.set(ot.fetch());
         const tt = Tasks.getTodaysTasks();

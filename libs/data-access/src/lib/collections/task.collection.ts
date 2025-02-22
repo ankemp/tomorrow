@@ -27,8 +27,16 @@ class TaskCollection extends Collection<Task> {
     );
   }
 
-  completeTask(task: Task) {
-    this.updateOne({ id: task.id }, { $set: { completedAt: new Date() } });
+  completeTask(task: Task, andUnpin = false) {
+    this.updateOne(
+      { id: task.id },
+      {
+        $set: {
+          completedAt: new Date(),
+          pinned: andUnpin ? false : task.pinned,
+        },
+      },
+    );
   }
 
   toggleSubtask(task: Task, subtaskIndex: number) {
@@ -56,6 +64,10 @@ class TaskCollection extends Collection<Task> {
     );
   }
 
+  pinTask(task: Task) {
+    this.updateOne({ id: task.id }, { $set: { pinned: !task.pinned } });
+  }
+
   searchTasks(query: string) {
     return this.find(
       {
@@ -80,11 +92,25 @@ class TaskCollection extends Collection<Task> {
     });
   }
 
+  getPinnedTasks(includeCompleted = true) {
+    return this.find(
+      {
+        pinned: true,
+        // FIXME: not working as expected
+        // completedAt: includeCompleted ? { $ne: null } : null,
+      },
+      {
+        sort: { date: 1 },
+      },
+    );
+  }
+
   getOverdueTasks() {
     return this.find(
       {
         date: { $lt: startOfToday() },
         completedAt: null,
+        pinned: false,
       },
       {
         sort: { date: 1 },
@@ -97,6 +123,7 @@ class TaskCollection extends Collection<Task> {
       {
         date: { $gte: startOfToday(), $lt: endOfToday() },
         completedAt: null,
+        pinned: false,
       },
       {
         sort: { date: 1 },
@@ -108,6 +135,7 @@ class TaskCollection extends Collection<Task> {
     return this.find(
       {
         date: { $gte: startOfToday(), $lt: endOfToday() },
+        pinned: false,
       },
       {
         sort: { date: 1 },
@@ -119,6 +147,7 @@ class TaskCollection extends Collection<Task> {
     return this.find(
       {
         date: { $gt: startOfTomorrow() },
+        pinned: false,
       },
       {
         sort: { date: 1 },

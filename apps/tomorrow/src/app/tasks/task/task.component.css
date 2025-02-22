@@ -14,3 +14,15 @@
   display: flex;
   justify-content: space-between;
 }
+
+.action-grid {
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  padding: 0.5rem 0.5rem 1rem;
+
+  > [tuibutton] {
+    flex-direction: column;
+    height: 5.5rem;
+  }
+}
