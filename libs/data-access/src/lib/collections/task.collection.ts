@@ -110,7 +110,7 @@ class TaskCollection extends Collection<Task> {
       {
         date: { $lt: startOfToday() },
         completedAt: null,
-        pinned: false,
+        $or: [{ pinned: false }, { pinned: { $exists: false } }],
       },
       {
         sort: { date: 1 },
@@ -123,7 +123,7 @@ class TaskCollection extends Collection<Task> {
       {
         date: { $gte: startOfToday(), $lt: endOfToday() },
         completedAt: null,
-        pinned: false,
+        $or: [{ pinned: false }, { pinned: { $exists: false } }],
       },
       {
         sort: { date: 1 },
@@ -135,7 +135,7 @@ class TaskCollection extends Collection<Task> {
     return this.find(
       {
         date: { $gte: startOfToday(), $lt: endOfToday() },
-        pinned: false,
+        $or: [{ pinned: false }, { pinned: { $exists: false } }],
       },
       {
         sort: { date: 1 },
@@ -147,7 +147,7 @@ class TaskCollection extends Collection<Task> {
     return this.find(
       {
         date: { $gt: startOfTomorrow() },
-        pinned: false,
+        $or: [{ pinned: false }, { pinned: { $exists: false } }],
       },
       {
         sort: { date: 1 },
