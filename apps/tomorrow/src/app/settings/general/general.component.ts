@@ -63,7 +63,7 @@ export class GeneralComponent {
     this.alerts
       .open('All data synced', {
         appearance: 'success',
-        icon: '@tui.check-circle',
+        icon: '@tui.circle-check',
       })
       .subscribe();
   }
