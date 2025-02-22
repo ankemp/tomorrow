@@ -7,7 +7,12 @@ import {
   TuiIcon,
   TuiLink,
 } from '@taiga-ui/core';
-import { TUI_CONFIRM, TuiProgress, TuiProgressLabel } from '@taiga-ui/kit';
+import {
+  TUI_CONFIRM,
+  TuiAvatar,
+  TuiProgress,
+  TuiProgressLabel,
+} from '@taiga-ui/kit';
 import { TuiCell } from '@taiga-ui/layout';
 import { NgMathPipesModule } from 'ngx-pipes';
 import { EMPTY, of, switchMap, tap } from 'rxjs';
@@ -15,6 +20,7 @@ import { EMPTY, of, switchMap, tap } from 'rxjs';
 import { Attachments, Settings } from '@tmrw/data-access';
 
 import { version } from '../../../environments/version';
+import { Context } from '../../core/context.store';
 import { PreferencesCardComponent } from '../_primitives/preferences-card.component';
 
 @Component({
@@ -24,6 +30,7 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
     TuiButton,
     TuiIcon,
     TuiLink,
+    TuiAvatar,
     TuiProgress,
     TuiProgressLabel,
     TuiCell,
@@ -49,10 +56,23 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
           {{ attachmentsStore.fsQuota() | bytes: 0 }}
         </div>
       </div>
-      <div tuiCell>
-        <div tuiLabel>
-          App Version:
-          <a tuiLink [href]="versionUrl" target="_blank">{{ version }}</a>
+      <div class="version-cell" tuiCell>
+        <tui-avatar src="@tui.rocket" />
+        <div tuiTitle>
+          <div class="version-container">
+            App Version:&nbsp;
+            <a tuiLink [href]="versionUrl" target="_blank">
+              {{ version.substring(0, 7) }}
+            </a>
+          </div>
+          @if (context.isUpdating()) {
+            <label class="update-progress" tuiProgressLabel>
+              Updating...
+              <progress tuiProgressBar size="l" [max]="100"></progress>
+            </label>
+          } @else {
+            Up to date
+          }
         </div>
       </div>
       <button
@@ -74,6 +94,29 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
     </tw-preferences-card>
   `,
   styleUrl: './styles.css',
+  styles: `
+    .version-cell {
+      tui-avatar {
+        color: var(--tui-background-accent-1);
+        margin: 0.55rem;
+      }
+
+      [tuititle] {
+        width: 100%;
+      }
+
+      .version-container {
+        display: flex;
+        flex-direction: row;
+      }
+
+      .update-progress {
+        color: var(--tui-text-primary-on-accent-1);
+        inline-size: 100%;
+        text-shadow: 0 0 0.25rem #000;
+      }
+    }
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DevicePreferencesComponent {
@@ -81,6 +124,7 @@ export class DevicePreferencesComponent {
   private readonly alerts = inject(TuiAlertService);
   readonly attachmentsStore = inject(Attachments);
   readonly settingsStore = inject(Settings);
+  readonly context = inject(Context);
   readonly version: string = version;
   get versionUrl() {
     if (this.version === 'DEV') {
