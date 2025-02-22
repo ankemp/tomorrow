@@ -81,7 +81,7 @@ export class DevicePreferencesComponent {
   private readonly alerts = inject(TuiAlertService);
   readonly attachmentsStore = inject(Attachments);
   readonly settingsStore = inject(Settings);
-  readonly version = version;
+  readonly version: string = version;
   get versionUrl() {
     if (this.version === 'DEV') {
       return 'https://github.com/ankemp/tomorrow';
