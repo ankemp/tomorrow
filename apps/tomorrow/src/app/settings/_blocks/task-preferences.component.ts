@@ -34,7 +34,7 @@ class TimeTransformer extends TuiValueTransformer<
 
 // TODO: Add default reminder time-from-now if today
 @Component({
-  selector: 'tw-reminder-preferences',
+  selector: 'tw-task-preferences',
   imports: [
     CommonModule,
     FormsModule,
@@ -152,6 +152,6 @@ class TimeTransformer extends TuiValueTransformer<
   styleUrl: './styles.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ReminderPreferencesComponent {
+export class TaskPreferencesComponent {
   readonly settings = inject(Settings);
 }

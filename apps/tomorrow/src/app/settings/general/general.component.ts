@@ -23,8 +23,8 @@ import { Settings, syncManager } from '@tmrw/data-access';
 import { DevicePreferencesComponent } from '../_blocks/device-preferences.component';
 import { DisplayPreferencesComponent } from '../_blocks/display-preferences.component';
 import { NotificationPreferencesComponent } from '../_blocks/notification-preferences.component';
-import { ReminderPreferencesComponent } from '../_blocks/reminder-preferences.component';
 import { SyncPreferencesComponent } from '../_blocks/sync-preferences.component';
+import { TaskPreferencesComponent } from '../_blocks/task-preferences.component';
 
 @Component({
   selector: 'tw-general',
@@ -46,8 +46,8 @@ import { SyncPreferencesComponent } from '../_blocks/sync-preferences.component'
     DevicePreferencesComponent,
     DisplayPreferencesComponent,
     NotificationPreferencesComponent,
-    ReminderPreferencesComponent,
     SyncPreferencesComponent,
+    TaskPreferencesComponent,
   ],
   templateUrl: './general.component.html',
   styleUrl: './general.component.css',
