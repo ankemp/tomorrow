@@ -5,13 +5,15 @@ import {
   computed,
   effect,
   Inject,
+  inject,
   PLATFORM_ID,
   signal,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TuiButton } from '@taiga-ui/core';
+import { DateValues, set } from 'date-fns';
 
-import { Task, Tasks } from '@tmrw/data-access';
+import { Settings, Task, Tasks } from '@tmrw/data-access';
 
 import { ActionBarComponent } from '../../core/action-bar/action-bar-portal.component';
 import { CategoryCardComponent } from '../_primitives/category-card/category-card.component';
@@ -36,6 +38,7 @@ import { TaskListHeaderComponent } from '../_primitives/task-list-header/task-li
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent {
+  readonly settings = inject(Settings);
   readonly pinnedTasks = signal<Task[]>([]);
   readonly overDueTasks = signal<Task[]>([]);
   readonly todaysTasks = signal<Task[]>([]);
@@ -67,6 +70,23 @@ export class DashboardComponent {
   completeAll(tasks: Task[]) {
     tasks.forEach((task) => {
       Tasks.completeTask(task);
+    });
+  }
+
+  moveToToday(tasks: Task[]) {
+    const [hours, minutes] = this.settings
+      .defaultReminderTime()
+      .split(':')
+      .map(Number);
+    const dateValues: DateValues = {
+      hours,
+      minutes,
+      seconds: 0,
+      milliseconds: 0,
+    };
+    const today = set(new Date(), dateValues);
+    tasks.forEach((task) => {
+      Tasks.updateDate(task, today);
     });
   }
 }

@@ -69,6 +69,17 @@ class TaskCollection extends Collection<Task> {
     this.updateOne({ id: task.id }, { $set: { pinned: !task.pinned } });
   }
 
+  updateDate(task: Task, date: Date) {
+    this.updateOne(
+      { id: task.id },
+      {
+        $set: {
+          date: date,
+        },
+      },
+    );
+  }
+
   searchTasks(query: string) {
     return this.find(
       {

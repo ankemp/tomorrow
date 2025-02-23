@@ -125,11 +125,11 @@ export class DatePickerComponent implements ControlValueAccessor {
   constructor() {
     effect(() => {
       const preset = this.datePickerPreset();
-      const defaultReminderTime = this.settings.defaultReminderTime();
       const today = new Date();
-      const [hours, minutes] = defaultReminderTime
-        ? defaultReminderTime.split(':').map(Number)
-        : [0, 0];
+      const [hours, minutes] = this.settings
+        .defaultReminderTime()
+        .split(':')
+        .map(Number);
       const dateValues: DateValues = {
         hours,
         minutes,
