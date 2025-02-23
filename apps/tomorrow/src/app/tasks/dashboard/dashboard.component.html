@@ -9,7 +9,12 @@
 
 @if (hasPinnedTasks()) {
   <section class="task-list-grid">
-    <tw-task-list-header title="Pinned" headerSize="s" icon="@tui.pin">
+    <tw-task-list-header
+      title="Pinned"
+      headerSize="s"
+      icon="@tui.pin"
+      [sticky]="true"
+    >
       <!-- <button
         appearance="flat-grayscale"
         size="m"
@@ -29,7 +34,12 @@
 
 @if (hasOverdueTasks()) {
   <section class="task-list-grid">
-    <tw-task-list-header title="Overdue" headerSize="s" icon="@tui.clock-9">
+    <tw-task-list-header
+      title="Overdue"
+      headerSize="s"
+      icon="@tui.clock-9"
+      [sticky]="true"
+    >
       <button
         appearance="flat-grayscale"
         size="m"
@@ -58,7 +68,12 @@
 }
 
 <section class="task-list-grid">
-  <tw-task-list-header title="Today" headerSize="s" icon="@tui.clock-12">
+  <tw-task-list-header
+    title="Today"
+    headerSize="s"
+    icon="@tui.clock-12"
+    [sticky]="true"
+  >
     @if (todaysTasks().length > 0) {
       <button
         appearance="flat-grayscale"
@@ -87,6 +102,7 @@
     title="Upcoming"
     headerSize="s"
     icon="@tui.calendar-days"
+    [sticky]="true"
   >
     @if (upcomingTasks().length > 0) {
       <button

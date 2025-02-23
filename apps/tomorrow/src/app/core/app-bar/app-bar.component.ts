@@ -62,6 +62,11 @@ export class AppBarComponent {
           c.cleanup();
         });
       });
+      effect(() => {
+        if (this.context.isOffline() && this.settings.remoteSync()) {
+          document.documentElement.style.setProperty('--header-offset', '2rem');
+        }
+      });
     }
   }
 }

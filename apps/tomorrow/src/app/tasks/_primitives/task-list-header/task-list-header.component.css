@@ -1,5 +1,12 @@
 :host {
   display: block;
+  background-color: var(--tui-background-base);
+
+  &.sticky {
+    position: sticky;
+    top: calc(56px + var(--header-offset));
+    z-index: 96;
+  }
 }
 
 [tuiHeader] {

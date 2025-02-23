@@ -10,10 +10,10 @@
 }
 
 tui-app-bar {
-  z-index: 2;
+  z-index: 98;
 }
 
 tui-notification {
-  z-index: 1;
+  z-index: 97;
   border-radius: unset !important;
 }
