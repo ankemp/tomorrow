@@ -38,6 +38,7 @@ export const Context = signalStore(
       pipe(
         switchMap(() =>
           merge(
+            // FIXME: Causes references error on server.
             fromEvent(window, 'offline').pipe(map(() => false)),
             fromEvent(window, 'online').pipe(map(() => true)),
           ),
