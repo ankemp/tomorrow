@@ -27,6 +27,7 @@ const initialState: SettingsState = {
   startOfWeek: 'Sunday',
   timeFormat: '12h',
   autoCompleteTasks: 'ask',
+  timeSpecificity: 'always',
   locale: 'en-US', // TODO: Get from browser(?)
   userId: null,
   deviceId: null,
@@ -122,6 +123,11 @@ export const Settings = signalStore(
       autoCompleteTasks: 'always' | 'never' | 'ask',
     ): void {
       patchState(store, { autoCompleteTasks });
+    },
+    updateTimeSpecificity(
+      timeSpecificity: 'always' | 'never' | 'optional',
+    ): void {
+      patchState(store, { timeSpecificity });
     },
     setDeviceId(): void {
       const deviceId = window.crypto.randomUUID();

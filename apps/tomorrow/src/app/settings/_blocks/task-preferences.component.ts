@@ -70,6 +70,37 @@ class TimeTransformer extends TuiValueTransformer<
           </tui-input-time>
         </div>
         <div tuiLabel>
+          Time Format
+          <tui-select
+            [ngModel]="settings.timeFormat()"
+            (ngModelChange)="settings.updateTimeFormat($event)"
+          >
+            Select format
+            <tui-data-list-wrapper *tuiDataList [items]="['12h', '24h']" />
+          </tui-select>
+        </div>
+        <div tuiLabel>
+          Start of Week
+          <tui-select
+            [ngModel]="settings.startOfWeek()"
+            (ngModelChange)="settings.updateStartOfWeek($event)"
+          >
+            Select Day
+            <tui-data-list-wrapper
+              *tuiDataList
+              [items]="[
+                'Sunday',
+                'Monday',
+                'Tuesday',
+                'Wednesday',
+                'Thursday',
+                'Friday',
+                'Saturday',
+              ]"
+            />
+          </tui-select>
+        </div>
+        <div tuiLabel>
           Default Task Category
           <tui-select
             [ngModel]="settings.defaultReminderCategory()"
@@ -98,34 +129,22 @@ class TimeTransformer extends TuiValueTransformer<
           </tui-select>
         </div>
         <div tuiLabel>
-          Start of Week
+          Time Specificity
           <tui-select
-            [ngModel]="settings.startOfWeek()"
-            (ngModelChange)="settings.updateStartOfWeek($event)"
+            [ngModel]="settings.timeSpecificity()"
+            (ngModelChange)="settings.updateTimeSpecificity($event)"
+            [valueContent]="timeSpecificityValueTemplate"
           >
-            Select Day
+            Select Option
+            <!-- TODO: add optional as an item, requires writing a custom validator for our date-picker -->
             <tui-data-list-wrapper
               *tuiDataList
-              [items]="[
-                'Sunday',
-                'Monday',
-                'Tuesday',
-                'Wednesday',
-                'Thursday',
-                'Friday',
-                'Saturday',
-              ]"
+              [items]="['always', 'never']"
+              [itemContent]="timeSpecificityValueTemplate"
             />
-          </tui-select>
-        </div>
-        <div tuiLabel>
-          Time Format
-          <tui-select
-            [ngModel]="settings.timeFormat()"
-            (ngModelChange)="settings.updateTimeFormat($event)"
-          >
-            Select format
-            <tui-data-list-wrapper *tuiDataList [items]="['12h', '24h']" />
+            <ng-template #timeSpecificityValueTemplate let-item>
+              <span style="text-transform: capitalize;">{{ item }}</span>
+            </ng-template>
           </tui-select>
         </div>
         <div tuiLabel>

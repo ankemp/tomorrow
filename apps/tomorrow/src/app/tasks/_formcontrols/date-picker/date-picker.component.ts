@@ -21,8 +21,12 @@ import {
   TuiAppearance,
   tuiDateFormatProvider,
 } from '@taiga-ui/core';
-import { TUI_DATE_TIME_VALUE_TRANSFORMER, TuiChip } from '@taiga-ui/kit';
-import { TuiInputDateTimeModule } from '@taiga-ui/legacy';
+import {
+  TUI_DATE_TIME_VALUE_TRANSFORMER,
+  TUI_DATE_VALUE_TRANSFORMER,
+  TuiChip,
+} from '@taiga-ui/kit';
+import { TuiInputDateModule, TuiInputDateTimeModule } from '@taiga-ui/legacy';
 import { addDays, DateValues, nextSaturday, set } from 'date-fns';
 
 import { Settings } from '@tmrw/data-access';
@@ -59,6 +63,16 @@ class DateTimeTransformer extends TuiValueTransformer<
   }
 }
 
+class DateTransformer extends TuiValueTransformer<TuiDay | null, Date | null> {
+  fromControlValue(controlValue: Date | null): TuiDay | null {
+    return controlValue ? TuiDay.fromLocalNativeDate(controlValue) : null;
+  }
+
+  toControlValue(value: TuiDay | null): Date | null {
+    return value ? value.toLocalNativeDate() : null;
+  }
+}
+
 @Component({
   selector: 'tw-date-picker',
   imports: [
@@ -66,6 +80,7 @@ class DateTimeTransformer extends TuiValueTransformer<
     FormsModule,
     TuiAppearance,
     TuiChip,
+    TuiInputDateModule,
     TuiInputDateTimeModule,
   ],
   templateUrl: './date-picker.component.html',
@@ -79,6 +94,10 @@ class DateTimeTransformer extends TuiValueTransformer<
     {
       provide: TUI_DATE_TIME_VALUE_TRANSFORMER,
       useClass: DateTimeTransformer,
+    },
+    {
+      provide: TUI_DATE_VALUE_TRANSFORMER,
+      useClass: DateTransformer,
     },
     {
       provide: TUI_FIRST_DAY_OF_WEEK,

@@ -4,6 +4,7 @@ export type SettingsState = {
   defaultReminderCategory: string | null;
   startOfWeek: string;
   timeFormat: string;
+  timeSpecificity: 'always' | 'never' | 'optional';
   autoCompleteTasks: 'always' | 'never' | 'ask';
   locale: string;
   userId: string | null;

@@ -2,9 +2,11 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   TuiAlertService,
+  TuiAppearance,
   TuiButton,
   TuiDialogService,
   TuiIcon,
+  TuiLabel,
   TuiLink,
 } from '@taiga-ui/core';
 import {
@@ -27,8 +29,10 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
   selector: 'tw-device-preferences',
   imports: [
     CommonModule,
+    TuiAppearance,
     TuiButton,
     TuiIcon,
+    TuiLabel,
     TuiLink,
     TuiAvatar,
     TuiProgress,
@@ -71,7 +75,14 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
               <progress tuiProgressBar size="l" [max]="100"></progress>
             </label>
           } @else {
-            Up to date
+            <label tuiLabel>
+              <tui-icon
+                style="--t-bg: unset"
+                tuiAppearance="positive"
+                icon="@tui.check"
+              />
+              Up to date
+            </label>
           }
         </div>
       </div>
@@ -89,7 +100,7 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
         tuiButton
         (click)="resetUser()"
       >
-        Reset User Scope
+        Reset user scope
       </button>
     </tw-preferences-card>
   `,

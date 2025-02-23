@@ -49,7 +49,7 @@
   </label>
 </div>
 
-@if (showDatePicker()) {
+@if (showDatePicker() && settings.timeSpecificity() === 'always') {
   <tui-input-date-time
     [timeMode]="settings.tuiTimeFormat()"
     [(ngModel)]="date"
@@ -57,4 +57,9 @@
   >
     Choose date and time
   </tui-input-date-time>
+}
+@if (showDatePicker() && settings.timeSpecificity() === 'never') {
+  <tui-input-date [(ngModel)]="date" [disabled]="disabled()">
+    Choose date
+  </tui-input-date>
 }

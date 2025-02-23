@@ -37,9 +37,10 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
           />
         </label>
         <label tuiLabel>
-          <span
-            >Encryption
+          <span>
+            Encryption
             <tui-icon
+              style="--t-bg: unset"
               [appearance]="
                 settings.hasEncryptionKey() ? 'positive' : 'negative'
               "
@@ -47,7 +48,8 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
               tuiTooltip="Encryption key is {{
                 settings.hasEncryptionKey() ? 'ready' : 'not ready'
               }}"
-          /></span>
+            />
+          </span>
           <!-- TODO: Add ability to delete key, warn about losing all data -->
           <input
             tuiSwitch
