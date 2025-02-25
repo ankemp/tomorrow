@@ -4,8 +4,9 @@ import {
   Component,
   computed,
   inject,
+  OnInit,
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { TuiSheetDialog } from '@taiga-ui/addon-mobile';
 import { TuiAutoFocus } from '@taiga-ui/cdk';
@@ -19,6 +20,7 @@ import {
 } from '@taiga-ui/core';
 import { TuiChip, TuiFade } from '@taiga-ui/kit';
 import { TuiAppBar, TuiBlockStatus, TuiCell } from '@taiga-ui/layout';
+import { debounceTime, filter } from 'rxjs';
 
 import { Search } from '@tmrw/data-access';
 
@@ -28,7 +30,7 @@ import { FormatDatePipe } from '../../tasks/_primitives/format-date/format-date.
   selector: 'tw-search',
   imports: [
     CommonModule,
-    FormsModule,
+    ReactiveFormsModule,
     RouterModule,
     TuiSheetDialog,
     TuiAutoFocus,
@@ -49,9 +51,10 @@ import { FormatDatePipe } from '../../tasks/_primitives/format-date/format-date.
   styleUrl: './search.component.less',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchComponent {
+export class SearchComponent implements OnInit {
   private readonly router = inject(Router);
   readonly search = inject(Search);
+  readonly searchInput = new FormControl();
 
   results = computed(() => {
     if (!this.search.query()) {
@@ -65,6 +68,22 @@ export class SearchComponent {
     }
     return this.search.cursor().count();
   });
+
+  ngOnInit(): void {
+    this.searchInput.valueChanges
+      .pipe(
+        filter((value) => value.length > 0),
+        debounceTime(300),
+      )
+      .subscribe((value) => {
+        this.search.setQuery(value);
+      });
+  }
+
+  setFromRecent(query: string) {
+    this.searchInput.setValue(query, { emitEvent: false });
+    this.search.setFromRecent(query);
+  }
 
   goToTask(id: string) {
     this.search.close();

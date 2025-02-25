@@ -18,9 +18,28 @@
   }
 }
 
+section {
+  padding: 0.5rem 0;
+}
+
+.history {
+  align-items: center;
+  display: flex;
+
+  &-list {
+    display: flex;
+    gap: 0.5rem;
+    margin-left: 0.5rem;
+  }
+}
+
 .results {
   display: grid;
   gap: 0.5rem;
+
+  tuicell {
+    white-space: nowrap;
+  }
 }
 
 .no-results {

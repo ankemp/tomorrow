@@ -11,8 +11,7 @@
     tuiAutoFocus
     type="search"
     class="input"
-    [ngModel]="search.query()"
-    (ngModelChange)="search.setQuery($event)"
+    [formControl]="searchInput"
   />
 </ng-template>
 <ng-template
@@ -20,20 +19,29 @@
   [tuiSheetDialogOptions]="{ label: bar, bar: false }"
   (tuiSheetDialogChange)="search.setIsOpen($event)"
 >
-  <!-- <div class="favorites">
-    <tui-avatar-labeled
-      *ngFor="let item of items | slice: 0 : 6"
-      [label]="item.name"
-    >
-      <tui-avatar [src]="item.avatar | tuiFallbackSrc: '@tui.user' | async" />
-    </tui-avatar-labeled>
-  </div> -->
-  <div class="results">
+  <section class="history">
+    <tui-icon icon="@tui.history" />
+    <div class="history-list" tuiFade>
+      @for (item of search.resentMax(); track $index) {
+        <button tuiChip type="button" (click)="setFromRecent(item)">
+          {{ item }}
+          <button
+            iconStart="@tui.x"
+            tuiIconButton
+            type="button"
+            (click)="search.removeRecent(item)"
+          >
+            Remove
+          </button>
+        </button>
+      }
+    </div>
+  </section>
+  <section class="results">
     @for (task of results(); track task.id) {
       <div
         tuiCell
         tuiAppearance="neutral"
-        style="white-space: nowrap"
         tabindex="0"
         (click)="goToTask(task.id)"
         (keydown.enter)="goToTask(task.id)"
@@ -84,5 +92,5 @@
         }
       </tui-block-status>
     }
-  </div>
+  </section>
 </ng-template>

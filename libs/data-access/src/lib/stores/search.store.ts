@@ -1,8 +1,9 @@
-import { computed } from '@angular/core';
+import { computed, effect } from '@angular/core';
 import {
   patchState,
   signalStore,
   withComputed,
+  withHooks,
   withMethods,
   withState,
 } from '@ngrx/signals';
@@ -12,6 +13,7 @@ import { SearchState } from '../models/search.state';
 
 const initialState: SearchState = {
   isOpen: false,
+  resent: [],
   query: '',
 };
 
@@ -29,6 +31,9 @@ export const Search = signalStore(
       const query = state.query();
       return Tasks.searchTasks(query);
     }),
+    resentMax: computed(() => {
+      return state.resent().slice(0, 5);
+    }),
   })),
   withMethods((store) => ({
     open() {
@@ -44,7 +49,41 @@ export const Search = signalStore(
       patchState(store, { isOpen, query: '' });
     },
     setQuery(query: string) {
+      const previousQuery = store.query();
+      if (query !== previousQuery && query !== '') {
+        if (
+          !previousQuery ||
+          (!previousQuery.startsWith(query) && !query.startsWith(previousQuery))
+        ) {
+          const resent = store.resent();
+          patchState(store, { query, resent: [query, ...resent] });
+        } else if (query !== previousQuery) {
+          patchState(store, { query });
+        }
+      } else if (query !== previousQuery) {
+        patchState(store, { query });
+      }
+    },
+    setFromRecent(query: string) {
       patchState(store, { query });
     },
+    removeRecent(query: string) {
+      patchState(store, { resent: store.resent().filter((r) => r !== query) });
+    },
   })),
+  withHooks({
+    onInit(store) {
+      if (typeof window !== 'undefined' && 'localStorage' in window) {
+        const search = localStorage.getItem('search');
+        if (search) {
+          patchState(store, JSON.parse(search));
+        }
+        effect(() => {
+          const resent = store.resent();
+          console.log(resent);
+          localStorage.setItem('search', JSON.stringify({ resent }));
+        });
+      }
+    },
+  }),
 );
