@@ -40,26 +40,8 @@
       icon="@tui.clock-9"
       [sticky]="true"
     >
-      <button
-        appearance="flat-grayscale"
-        size="m"
-        tuiIconButton
-        iconStart="@tui.redo-dot"
-        type="button"
-        (click)="moveToToday(overDueTasks())"
-      >
-        Move to Today
-      </button>
-      <button
-        appearance="flat-grayscale"
-        size="m"
-        tuiIconButton
-        iconStart="@tui.check-check"
-        type="button"
-        (click)="completeAll(overDueTasks())"
-      >
-        Complete All
-      </button>
+      <tw-bulk-move-tasks-to-today-button [tasks]="overDueTasks()" />
+      <tw-bulk-complete-tasks-button [tasks]="overDueTasks()" />
     </tw-task-list-header>
     @for (task of overDueTasks(); track task.id) {
       <tw-task-list-card [task]="task" />
@@ -75,16 +57,7 @@
     [sticky]="true"
   >
     @if (todaysTasks().length > 0) {
-      <button
-        appearance="flat-grayscale"
-        size="m"
-        tuiIconButton
-        iconStart="@tui.check-check"
-        type="button"
-        (click)="completeAll(todaysTasks())"
-      >
-        Complete All
-      </button>
+      <tw-bulk-complete-tasks-button [tasks]="todaysTasks()" />
     }
   </tw-task-list-header>
   @for (task of todaysTasks(); track task.id) {
@@ -105,16 +78,7 @@
     [sticky]="true"
   >
     @if (upcomingTasks().length > 0) {
-      <button
-        appearance="flat-grayscale"
-        size="m"
-        tuiIconButton
-        iconStart="@tui.check-check"
-        type="button"
-        (click)="completeAll(upcomingTasks())"
-      >
-        Complete All
-      </button>
+      <tw-bulk-complete-tasks-button [tasks]="upcomingTasks()" />
     }
   </tw-task-list-header>
   @for (task of upcomingTasks(); track task.id) {

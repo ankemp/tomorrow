@@ -11,11 +11,12 @@ import {
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TuiButton } from '@taiga-ui/core';
-import { DateValues, set } from 'date-fns';
 
 import { Settings, Task, Tasks } from '@tmrw/data-access';
 
 import { ActionBarComponent } from '../../core/action-bar/action-bar-portal.component';
+import { BulkCompleteTasksButtonComponent } from '../_primitives/bulk-complete-tasks-button.component';
+import { BulkMoveTasksToTodayButtonComponent } from '../_primitives/bulk-move-tasks-to-today-button.component';
 import { CategoryCardComponent } from '../_primitives/category-card/category-card.component';
 import { EmptyStateComponent } from '../_primitives/empty-state/empty-state.component';
 import { TaskListCardComponent } from '../_primitives/task-list-card/task-list-card.component';
@@ -28,6 +29,8 @@ import { TaskListHeaderComponent } from '../_primitives/task-list-header/task-li
     RouterModule,
     TuiButton,
     ActionBarComponent,
+    BulkCompleteTasksButtonComponent,
+    BulkMoveTasksToTodayButtonComponent,
     CategoryCardComponent,
     EmptyStateComponent,
     TaskListCardComponent,
@@ -65,28 +68,5 @@ export class DashboardComponent {
         });
       });
     }
-  }
-
-  completeAll(tasks: Task[]) {
-    tasks.forEach((task) => {
-      Tasks.completeTask(task);
-    });
-  }
-
-  moveToToday(tasks: Task[]) {
-    const [hours, minutes] = this.settings
-      .defaultReminderTime()
-      .split(':')
-      .map(Number);
-    const dateValues: DateValues = {
-      hours,
-      minutes,
-      seconds: 0,
-      milliseconds: 0,
-    };
-    const today = set(new Date(), dateValues);
-    tasks.forEach((task) => {
-      Tasks.updateDate(task, today);
-    });
   }
 }
