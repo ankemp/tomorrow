@@ -16,6 +16,8 @@ import { TuiContext } from '@taiga-ui/cdk';
 import { TuiKeySteps } from '@taiga-ui/kit';
 import { TuiInputSliderModule } from '@taiga-ui/legacy';
 
+import { FormatDurationPipe } from '../../_primitives/format-duration.pipe';
+
 @Component({
   selector: 'tw-duration',
   imports: [CommonModule, FormsModule, TuiInputSliderModule],
@@ -35,7 +37,7 @@ export class DurationComponent implements ControlValueAccessor {
 
   readonly disabled = signal(false);
 
-  constructor() {
+  constructor(private formatDurationPipe: FormatDurationPipe) {
     effect(() => {
       this._onChange(this.duration());
     });
@@ -61,12 +63,7 @@ export class DurationComponent implements ControlValueAccessor {
 
   readonly durationLabel = ({ $implicit }: TuiContext<number>): string => {
     const minutes = $implicit;
-    if (minutes >= 60) {
-      const hours = Math.floor(minutes / 60);
-      const remainingMinutes = minutes % 60;
-      return `${hours}h ${remainingMinutes}m`;
-    }
-    return `${minutes}m`;
+    return this.formatDurationPipe.transform(minutes);
   };
 
   readonly tickLabels = [

@@ -20,6 +20,7 @@ import { BulkCompleteTasksButtonComponent } from '../_primitives/bulk-complete-t
 import { BulkMoveTasksToTodayButtonComponent } from '../_primitives/bulk-move-tasks-to-today-button.component';
 import { CategoryCardComponent } from '../_primitives/category-card/category-card.component';
 import { EmptyStateComponent } from '../_primitives/empty-state/empty-state.component';
+import { FormatDurationPipe } from '../_primitives/format-duration.pipe';
 import { TaskListCardComponent } from '../_primitives/task-list-card/task-list-card.component';
 import { TaskListHeaderComponent } from '../_primitives/task-list-header/task-list-header.component';
 
@@ -36,6 +37,7 @@ import { TaskListHeaderComponent } from '../_primitives/task-list-header/task-li
     BulkMoveTasksToTodayButtonComponent,
     CategoryCardComponent,
     EmptyStateComponent,
+    FormatDurationPipe,
     TaskListCardComponent,
     TaskListHeaderComponent,
   ],
@@ -53,16 +55,14 @@ export class DashboardComponent {
   readonly hasPinnedTasks = computed(() => this.pinnedTasks().length > 0);
   readonly hasOverdueTasks = computed(() => this.overDueTasks().length > 0);
   readonly todaysTasksDuration = computed(() => {
-    const minutes = this.todaysTasks()
+    return this.todaysTasks()
       .filter((t) => !t.completedAt)
       .reduce((acc, task) => acc + (task.duration ?? 0), 0);
-    return this.minutesToHoursAndMinutes(minutes);
   });
   readonly upcomingTasksDuration = computed(() => {
-    const minutes = this.upcomingTasks()
+    return this.upcomingTasks()
       .filter((t) => !t.completedAt)
       .reduce((acc, task) => acc + (task.duration ?? 0), 0);
-    return this.minutesToHoursAndMinutes(minutes);
   });
 
   constructor(@Inject(PLATFORM_ID) platformId: any) {
@@ -83,14 +83,5 @@ export class DashboardComponent {
         });
       });
     }
-  }
-
-  private minutesToHoursAndMinutes(minutes: number) {
-    if (minutes >= 60) {
-      const hours = Math.floor(minutes / 60);
-      const remainingMinutes = minutes % 60;
-      return `${hours}h ${remainingMinutes}m`;
-    }
-    return `${minutes}m`;
   }
 }

@@ -49,7 +49,7 @@
     @if (todaysTasks().length > 0) {
       <tui-chip size="s">
         <tui-icon icon="@tui.clock" />
-        {{ todaysTasksDuration() }}
+        {{ todaysTasksDuration() | formatDuration }}
       </tui-chip>
       <tw-bulk-complete-tasks-button [tasks]="todaysTasks()" />
     }
@@ -74,7 +74,7 @@
     @if (upcomingTasks().length > 0) {
       <tui-chip size="s">
         <tui-icon icon="@tui.clock" />
-        {{ upcomingTasksDuration() }}
+        {{ upcomingTasksDuration() | formatDuration }}
       </tui-chip>
       <tw-bulk-complete-tasks-button [tasks]="upcomingTasks()" />
     }

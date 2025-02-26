@@ -52,7 +52,7 @@
     @if (t.duration) {
       <div>
         <tui-icon icon="@tui.clock" />
-        {{ duration() }}
+        {{ t.duration | formatDuration }}
       </div>
     }
   </section>

@@ -72,7 +72,6 @@ export const Search = signalStore(
         }
         effect(() => {
           const resent = store.resent();
-          console.log(resent);
           localStorage.setItem('search', JSON.stringify({ resent }));
         });
       }

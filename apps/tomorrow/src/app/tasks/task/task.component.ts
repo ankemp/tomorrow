@@ -39,7 +39,8 @@ import { Attachments, Settings, Task, Tasks } from '@tmrw/data-access';
 
 import { ActionBarComponent } from '../../core/action-bar/action-bar-portal.component';
 import { EmptyStateComponent } from '../_primitives/empty-state/empty-state.component';
-import { FormatDatePipe } from '../_primitives/format-date/format-date.pipe';
+import { FormatDatePipe } from '../_primitives/format-date.pipe';
+import { FormatDurationPipe } from '../_primitives/format-duration.pipe';
 
 @Component({
   selector: 'tw-task',
@@ -66,6 +67,7 @@ import { FormatDatePipe } from '../_primitives/format-date/format-date.pipe';
     ActionBarComponent,
     EmptyStateComponent,
     FormatDatePipe,
+    FormatDurationPipe,
   ],
   providers: [Attachments],
   templateUrl: './task.component.html',
@@ -84,16 +86,6 @@ export class TaskComponent {
 
   readonly taskExists = computed(() => {
     return !!this.task();
-  });
-
-  readonly duration = computed(() => {
-    const minutes = this.task()?.duration ?? 0;
-    if (minutes >= 60) {
-      const hours = Math.floor(minutes / 60);
-      const remainingMinutes = minutes % 60;
-      return `${hours}h ${remainingMinutes}m`;
-    }
-    return `${minutes}m`;
   });
 
   readonly hasSubTasks = computed(() => {

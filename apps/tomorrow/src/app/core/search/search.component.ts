@@ -22,7 +22,7 @@ import { TuiAppBar, TuiBlockStatus, TuiCell } from '@taiga-ui/layout';
 
 import { Search } from '@tmrw/data-access';
 
-import { FormatDatePipe } from '../../tasks/_primitives/format-date/format-date.pipe';
+import { FormatDatePipe } from '../../tasks/_primitives/format-date.pipe';
 
 @Component({
   selector: 'tw-search',

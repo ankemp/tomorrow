@@ -21,7 +21,8 @@ import { tap } from 'rxjs';
 
 import { Settings, Task, Tasks } from '@tmrw/data-access';
 
-import { FormatDatePipe } from '../format-date/format-date.pipe';
+import { FormatDatePipe } from '../format-date.pipe';
+import { FormatDurationPipe } from '../format-duration.pipe';
 
 @Component({
   selector: 'tw-task-list-card',
