@@ -1,6 +1,7 @@
 :host {
-  display: block;
   background-color: var(--tui-background-base);
+  display: block;
+  height: 44px;
 
   &.sticky {
     position: sticky;
@@ -11,6 +12,7 @@
 
 [tuiHeader] {
   align-items: center;
+  height: 100%;
 
   tui-icon {
     margin-right: 0.5rem;

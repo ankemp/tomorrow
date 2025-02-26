@@ -15,16 +15,6 @@
       icon="@tui.pin"
       [sticky]="true"
     >
-      <!-- <button
-        appearance="flat-grayscale"
-        size="m"
-        tuiIconButton
-        iconStart="@tui.check-check"
-        type="button"
-        (click)="completeAll(pinnedTasks())"
-      >
-        Complete All
-      </button> -->
     </tw-task-list-header>
     @for (task of pinnedTasks(); track task.id) {
       <tw-task-list-card [task]="task" [fullDateFormat]="true" />

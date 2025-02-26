@@ -1,71 +1,63 @@
 <h2 tuiTitle="m">Completed tasks</h2>
 
 @if (hasFutureTasks()) {
-  <div class="task-list-group">
+  <section class="task-list-grid">
     <tw-task-list-header
       title="Future"
-      headerSize="xs"
+      headerSize="s"
       icon="@tui.clock-3"
       [sticky]="true"
     />
-    <div class="task-list-grid">
-      @for (task of futureTasks(); track task.id) {
-        <tw-task-list-card [task]="task" [strikeThrough]="false" />
-      }
-    </div>
-  </div>
+    @for (task of futureTasks(); track task.id) {
+      <tw-task-list-card [task]="task" [strikeThrough]="false" />
+    }
+  </section>
 }
 
-<div class="task-list-group">
+<section class="task-list-grid">
   <tw-task-list-header
     title="Today"
-    headerSize="xs"
+    headerSize="s"
     icon="@tui.clock-12"
     [sticky]="true"
   />
-  <div class="task-list-grid">
-    @for (task of todaysTasks(); track task.id) {
-      <tw-task-list-card [task]="task" [strikeThrough]="false" />
-    } @empty {
-      <tw-empty-state
-        title="No Completed Tasks Today"
-        [skeleton]="(isReady | async) === null"
-      />
-    }
-  </div>
-</div>
+  @for (task of todaysTasks(); track task.id) {
+    <tw-task-list-card [task]="task" [strikeThrough]="false" />
+  } @empty {
+    <tw-empty-state
+      title="No Completed Tasks Today"
+      [skeleton]="(isReady | async) === null"
+    />
+  }
+</section>
 
-<div class="task-list-group">
+<section class="task-list-grid">
   <tw-task-list-header
     title="Yesterday"
-    headerSize="xs"
+    headerSize="s"
     icon="@tui.clock-9"
     [sticky]="true"
   />
-  <div class="task-list-grid">
-    @for (task of yesterdaysTasks(); track task.id) {
-      <tw-task-list-card [task]="task" [strikeThrough]="false" />
-    } @empty {
-      <tw-empty-state
-        title="No Tasks Competed Yesterday"
-        [skeleton]="(isReady | async) === null"
-      />
-    }
-  </div>
-</div>
+  @for (task of yesterdaysTasks(); track task.id) {
+    <tw-task-list-card [task]="task" [strikeThrough]="false" />
+  } @empty {
+    <tw-empty-state
+      title="No Tasks Competed Yesterday"
+      [skeleton]="(isReady | async) === null"
+    />
+  }
+</section>
 
 @for (group of olderTasks(); track group.date) {
-  <div class="task-list-group">
+  <section class="task-list-grid">
     <tw-task-list-header
       [title]="group.date"
-      headerSize="xs"
+      headerSize="s"
       icon="@tui.calendar-days"
       [sticky]="true"
     />
-    <div class="task-list-grid">
-      @for (task of group.tasks; track task.id) {
-        <tw-task-list-card [task]="task" [strikeThrough]="false" />
-      }
-    </div>
-  </div>
+    @for (task of group.tasks; track task.id) {
+      <tw-task-list-card [task]="task" [strikeThrough]="false" />
+    }
+  </section>
 }
