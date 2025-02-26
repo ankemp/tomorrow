@@ -47,6 +47,10 @@
     [sticky]="true"
   >
     @if (todaysTasks().length > 0) {
+      <tui-chip size="s">
+        <tui-icon icon="@tui.clock" />
+        {{ todaysTasksDuration() }}
+      </tui-chip>
       <tw-bulk-complete-tasks-button [tasks]="todaysTasks()" />
     }
   </tw-task-list-header>
@@ -68,6 +72,10 @@
     [sticky]="true"
   >
     @if (upcomingTasks().length > 0) {
+      <tui-chip size="s">
+        <tui-icon icon="@tui.clock" />
+        {{ upcomingTasksDuration() }}
+      </tui-chip>
       <tw-bulk-complete-tasks-button [tasks]="upcomingTasks()" />
     }
   </tw-task-list-header>

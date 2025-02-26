@@ -199,13 +199,15 @@ function createRandomTask() {
   const categories = ['Work', 'Personal', 'Health', 'Shopping'];
   const randomCategory =
     categories[Math.floor(Math.random() * categories.length)];
+  const randomDuration = Math.floor(Math.random() * (1440 - 1) + 1);
 
   return {
     title: randomTitle,
     date: randomDate,
     category: randomCategory,
     completedAt: null,
-  };
+    ...(Math.random() < 0.5 ? { duration: randomDuration } : {}),
+  } satisfies Partial<Task>;
 }
 
 if (isDevMode() && typeof window !== 'undefined') {

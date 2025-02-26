@@ -10,7 +10,8 @@ import {
   signal,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { TuiButton } from '@taiga-ui/core';
+import { TuiButton, TuiIcon } from '@taiga-ui/core';
+import { TuiChip } from '@taiga-ui/kit';
 
 import { Settings, Task, Tasks } from '@tmrw/data-access';
 
@@ -28,6 +29,8 @@ import { TaskListHeaderComponent } from '../_primitives/task-list-header/task-li
     CommonModule,
     RouterModule,
     TuiButton,
+    TuiChip,
+    TuiIcon,
     ActionBarComponent,
     BulkCompleteTasksButtonComponent,
     BulkMoveTasksToTodayButtonComponent,
@@ -49,6 +52,18 @@ export class DashboardComponent {
   readonly isReady = Tasks.isReady();
   readonly hasPinnedTasks = computed(() => this.pinnedTasks().length > 0);
   readonly hasOverdueTasks = computed(() => this.overDueTasks().length > 0);
+  readonly todaysTasksDuration = computed(() => {
+    const minutes = this.todaysTasks()
+      .filter((t) => !t.completedAt)
+      .reduce((acc, task) => acc + (task.duration ?? 0), 0);
+    return this.minutesToHoursAndMinutes(minutes);
+  });
+  readonly upcomingTasksDuration = computed(() => {
+    const minutes = this.upcomingTasks()
+      .filter((t) => !t.completedAt)
+      .reduce((acc, task) => acc + (task.duration ?? 0), 0);
+    return this.minutesToHoursAndMinutes(minutes);
+  });
 
   constructor(@Inject(PLATFORM_ID) platformId: any) {
     if (isPlatformBrowser(platformId)) {
@@ -68,5 +83,14 @@ export class DashboardComponent {
         });
       });
     }
+  }
+
+  private minutesToHoursAndMinutes(minutes: number) {
+    if (minutes >= 60) {
+      const hours = Math.floor(minutes / 60);
+      const remainingMinutes = minutes % 60;
+      return `${hours}h ${remainingMinutes}m`;
+    }
+    return `${minutes}m`;
   }
 }
