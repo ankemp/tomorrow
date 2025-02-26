@@ -5,14 +5,27 @@
     </button>
     Search tasks
   </tui-app-bar>
-  <input
-    placeholder="Search tasks"
-    tuiSearch
-    tuiAutoFocus
-    type="search"
-    class="input"
-    [formControl]="searchInput"
-  />
+  <div class="search-group">
+    <input
+      style="width: calc(100% - 56px)"
+      placeholder="Search tasks"
+      tuiSearch
+      tuiAutoFocus
+      type="search"
+      class="input"
+      [formControl]="searchInput"
+      (keydown.enter)="onSearch()"
+    />
+    <button
+      appearance="action"
+      tuiIconButton
+      iconStart="@tui.search"
+      type="button"
+      (click)="onSearch()"
+    >
+      Search
+    </button>
+  </div>
 </ng-template>
 <ng-template
   [tuiSheetDialog]="search.isOpen()"

@@ -49,20 +49,12 @@ export const Search = signalStore(
       patchState(store, { isOpen, query: '' });
     },
     setQuery(query: string) {
-      const previousQuery = store.query();
-      if (query !== previousQuery && query !== '') {
-        if (
-          !previousQuery ||
-          (!previousQuery.startsWith(query) && !query.startsWith(previousQuery))
-        ) {
-          const resent = store.resent();
-          patchState(store, { query, resent: [query, ...resent] });
-        } else if (query !== previousQuery) {
-          patchState(store, { query });
-        }
-      } else if (query !== previousQuery) {
-        patchState(store, { query });
-      }
+      const resent = store.resent();
+      const lowerCaseQuery = query.toLowerCase();
+      const filteredResent = resent.filter(
+        (r) => r.toLowerCase() !== lowerCaseQuery,
+      );
+      patchState(store, { query, resent: [query, ...filteredResent] });
     },
     setFromRecent(query: string) {
       patchState(store, { query });
