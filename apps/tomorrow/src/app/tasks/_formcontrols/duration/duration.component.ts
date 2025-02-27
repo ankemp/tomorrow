@@ -24,6 +24,7 @@ import { FormatDurationPipe } from '../../_primitives/format-duration.pipe';
   templateUrl: './duration.component.html',
   styleUrl: './duration.component.less',
   providers: [
+    FormatDurationPipe,
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => DurationComponent),
