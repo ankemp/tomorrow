@@ -59,11 +59,6 @@ export class DashboardComponent {
       .filter((t) => !t.completedAt)
       .reduce((acc, task) => acc + (task.duration ?? 0), 0);
   });
-  readonly upcomingTasksDuration = computed(() => {
-    return this.upcomingTasks()
-      .filter((t) => !t.completedAt)
-      .reduce((acc, task) => acc + (task.duration ?? 0), 0);
-  });
 
   constructor(@Inject(PLATFORM_ID) platformId: any) {
     if (isPlatformBrowser(platformId)) {

@@ -9,7 +9,8 @@ import {
   signal,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { TuiButton, TuiTitle } from '@taiga-ui/core';
+import { TuiButton, TuiIcon, TuiTitle } from '@taiga-ui/core';
+import { TuiChip } from '@taiga-ui/kit';
 import {
   endOfTomorrow,
   endOfYesterday,
@@ -22,6 +23,7 @@ import {
 import { Task, Tasks } from '@tmrw/data-access';
 
 import { EmptyStateComponent } from '../_primitives/empty-state/empty-state.component';
+import { FormatDurationPipe } from '../_primitives/format-duration.pipe';
 import { TaskListCardComponent } from '../_primitives/task-list-card/task-list-card.component';
 import { TaskListHeaderComponent } from '../_primitives/task-list-header/task-list-header.component';
 
@@ -30,8 +32,11 @@ import { TaskListHeaderComponent } from '../_primitives/task-list-header/task-li
   imports: [
     CommonModule,
     TuiButton,
+    TuiIcon,
     TuiTitle,
+    TuiChip,
     EmptyStateComponent,
+    FormatDurationPipe,
     TaskListCardComponent,
     TaskListHeaderComponent,
   ],
@@ -54,11 +59,21 @@ export class CategoryComponent {
       return isToday(task.date);
     });
   });
+  readonly todaysTasksDuration = computed(() => {
+    return this.todaysTasks()
+      .filter((t) => !t.completedAt)
+      .reduce((acc, task) => acc + (task.duration ?? 0), 0);
+  });
 
   readonly tomorrowTasks = computed(() => {
     return this.categoryTasks().filter((task) => {
       return isTomorrow(task.date);
     });
+  });
+  readonly tomorrowTasksDuration = computed(() => {
+    return this.tomorrowTasks()
+      .filter((t) => !t.completedAt)
+      .reduce((acc, task) => acc + (task.duration ?? 0), 0);
   });
 
   readonly futureTasks = computed(() => {

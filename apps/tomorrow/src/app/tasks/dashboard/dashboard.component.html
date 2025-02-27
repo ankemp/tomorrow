@@ -72,10 +72,6 @@
     [sticky]="true"
   >
     @if (upcomingTasks().length > 0) {
-      <tui-chip size="s">
-        <tui-icon icon="@tui.clock" />
-        {{ upcomingTasksDuration() | formatDuration }}
-      </tui-chip>
       <tw-bulk-complete-tasks-button [tasks]="upcomingTasks()" />
     }
   </tw-task-list-header>

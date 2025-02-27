@@ -37,6 +37,10 @@
     [sticky]="true"
   >
     @if (todaysTasks().length > 0) {
+      <tui-chip size="s">
+        <tui-icon icon="@tui.clock" />
+        {{ todaysTasksDuration() | formatDuration }}
+      </tui-chip>
       <button
         appearance="flat-grayscale"
         size="m"
@@ -66,6 +70,10 @@
     [sticky]="true"
   >
     @if (tomorrowTasks().length > 0) {
+      <tui-chip size="s">
+        <tui-icon icon="@tui.clock" />
+        {{ tomorrowTasksDuration() | formatDuration }}
+      </tui-chip>
       <button
         appearance="flat-grayscale"
         size="m"
