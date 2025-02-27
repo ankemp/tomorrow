@@ -1,52 +1,70 @@
-<!-- <tui-swipe-actions> -->
-<div
-  tuiCell
-  tuiSurface="neutral"
-  [class.completed]="task().completedAt && strikeThrough()"
-  style="white-space: nowrap"
->
-  <button
-    appearance="flat"
-    [iconStart]="icon()"
-    size="xs"
-    tuiIconButton
-    type="button"
-    [style.border-radius.%]="100"
-    (click)="toggleTask(task())"
+<tui-swipe-actions>
+  @let t = task();
+  <div
+    tuiCell
+    tuiSurface="neutral"
+    [class.completed]="t.completedAt && strikeThrough()"
+    style="white-space: nowrap"
   >
-    {{ task().completedAt ? 'Undo' : 'Done' }}
-  </button>
-  <div tuiTitle>
-    <span class="title" tuiFade>{{ task().title }}</span>
-    <div tuiSubtitle>
-      {{ task().date | formatDate: fullDateFormat() }}
-    </div>
-  </div>
-  @if (showCategory()) {
-    <tui-chip
-      size="xs"
-      appearance="custom"
-      [style.background-color]="task().category | tuiAutoColor"
+    <!-- TODO: Fix ripple(?) -->
+    <button
+      style="max-width: 32px; border-radius: 50%"
+      appearance="flat"
+      [iconStart]="icon()"
+      size="l"
+      tuiIconButton
+      type="button"
+      (click)="toggleTask(t)"
     >
-      {{ task().category }}
-    </tui-chip>
-  }
+      {{ t.completedAt ? 'Undo' : 'Done' }}
+    </button>
+    <div tuiTitle style="width: 100%">
+      <span class="title" tuiFade>{{ t.title }}</span>
+      <div tuiSubtitle>
+        {{ t.date | formatDate: fullDateFormat() }}
+      </div>
+      <div class="chips">
+        @if (showDuration() && t.duration) {
+          <tui-chip size="xs" appearance="neutral">
+            <tui-icon icon="@tui.clock" />
+            {{ t.duration | formatDuration }}
+          </tui-chip>
+        }
+        @if (showSubtasks() && subtaskCount() > 0) {
+          <tui-chip size="xs" appearance="neutral">
+            <tui-icon icon="@tui.clipboard-list" />
+            {{ completedSubtaskCount() }} / {{ subtaskCount() }}
+          </tui-chip>
+        }
+        @if (showCategory()) {
+          <tui-chip
+            size="xs"
+            appearance="custom"
+            [style.background-color]="t.category | tuiAutoColor"
+          >
+            {{ t.category }}
+          </tui-chip>
+        }
+      </div>
+    </div>
+    <button
+      style="align-self: start; height: 100%"
+      appearance="action"
+      tuiIconButton
+      iconStart="@tui.chevron-right"
+      [routerLink]="['/tasks/', t.id]"
+    >
+      Open Task
+    </button>
+  </div>
   <button
-    appearance="action"
-    tuiIconButton
-    iconStart="@tui.chevron-right"
-    [routerLink]="['/tasks/', task().id]"
-  >
-    Open Task
-  </button>
-</div>
-<!-- <button
     appearance="flat"
     iconStart="@tui.pencil"
     size="m"
     tuiIconButton
     tuiSwipeAction
     type="button"
+    [routerLink]="['/tasks', t.id, 'edit']"
   >
     Edit
   </button>
@@ -57,8 +75,8 @@
     tuiIconButton
     tuiSwipeAction
     type="button"
-    (click)="deleteTask()"
+    (click)="deleteTask(t)"
   >
     Delete
   </button>
-</tui-swipe-actions> -->
+</tui-swipe-actions>
