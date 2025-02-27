@@ -4,6 +4,10 @@
   max-width: calc(100vw - 2rem);
 }
 
+[tuicell] {
+  white-space: nowrap;
+}
+
 .completed .title {
   text-decoration: line-through;
 }

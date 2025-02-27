@@ -3,17 +3,15 @@
   <div
     tuiCell
     tuiSurface="neutral"
+    tuiRipple
     [class.completed]="t.completedAt && strikeThrough()"
-    style="white-space: nowrap"
   >
-    <!-- TODO: Fix ripple(?) -->
     <button
-      style="max-width: 32px; border-radius: 50%"
+      style="max-width: 32px"
       appearance="flat"
       [iconStart]="icon()"
       size="l"
       tuiIconButton
-      type="button"
       (click)="toggleTask(t)"
     >
       {{ t.completedAt ? 'Undo' : 'Done' }}
@@ -48,9 +46,9 @@
       </div>
     </div>
     <button
-      style="align-self: start; height: 100%"
       appearance="action"
       tuiIconButton
+      size="l"
       iconStart="@tui.chevron-right"
       [routerLink]="['/tasks/', t.id]"
     >

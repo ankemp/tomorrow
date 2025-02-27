@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, input } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { TuiSwipeActions } from '@taiga-ui/addon-mobile';
+import { TuiRipple, TuiSwipeActions } from '@taiga-ui/addon-mobile';
 import {
   TuiAlertService,
   TuiAppearance,
@@ -26,6 +26,7 @@ import { FormatDurationPipe } from '../format-duration.pipe';
   imports: [
     CommonModule,
     RouterModule,
+    TuiRipple,
     TuiSwipeActions,
     TuiAppearance,
     TuiAutoColorPipe,
