@@ -46,7 +46,6 @@ export class PrioritySelectorComponent implements ControlValueAccessor {
   }
 
   writeValue(input: number): void {
-    console.log(input);
     this.priority.set(input);
   }
   registerOnChange(fn: any): void {
