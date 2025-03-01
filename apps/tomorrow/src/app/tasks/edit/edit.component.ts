@@ -36,6 +36,7 @@ import { CategorySelectorComponent } from '../_formcontrols/category-selector/ca
 import { DatePickerComponent } from '../_formcontrols/date-picker/date-picker.component';
 import { DurationComponent } from '../_formcontrols/duration/duration.component';
 import { FileUploadComponent } from '../_formcontrols/file-upload/file-upload.component';
+import { PrioritySelectorComponent } from '../_formcontrols/priority-selector/priority-selector.component';
 import { SubtasksComponent } from '../_formcontrols/subtasks/subtasks.component';
 
 @Component({
@@ -59,6 +60,7 @@ import { SubtasksComponent } from '../_formcontrols/subtasks/subtasks.component'
     DatePickerComponent,
     DurationComponent,
     FileUploadComponent,
+    PrioritySelectorComponent,
     SubtasksComponent,
   ],
   providers: [Attachments],
@@ -77,6 +79,7 @@ export class EditComponent implements AfterViewInit {
     title: this.fb.control<string>('', [Validators.required]),
     date: this.fb.control<Date>(null as any, [Validators.required]),
     category: this.fb.control<string>(null as any, [Validators.required]),
+    priority: this.fb.control<number | null>(null),
     description: this.fb.control<string | null>(null),
     location: this.fb.control<string | null>(null),
     duration: this.fb.control<number | null>(null),
@@ -122,6 +125,7 @@ export class EditComponent implements AfterViewInit {
       title: task.title,
       date: task.date,
       category: task.category,
+      priority: task.priority,
       description: task.description,
       location: task.location,
       duration: task.duration,

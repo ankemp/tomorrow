@@ -16,8 +16,12 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.25rem;
+  min-height: 24px;
 
   tui-icon {
     color: var(--tui-text-secondary);
   }
+
+  --pin-left: 6px;
+  --pin-top: 12px;
 }

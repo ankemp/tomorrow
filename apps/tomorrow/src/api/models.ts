@@ -27,6 +27,7 @@ export class PlainTask
   declare date: Date;
   declare category: string;
   declare pinned: boolean;
+  declare priority: CreationOptional<number>;
   declare description: CreationOptional<string>;
   declare location: CreationOptional<string>;
   declare duration: CreationOptional<number>;
@@ -45,6 +46,7 @@ PlainTask.init(
     date: { type: DataTypes.DATE },
     category: { type: DataTypes.STRING },
     pinned: { type: DataTypes.BOOLEAN, defaultValue: false },
+    priority: { type: DataTypes.INTEGER, defaultValue: 0 },
     description: { type: DataTypes.TEXT },
     location: { type: DataTypes.STRING },
     duration: { type: DataTypes.INTEGER },

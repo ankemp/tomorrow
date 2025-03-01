@@ -27,6 +27,7 @@ import { CategorySelectorComponent } from '../_formcontrols/category-selector/ca
 import { DatePickerComponent } from '../_formcontrols/date-picker/date-picker.component';
 import { DurationComponent } from '../_formcontrols/duration/duration.component';
 import { FileUploadComponent } from '../_formcontrols/file-upload/file-upload.component';
+import { PrioritySelectorComponent } from '../_formcontrols/priority-selector/priority-selector.component';
 import { SubtasksComponent } from '../_formcontrols/subtasks/subtasks.component';
 
 @Component({
@@ -49,6 +50,7 @@ import { SubtasksComponent } from '../_formcontrols/subtasks/subtasks.component'
     DatePickerComponent,
     DurationComponent,
     FileUploadComponent,
+    PrioritySelectorComponent,
     SubtasksComponent,
   ],
   providers: [Attachments],
@@ -67,6 +69,7 @@ export class CreateComponent {
     title: this.fb.control<string>('', [Validators.required]),
     date: this.fb.control<Date | null>(null, [Validators.required]),
     category: this.fb.control<string | null>(null, [Validators.required]),
+    priority: this.fb.control<number>(0),
     description: this.fb.control<string>(''),
     location: this.fb.control<string>(''),
     duration: this.fb.control<number>(0),

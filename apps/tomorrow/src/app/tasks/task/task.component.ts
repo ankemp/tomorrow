@@ -41,6 +41,7 @@ import { ActionBarComponent } from '../../core/action-bar/action-bar-portal.comp
 import { EmptyStateComponent } from '../_primitives/empty-state/empty-state.component';
 import { FormatDatePipe } from '../_primitives/format-date.pipe';
 import { FormatDurationPipe } from '../_primitives/format-duration.pipe';
+import { PriorityPinComponent } from '../_primitives/priority-pin.component';
 
 @Component({
   selector: 'tw-task',
@@ -68,6 +69,7 @@ import { FormatDurationPipe } from '../_primitives/format-duration.pipe';
     EmptyStateComponent,
     FormatDatePipe,
     FormatDurationPipe,
+    PriorityPinComponent,
   ],
   providers: [Attachments],
   templateUrl: './task.component.html',

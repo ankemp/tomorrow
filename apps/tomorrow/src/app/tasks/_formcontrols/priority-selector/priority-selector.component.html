@@ -1,0 +1,38 @@
+<label tuiChip appearance="outline-grayscale">
+  <tw-priority-pin [priority]="1" />
+  Low
+  <input
+    tuiRadio
+    [(ngModel)]="priority"
+    name="priority"
+    type="radio"
+    [value]="1"
+    [disabled]="disabled()"
+  />
+</label>
+<label tuiChip appearance="outline-grayscale">
+  <tw-priority-pin [priority]="50" />
+  Medium
+  <input
+    tuiRadio
+    [(ngModel)]="priority"
+    appearance="custom"
+    name="priority"
+    type="radio"
+    [value]="50"
+    [disabled]="disabled()"
+  />
+</label>
+<label tuiChip appearance="outline-grayscale">
+  <tw-priority-pin [priority]="99" />
+  High
+  <input
+    tuiRadio
+    [(ngModel)]="priority"
+    appearance="custom"
+    name="priority"
+    type="radio"
+    [value]="99"
+    [disabled]="disabled()"
+  />
+</label>

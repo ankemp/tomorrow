@@ -20,6 +20,7 @@ import { Attachments, Settings, Task, Tasks } from '@tmrw/data-access';
 
 import { FormatDatePipe } from '../format-date.pipe';
 import { FormatDurationPipe } from '../format-duration.pipe';
+import { PriorityPinComponent } from '../priority-pin.component';
 
 @Component({
   selector: 'tw-task-list-card',
@@ -39,6 +40,7 @@ import { FormatDurationPipe } from '../format-duration.pipe';
     TuiCell,
     FormatDatePipe,
     FormatDurationPipe,
+    PriorityPinComponent,
   ],
   providers: [Attachments],
   templateUrl: './task-list-card.component.html',
@@ -54,6 +56,7 @@ export class TaskListCardComponent {
   readonly showCategory = input<boolean>(true);
   readonly showSubtasks = input<boolean>(true);
   readonly showDuration = input<boolean>(true);
+  readonly showPriority = input<boolean>(true);
   readonly strikeThrough = input<boolean>(true);
   readonly fullDateFormat = input<boolean>(false);
 

@@ -9,6 +9,7 @@ export interface Task extends BaseModel {
   title: string;
   date: Date;
   category: string;
+  priority: number | null;
   description: string | null;
   pinned: boolean;
   completedAt: Date | null;

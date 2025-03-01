@@ -43,6 +43,9 @@
             {{ t.category }}
           </tui-chip>
         }
+        @if (showPriority() && t.priority && t.priority > 0) {
+          <tw-priority-pin [priority]="t.priority" />
+        }
       </div>
     </div>
     <button

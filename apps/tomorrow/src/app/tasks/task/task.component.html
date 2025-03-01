@@ -32,6 +32,11 @@
               {{ t.completedAt | formatDate }}
             </tui-badge>
           }
+          @if (t.priority && t.priority > 0) {
+            <tui-chip style="--pin-top: 9px; --pin-left: 2px">
+              <tw-priority-pin [priority]="t.priority" [showLabel]="true" />
+            </tui-chip>
+          }
         </div>
       </h2>
       <div tuiAccessories>

@@ -1,0 +1,12 @@
+:host {
+  display: flex;
+  gap: 0.5rem;
+
+  --pin-top: 6px;
+  --pin-left: 5px;
+}
+
+label {
+  display: flex;
+  align-items: center;
+}

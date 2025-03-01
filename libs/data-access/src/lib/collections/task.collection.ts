@@ -199,6 +199,7 @@ function createRandomTask() {
   const categories = ['Work', 'Personal', 'Health', 'Shopping'];
   const randomCategory =
     categories[Math.floor(Math.random() * categories.length)];
+  const randomPriority = [0, 1, 50, 99][Math.floor(Math.random() * 4)];
   const randomDuration = Math.floor(Math.random() * (1440 - 1) + 1);
 
   return {
@@ -206,6 +207,7 @@ function createRandomTask() {
     date: randomDate,
     category: randomCategory,
     completedAt: null,
+    priority: randomPriority,
     ...(Math.random() < 0.5 ? { duration: randomDuration } : {}),
   } satisfies Partial<Task>;
 }
