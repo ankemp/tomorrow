@@ -13,19 +13,16 @@ import {
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TuiDropdownMobile } from '@taiga-ui/addon-mobile';
 import {
-  TuiAlertService,
   TuiAppearance,
   TuiAutoColorPipe,
   TuiButton,
   TuiDataList,
-  TuiDialogService,
   TuiDropdown,
   TuiGroup,
   TuiIcon,
   TuiLink,
 } from '@taiga-ui/core';
 import {
-  TUI_CONFIRM,
   TuiBadge,
   TuiChip,
   TuiElasticContainer,
@@ -33,7 +30,6 @@ import {
   TuiProgress,
 } from '@taiga-ui/kit';
 import { TuiCardLarge, TuiCell, TuiHeader } from '@taiga-ui/layout';
-import { EMPTY, of, switchMap, tap } from 'rxjs';
 
 import { Attachments, Settings, Task, Tasks } from '@tmrw/data-access';
 
@@ -42,6 +38,7 @@ import { EmptyStateComponent } from '../_primitives/empty-state/empty-state.comp
 import { FormatDatePipe } from '../_primitives/format-date.pipe';
 import { FormatDurationPipe } from '../_primitives/format-duration.pipe';
 import { PriorityPinComponent } from '../_primitives/priority-pin.component';
+import { TaskService } from '../task.service';
 
 @Component({
   selector: 'tw-task',
@@ -71,17 +68,16 @@ import { PriorityPinComponent } from '../_primitives/priority-pin.component';
     FormatDurationPipe,
     PriorityPinComponent,
   ],
-  providers: [Attachments],
+  providers: [Attachments, TaskService],
   templateUrl: './task.component.html',
   styleUrl: './task.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskComponent {
   private readonly router = inject(Router);
-  private readonly dialogs = inject(TuiDialogService);
-  private readonly alerts = inject(TuiAlertService);
   readonly settings = inject(Settings);
   readonly attachmentsStore = inject(Attachments);
+  readonly taskService = inject(TaskService);
 
   readonly menuOpen = model(false);
   readonly task = signal<Task | null>(null);
@@ -187,86 +183,8 @@ export class TaskComponent {
     });
   }
 
-  toggleSubtask(task: Task, subtaskIndex: number) {
-    const completedCount = task.subTasks.filter((t) => t.completedAt).length;
-    const subTaskAlreadyCompleted =
-      !!task.subTasks.at(subtaskIndex)?.completedAt;
-    Tasks.toggleSubtask(task, subtaskIndex);
-    if (
-      !subTaskAlreadyCompleted &&
-      completedCount + 1 === task.subTasks.length &&
-      !task.completedAt
-    ) {
-      if (this.settings.autoCompleteTasks() === 'ask') {
-        this.dialogs
-          .open<boolean>(TUI_CONFIRM, {
-            label: 'Complete Task?',
-            data: {
-              content: `All subtasks are complete. Mark "${task.title}" as complete?`,
-              yes: 'Mark Complete',
-              no: 'Cancel',
-            },
-          })
-          .pipe(
-            switchMap((response) => (response ? of(true) : EMPTY)),
-            tap(() => {
-              this.toggleTask(task);
-            }),
-          )
-          .subscribe();
-      } else if (this.settings.autoCompleteTasks() === 'always') {
-        this.toggleTask(task);
-      }
-    }
-  }
-
-  toggleTask(task: Task) {
-    const isCompleted = !!task.completedAt;
-    Tasks.toggleTask(task);
-    this.alerts
-      .open(isCompleted ? 'Task marked incomplete' : 'Task completed', {
-        appearance: isCompleted ? 'destructive' : 'success',
-        icon: isCompleted ? '@tui.circle-slash' : '@tui.circle-check',
-      })
-      .subscribe();
-  }
-
   pinTask(task: Task) {
-    Tasks.pinTask(task);
+    this.taskService.pinTask(task);
     this.menuOpen.set(false);
-    this.alerts
-      .open(task.pinned ? 'Task unpinned' : 'Task pinned', {
-        appearance: task.pinned ? 'destructive' : 'success',
-        icon: task.pinned ? '@tui.pin-off' : '@tui.pin',
-      })
-      .subscribe();
-  }
-
-  deleteTask(task: Task) {
-    this.dialogs
-      .open<boolean>(TUI_CONFIRM, {
-        label: 'Confirm Deletion',
-        data: {
-          appearance: 'destructive',
-          content: 'Delete this task permanently?',
-          yes: 'Delete',
-          no: 'Cancel',
-        },
-      })
-      .pipe(
-        switchMap((response) => (response ? of(true) : EMPTY)),
-        tap(() => {
-          this.attachmentsStore.clearAttachments();
-          Tasks.removeOne({ id: task.id });
-          this.router.navigate(['/tasks']);
-        }),
-        switchMap(() => {
-          return this.alerts.open('Task deleted', {
-            appearance: 'destructive',
-            icon: '@tui.trash-2',
-          });
-        }),
-      )
-      .subscribe();
   }
 }

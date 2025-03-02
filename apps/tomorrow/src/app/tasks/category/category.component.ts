@@ -9,7 +9,7 @@ import {
   signal,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { TuiButton, TuiIcon, TuiTitle } from '@taiga-ui/core';
+import { TuiIcon, TuiTitle } from '@taiga-ui/core';
 import { TuiChip } from '@taiga-ui/kit';
 import {
   endOfTomorrow,
@@ -22,6 +22,7 @@ import {
 
 import { Task, Tasks } from '@tmrw/data-access';
 
+import { BulkCompleteTasksButtonComponent } from '../_primitives/bulk-complete-tasks-button.component';
 import { EmptyStateComponent } from '../_primitives/empty-state/empty-state.component';
 import { FormatDurationPipe } from '../_primitives/format-duration.pipe';
 import { TaskListCardComponent } from '../_primitives/task-list-card/task-list-card.component';
@@ -31,10 +32,10 @@ import { TaskListHeaderComponent } from '../_primitives/task-list-header/task-li
   selector: 'tw-category',
   imports: [
     CommonModule,
-    TuiButton,
     TuiIcon,
     TuiTitle,
     TuiChip,
+    BulkCompleteTasksButtonComponent,
     EmptyStateComponent,
     FormatDurationPipe,
     TaskListCardComponent,
@@ -97,11 +98,5 @@ export class CategoryComponent {
         });
       });
     }
-  }
-
-  completeAll(tasks: Task[]): void {
-    tasks.forEach((task) => {
-      Tasks.completeTask(task);
-    });
   }
 }

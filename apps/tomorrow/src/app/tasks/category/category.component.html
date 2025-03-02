@@ -3,16 +3,7 @@
 <div class="task-list-group">
   <tw-task-list-header title="Overdue" headerSize="xs" icon="@tui.clock-9">
     @if (overdueTasks().length > 0) {
-      <button
-        appearance="flat-grayscale"
-        size="m"
-        tuiIconButton
-        iconStart="@tui.check-check"
-        type="button"
-        (click)="completeAll(overdueTasks())"
-      >
-        Complete All
-      </button>
+      <tw-bulk-complete-tasks-button [tasks]="overdueTasks()" />
     }
   </tw-task-list-header>
   <div class="task-list-grid">
@@ -31,16 +22,7 @@
         <tui-icon icon="@tui.clock" />
         {{ todaysTasksDuration() | formatDuration }}
       </tui-chip>
-      <button
-        appearance="flat-grayscale"
-        size="m"
-        tuiIconButton
-        iconStart="@tui.check-check"
-        type="button"
-        (click)="completeAll(todaysTasks())"
-      >
-        Complete All
-      </button>
+      <tw-bulk-complete-tasks-button [tasks]="todaysTasks()" />
     }
   </tw-task-list-header>
   <div class="task-list-grid">
@@ -59,16 +41,7 @@
         <tui-icon icon="@tui.clock" />
         {{ tomorrowTasksDuration() | formatDuration }}
       </tui-chip>
-      <button
-        appearance="flat-grayscale"
-        size="m"
-        tuiIconButton
-        iconStart="@tui.check-check"
-        type="button"
-        (click)="completeAll(tomorrowTasks())"
-      >
-        Complete All
-      </button>
+      <tw-bulk-complete-tasks-button [tasks]="tomorrowTasks()" />
     }
   </tw-task-list-header>
   <div class="task-list-grid">
@@ -83,16 +56,7 @@
 <div class="task-list-group">
   <tw-task-list-header title="Future" headerSize="xs" icon="@tui.calendar-days">
     @if (futureTasks().length > 0) {
-      <button
-        appearance="flat-grayscale"
-        size="m"
-        tuiIconButton
-        iconStart="@tui.check-check"
-        type="button"
-        (click)="completeAll(futureTasks())"
-      >
-        Complete All
-      </button>
+      <tw-bulk-complete-tasks-button [tasks]="futureTasks()" />
     }
   </tw-task-list-header>
   <div class="task-list-grid">

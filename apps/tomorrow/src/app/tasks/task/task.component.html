@@ -99,7 +99,7 @@
             tuiIconButton
             type="button"
             [style.border-radius.%]="100"
-            (click)="toggleSubtask(t, $index)"
+            (click)="taskService.toggleSubtask(t, $index)"
           >
             {{ isCompleted ? 'Undo' : 'Done' }}
           </button>
@@ -211,7 +211,7 @@
         <button
           style="width: calc(100% - 56px - 1rem)"
           tuiButton
-          (click)="toggleTask(t)"
+          (click)="taskService.toggleTask(t)"
         >
           Mark {{ t.completedAt ? 'Incomplete' : 'Complete' }}
         </button>
@@ -233,7 +233,7 @@
               appearance="secondary-destructive"
               iconStart="@tui.trash"
               tuiButton
-              (click)="deleteTask(t)"
+              (click)="taskService.deleteTask(t)"
             >
               Delete
             </button>
@@ -253,6 +253,20 @@
             >
               Edit
             </a>
+            <button
+              appearance="secondary-grayscale"
+              iconStart="@tui.calendar-sync"
+              tuiButton
+            >
+              Reschedule
+            </button>
+            <button
+              appearance="secondary-grayscale"
+              iconStart="@tui.timer"
+              tuiButton
+            >
+              Start Timer
+            </button>
           </div>
         </ng-template>
       </div>

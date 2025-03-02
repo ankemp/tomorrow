@@ -26,6 +26,7 @@ const initialState: AttachmentState = {
 };
 
 export const Attachments = signalStore(
+  { providedIn: 'root' },
   withState<AttachmentState>(initialState),
   withComputed((state) => ({
     hasAttachments: computed(() => state.attachments().length > 0),

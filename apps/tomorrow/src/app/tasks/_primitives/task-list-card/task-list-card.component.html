@@ -12,7 +12,7 @@
       [iconStart]="icon()"
       size="l"
       tuiIconButton
-      (click)="toggleTask(t)"
+      (click)="taskService.toggleTask(t)"
     >
       {{ t.completedAt ? 'Undo' : 'Done' }}
     </button>
@@ -66,6 +66,7 @@
     tuiSwipeAction
     type="button"
     [routerLink]="['/tasks', t.id, 'edit']"
+    [queryParams]="{ returnUrl: router.url }"
   >
     Edit
   </button>
@@ -76,7 +77,7 @@
     tuiIconButton
     tuiSwipeAction
     type="button"
-    (click)="deleteTask(t)"
+    (click)="taskService.deleteTask(t)"
   >
     Delete
   </button>

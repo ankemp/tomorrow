@@ -30,6 +30,7 @@ import {
   TuiSkeleton,
 } from '@taiga-ui/kit';
 import { TuiCardLarge, TuiCell, TuiHeader } from '@taiga-ui/layout';
+import { isNotNil } from 'es-toolkit';
 import {
   LOAD_WASM,
   NgxScannerQrcodeComponent,
@@ -144,7 +145,7 @@ export class ConnectDeviceComponent implements AfterViewInit {
               scan.type === ScannerQRCodeSymbolType.ScannerQRCode_QRCODE,
           ),
         ),
-        filter((scan) => scan !== undefined),
+        filter((scan) => isNotNil(scan)),
         filter((scan) => scan.value.includes('"use":"tomorrow"')),
         distinctUntilKeyChanged('value'),
       )

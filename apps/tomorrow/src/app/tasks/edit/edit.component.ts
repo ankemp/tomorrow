@@ -29,6 +29,7 @@ import { TuiAccordion, TuiAccordionComponent } from '@taiga-ui/experimental';
 import { TuiBadgeNotification } from '@taiga-ui/kit';
 import { TuiCardLarge, TuiForm, TuiHeader } from '@taiga-ui/layout';
 import { TuiTextareaModule } from '@taiga-ui/legacy';
+import { isNil } from 'es-toolkit';
 
 import { Attachments, Settings, SubTask, Task, Tasks } from '@tmrw/data-access';
 
@@ -71,6 +72,7 @@ import { SubtasksComponent } from '../_formcontrols/subtasks/subtasks.component'
 export class EditComponent implements AfterViewInit {
   private readonly fb = inject(NonNullableFormBuilder);
   private readonly router = inject(Router);
+  private readonly activatedRoute = inject(ActivatedRoute);
   private readonly alerts = inject(TuiAlertService);
   readonly settings = inject(Settings);
   readonly attachmentsStore = inject(Attachments);
@@ -93,13 +95,10 @@ export class EditComponent implements AfterViewInit {
   @ViewChild(TuiAccordionComponent, { static: true })
   readonly accordion!: TuiAccordionComponent;
 
-  constructor(
-    @Inject(PLATFORM_ID) platformId: any,
-    private readonly activatedRoute: ActivatedRoute,
-  ) {
+  constructor(@Inject(PLATFORM_ID) platformId: any) {
     if (isPlatformBrowser(platformId)) {
       effect(() => {
-        const t = Tasks.getTaskById(activatedRoute.snapshot.params['id']);
+        const t = Tasks.getTaskById(this.activatedRoute.snapshot.params['id']);
         if (t) {
           this.task.set(t);
           this.attachmentsStore.init(t);
@@ -171,7 +170,12 @@ export class EditComponent implements AfterViewInit {
       this.alerts
         .open('Task updated', { appearance: 'success', icon: '@tui.check' })
         .subscribe();
-      this.router.navigate(['/tasks', taskId]);
+      const returnUrl = this.activatedRoute.snapshot.queryParams['returnUrl'];
+      if (!isNil(returnUrl)) {
+        this.router.navigate([returnUrl], { replaceUrl: true });
+      } else {
+        this.router.navigate(['/tasks', taskId, 'view'], { replaceUrl: true });
+      }
     }
   }
 }
