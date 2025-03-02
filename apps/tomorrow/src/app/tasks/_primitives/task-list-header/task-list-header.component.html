@@ -10,6 +10,56 @@
   </div>
 
   <div tuiAccessories>
+    @if (canSort()) {
+      <button
+        type="button"
+        appearance="flat-grayscale"
+        size="m"
+        tuiIconButton
+        [iconStart]="sortStateIcon()"
+        tuiDropdownOpen
+        tuiDropdownAlign="right"
+        [tuiDropdown]="content"
+      >
+        Sort
+      </button>
+    }
+    <ng-template #content>
+      <tui-data-list role="menu">
+        <tui-opt-group label="Date">
+          <button
+            tuiOption
+            iconStart="@tui.clock-arrow-down"
+            (click)="sortState.set('date_desc')"
+          >
+            Date Desc
+          </button>
+          <button
+            tuiOption
+            iconStart="@tui.clock-arrow-up"
+            (click)="sortState.set('date_asc')"
+          >
+            Date Asc
+          </button>
+        </tui-opt-group>
+        <tui-opt-group label="Priority">
+          <button
+            tuiOption
+            iconStart="@tui.arrow-down-0-1"
+            (click)="sortState.set('priority_desc')"
+          >
+            High to Low
+          </button>
+          <button
+            tuiOption
+            iconStart="@tui.arrow-up-1-0"
+            (click)="sortState.set('priority_asc')"
+          >
+            Low to High
+          </button>
+        </tui-opt-group>
+      </tui-data-list>
+    </ng-template>
     <ng-content></ng-content>
   </div>
 </div>

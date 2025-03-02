@@ -13,7 +13,13 @@ import { RouterModule } from '@angular/router';
 import { TuiButton, TuiIcon } from '@taiga-ui/core';
 import { TuiChip } from '@taiga-ui/kit';
 
-import { Settings, Task, Tasks } from '@tmrw/data-access';
+import {
+  Settings,
+  SORT_DEFAULT,
+  Task,
+  Tasks,
+  TaskSort,
+} from '@tmrw/data-access';
 
 import { ActionBarComponent } from '../../core/action-bar/action-bar-portal.component';
 import { BulkCompleteTasksButtonComponent } from '../_primitives/bulk-complete-tasks-button.component';
@@ -50,7 +56,9 @@ export class DashboardComponent {
   readonly pinnedTasks = signal<Task[]>([]);
   readonly overDueTasks = signal<Task[]>([]);
   readonly todaysTasks = signal<Task[]>([]);
+  readonly todaysSort = signal<TaskSort>(SORT_DEFAULT);
   readonly upcomingTasks = signal<Task[]>([]);
+  readonly upcomingSort = signal<TaskSort>(SORT_DEFAULT);
   readonly isReady = Tasks.isReady();
   readonly hasPinnedTasks = computed(() => this.pinnedTasks().length > 0);
   readonly hasOverdueTasks = computed(() => this.overDueTasks().length > 0);
@@ -65,15 +73,33 @@ export class DashboardComponent {
       effect((onCleanup) => {
         const pt = Tasks.getPinnedTasks();
         this.pinnedTasks.set(pt.fetch());
+        onCleanup(() => {
+          pt.cleanup();
+        });
+      });
+
+      effect((onCleanup) => {
         const ot = Tasks.getOverdueTasks();
         this.overDueTasks.set(ot.fetch());
-        const tt = Tasks.getTodaysTasks();
-        this.todaysTasks.set(tt.fetch());
-        const ut = Tasks.getUpcomingTasks();
-        this.upcomingTasks.set(ut.fetch());
         onCleanup(() => {
           ot.cleanup();
+        });
+      });
+
+      effect((onCleanup) => {
+        const sort = this.todaysSort();
+        const tt = Tasks.getTodaysTasks(sort);
+        this.todaysTasks.set(tt.fetch());
+        onCleanup(() => {
           tt.cleanup();
+        });
+      });
+
+      effect((onCleanup) => {
+        const sort = this.upcomingSort();
+        const ut = Tasks.getUpcomingTasks(sort);
+        this.upcomingTasks.set(ut.fetch());
+        onCleanup(() => {
           ut.cleanup();
         });
       });

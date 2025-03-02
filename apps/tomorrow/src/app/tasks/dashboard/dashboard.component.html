@@ -9,12 +9,7 @@
 
 @if (hasPinnedTasks()) {
   <section class="task-list-grid">
-    <tw-task-list-header
-      title="Pinned"
-      headerSize="s"
-      icon="@tui.pin"
-      [sticky]="true"
-    >
+    <tw-task-list-header title="Pinned" headerSize="s" icon="@tui.pin">
     </tw-task-list-header>
     @for (task of pinnedTasks(); track task.id) {
       <tw-task-list-card [task]="task" [fullDateFormat]="true" />
@@ -24,12 +19,7 @@
 
 @if (hasOverdueTasks()) {
   <section class="task-list-grid">
-    <tw-task-list-header
-      title="Overdue"
-      headerSize="s"
-      icon="@tui.clock-9"
-      [sticky]="true"
-    >
+    <tw-task-list-header title="Overdue" headerSize="s" icon="@tui.clock-9">
       <tw-bulk-move-tasks-to-today-button [tasks]="overDueTasks()" />
       <tw-bulk-complete-tasks-button [tasks]="overDueTasks()" />
     </tw-task-list-header>
@@ -44,7 +34,8 @@
     title="Today"
     headerSize="s"
     icon="@tui.clock-12"
-    [sticky]="true"
+    [canSort]="true"
+    (sortChanged)="todaysSort.set($event)"
   >
     @if (todaysTasks().length > 0) {
       <tui-chip size="s">
@@ -69,7 +60,8 @@
     title="Upcoming"
     headerSize="s"
     icon="@tui.calendar-days"
-    [sticky]="true"
+    [canSort]="true"
+    (sortChanged)="upcomingSort.set($event)"
   >
     @if (upcomingTasks().length > 0) {
       <tw-bulk-complete-tasks-button [tasks]="upcomingTasks()" />

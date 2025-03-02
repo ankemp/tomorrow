@@ -7,6 +7,21 @@ import { endOfToday, startOfToday, startOfTomorrow } from 'date-fns';
 import { Task } from '../models/task.model';
 import { syncManager } from '../sync-manager';
 
+export type TaskSort =
+  | 'date_desc'
+  | 'date_asc'
+  | 'priority_desc'
+  | 'priority_asc';
+export const SORT_DEFAULT: TaskSort = 'date_desc';
+
+export function parseTaskSort(sort: TaskSort): {
+  field: string;
+  order: 1 | -1;
+} {
+  const [field, order] = sort.split('_');
+  return { field, order: order === 'asc' ? 1 : -1 };
+}
+
 class TaskCollection extends Collection<Task> {
   constructor() {
     super({
@@ -143,26 +158,28 @@ class TaskCollection extends Collection<Task> {
     );
   }
 
-  getTodaysTasks() {
+  getTodaysTasks(sort: TaskSort) {
+    const { field, order } = parseTaskSort(sort);
     return this.find(
       {
         date: { $gte: startOfToday(), $lt: endOfToday() },
         $or: [{ pinned: false }, { pinned: { $exists: false } }],
       },
       {
-        sort: { date: 1 },
+        sort: { [field]: order },
       },
     );
   }
 
-  getUpcomingTasks(limit = 5) {
+  getUpcomingTasks(sort: TaskSort, limit = 5) {
+    const { field, order } = parseTaskSort(sort);
     return this.find(
       {
         date: { $gt: startOfTomorrow() },
         $or: [{ pinned: false }, { pinned: { $exists: false } }],
       },
       {
-        sort: { date: 1 },
+        sort: { [field]: order },
         limit: limit,
       },
     );
