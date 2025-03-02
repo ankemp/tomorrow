@@ -33,7 +33,7 @@
             </tui-badge>
           }
           @if (t.priority && t.priority > 0) {
-            <tui-chip style="--pin-top: 9px; --pin-left: 2px">
+            <tui-chip size="xs" style="--pin-top: 9px; --pin-left: 3px">
               <tw-priority-pin [priority]="t.priority" [showLabel]="true" />
             </tui-chip>
           }
@@ -235,7 +235,7 @@
               tuiButton
               (click)="deleteTask(t)"
             >
-              Delete Task
+              Delete
             </button>
             <button
               appearance="secondary-grayscale"
@@ -243,7 +243,7 @@
               tuiButton
               (click)="pinTask(t)"
             >
-              {{ t.pinned ? 'Unpin' : 'Pin' }} Task
+              {{ t.pinned ? 'Unpin' : 'Pin' }}
             </button>
             <a
               appearance="secondary"
@@ -251,7 +251,7 @@
               tuiButton
               [routerLink]="['./edit']"
             >
-              Edit Task
+              Edit
             </a>
           </div>
         </ng-template>

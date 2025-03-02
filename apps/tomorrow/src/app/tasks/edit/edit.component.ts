@@ -121,17 +121,8 @@ export class EditComponent implements AfterViewInit {
 
   async setFormData(task: Task) {
     const formData = {
-      userId: task.userId,
-      title: task.title,
-      date: task.date,
-      category: task.category,
-      priority: task.priority,
-      description: task.description,
-      location: task.location,
-      duration: task.duration,
-      subTasks: task.subTasks,
+      ...task,
       attachments: this.attachmentsStore.files(),
-      notes: task.notes,
     };
     this.form.patchValue(formData);
   }
@@ -170,13 +161,7 @@ export class EditComponent implements AfterViewInit {
         { id: taskId },
         {
           $set: {
-            title: task.title,
-            date: task.date,
-            category: task.category,
-            description: task.description,
-            location: task.location,
-            duration: task.duration,
-            notes: task.notes,
+            ...task,
             subTasks: subTasks?.filter((st) => st.title?.length),
             attachments: attachments?.map((file) => file.name),
           },
