@@ -97,8 +97,10 @@ export const Context = signalStore(
   })),
   withHooks({
     onInit(store) {
-      store.watchIsOnline();
-      store.watchUpdates();
+      if (typeof window !== 'undefined') {
+        store.watchIsOnline();
+        store.watchUpdates();
+      }
       // effect(async () => {});
     },
   }),
