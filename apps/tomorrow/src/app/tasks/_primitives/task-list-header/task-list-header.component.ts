@@ -5,6 +5,7 @@ import {
   computed,
   effect,
   input,
+  model,
   output,
   signal,
 } from '@angular/core';
@@ -50,6 +51,7 @@ export class TaskListHeaderComponent {
 
   readonly sortChanged = output<TaskSort>();
 
+  readonly sortMenuOpen = model<boolean>(false);
   readonly sortState = signal<TaskSort>(SORT_DEFAULT);
 
   readonly hasIcon = computed(() => !!this.icon());
@@ -71,5 +73,10 @@ export class TaskListHeaderComponent {
     effect(() => {
       this.sortChanged.emit(this.sortState());
     });
+  }
+
+  setSort(sort: TaskSort) {
+    this.sortState.set(sort);
+    this.sortMenuOpen.set(false);
   }
 }

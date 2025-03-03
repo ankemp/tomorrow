@@ -14,12 +14,14 @@
       <button
         type="button"
         appearance="flat-grayscale"
+        [tuiAppearanceState]="sortMenuOpen() ? 'active' : null"
         size="m"
         tuiIconButton
         [iconStart]="sortStateIcon()"
         tuiDropdownOpen
         tuiDropdownAlign="right"
         [tuiDropdown]="content"
+        [(tuiDropdownOpen)]="sortMenuOpen"
       >
         Sort
       </button>
@@ -30,30 +32,30 @@
           <button
             tuiOption
             iconStart="@tui.clock-arrow-down"
-            (click)="sortState.set('date_desc')"
+            (click)="setSort('date_desc')"
           >
-            Date Desc
+            Newest First
           </button>
           <button
             tuiOption
             iconStart="@tui.clock-arrow-up"
-            (click)="sortState.set('date_asc')"
+            (click)="setSort('date_asc')"
           >
-            Date Asc
+            Oldest First
           </button>
         </tui-opt-group>
         <tui-opt-group label="Priority">
           <button
             tuiOption
             iconStart="@tui.arrow-down-0-1"
-            (click)="sortState.set('priority_desc')"
+            (click)="setSort('priority_desc')"
           >
             High to Low
           </button>
           <button
             tuiOption
             iconStart="@tui.arrow-up-1-0"
-            (click)="sortState.set('priority_asc')"
+            (click)="setSort('priority_asc')"
           >
             Low to High
           </button>
