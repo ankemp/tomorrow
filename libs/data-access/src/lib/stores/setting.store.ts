@@ -23,6 +23,7 @@ import { parseUserAgent } from '../utils/user-agent-parser';
 const initialState: SettingsState = {
   lastSyncTime: 0,
   defaultReminderTime: '08:00',
+  defaultReminderTimeAfterCreation: 60,
   defaultReminderCategory: null,
   startOfWeek: 'Sunday',
   timeFormat: '12h',
@@ -109,6 +110,11 @@ export const Settings = signalStore(
   withMethods((store) => ({
     updateDefaultReminderTime(defaultReminderTime: string): void {
       patchState(store, { defaultReminderTime });
+    },
+    updateDefaultReminderTimeAfterCreation(
+      defaultReminderTimeAfterCreation: number,
+    ): void {
+      patchState(store, { defaultReminderTimeAfterCreation });
     },
     updateDefaultReminderCategory(defaultReminderCategory: string): void {
       patchState(store, { defaultReminderCategory });
@@ -217,6 +223,8 @@ function pushUserSettings(http: HttpClient, settings: SettingsState) {
       .post<void>(`api/users/${settings.userId}`, {
         syncDevices: settings.syncDevices,
         defaultReminderTime: settings.defaultReminderTime,
+        defaultReminderTimeAfterCreation:
+          settings.defaultReminderTimeAfterCreation,
         defaultReminderCategory: settings.defaultReminderCategory,
         startOfWeek: settings.startOfWeek,
         timeFormat: settings.timeFormat,

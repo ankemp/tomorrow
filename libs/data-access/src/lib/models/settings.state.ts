@@ -1,6 +1,7 @@
 export type SettingsState = {
   lastSyncTime: number;
   defaultReminderTime: string;
+  defaultReminderTimeAfterCreation: number; // in minutes
   defaultReminderCategory: string | null;
   startOfWeek: string;
   timeFormat: string;

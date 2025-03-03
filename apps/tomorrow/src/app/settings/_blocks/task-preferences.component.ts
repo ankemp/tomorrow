@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TuiTime, TuiValueTransformer } from '@taiga-ui/cdk';
+import { TuiContext, TuiTime, TuiValueTransformer } from '@taiga-ui/cdk';
 import { TuiAutoColorPipe } from '@taiga-ui/core';
 import {
   TUI_TIME_VALUE_TRANSFORMER,
@@ -9,6 +9,7 @@ import {
   TuiDataListWrapper,
 } from '@taiga-ui/kit';
 import {
+  TuiInputSliderModule,
   TuiInputTimeModule,
   tuiInputTimeOptionsProvider,
   TuiSelectModule,
@@ -17,6 +18,7 @@ import {
 
 import { Settings } from '@tmrw/data-access';
 
+import { FormatDurationPipe } from '../../tasks/_primitives/format-duration.pipe';
 import { PreferencesCardComponent } from '../_primitives/preferences-card.component';
 
 class TimeTransformer extends TuiValueTransformer<
@@ -32,7 +34,6 @@ class TimeTransformer extends TuiValueTransformer<
   }
 }
 
-// TODO: Add default reminder time-from-now if today
 @Component({
   selector: 'tw-task-preferences',
   imports: [
@@ -41,12 +42,14 @@ class TimeTransformer extends TuiValueTransformer<
     TuiAutoColorPipe,
     TuiChip,
     TuiDataListWrapper,
+    TuiInputSliderModule,
     TuiInputTimeModule,
     TuiTextfieldControllerModule,
     TuiSelectModule,
     PreferencesCardComponent,
   ],
   providers: [
+    FormatDurationPipe,
     {
       provide: TUI_TIME_VALUE_TRANSFORMER,
       useClass: TimeTransformer,
@@ -78,6 +81,22 @@ class TimeTransformer extends TuiValueTransformer<
             Select format
             <tui-data-list-wrapper *tuiDataList [items]="['12h', '24h']" />
           </tui-select>
+        </div>
+        <div tuiLabel>
+          Default Time Until Due (minutes)
+          <tui-input-slider
+            [ngModel]="settings.defaultReminderTimeAfterCreation()"
+            (ngModelChange)="
+              settings.updateDefaultReminderTimeAfterCreation($event)
+            "
+            [min]="0"
+            [max]="1440"
+            [steps]="100"
+            [segments]="12"
+            [valueContent]="durationLabel"
+          >
+            Minutes Until Due
+          </tui-input-slider>
         </div>
         <div tuiLabel>
           Start of Week
@@ -173,4 +192,11 @@ class TimeTransformer extends TuiValueTransformer<
 })
 export class TaskPreferencesComponent {
   readonly settings = inject(Settings);
+
+  constructor(private formatDurationPipe: FormatDurationPipe) {}
+
+  readonly durationLabel = ({ $implicit }: TuiContext<number>): string => {
+    const minutes = $implicit;
+    return this.formatDurationPipe.transform(minutes);
+  };
 }

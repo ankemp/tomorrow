@@ -27,7 +27,14 @@ import {
   TuiChip,
 } from '@taiga-ui/kit';
 import { TuiInputDateModule, TuiInputDateTimeModule } from '@taiga-ui/legacy';
-import { addDays, DateValues, nextSaturday, set } from 'date-fns';
+import {
+  addDays,
+  addMinutes,
+  DateValues,
+  isAfter,
+  nextSaturday,
+  set,
+} from 'date-fns';
 
 import { Settings } from '@tmrw/data-access';
 
@@ -138,15 +145,25 @@ export class DatePickerComponent implements ControlValueAccessor {
       };
 
       switch (preset) {
-        case 'today':
-          this.date.set(set(today, dateValues));
+        case 'today': {
+          let setValue = set(today, dateValues);
+          if (isAfter(today, setValue)) {
+            setValue = addMinutes(
+              today,
+              this.settings.defaultReminderTimeAfterCreation(),
+            );
+          }
+          this.date.set(setValue);
           break;
-        case 'tomorrow':
+        }
+        case 'tomorrow': {
           this.date.set(set(addDays(today, 1), dateValues));
           break;
-        case 'weekend':
+        }
+        case 'weekend': {
           this.date.set(set(nextSaturday(today), dateValues));
           break;
+        }
       }
     });
     effect(() => {
