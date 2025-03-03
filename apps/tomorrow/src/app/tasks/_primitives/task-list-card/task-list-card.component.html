@@ -59,6 +59,28 @@
     </button>
   </div>
   <button
+    appearance="flat-destructive"
+    iconStart="@tui.trash-2"
+    size="m"
+    tuiIconButton
+    tuiSwipeAction
+    type="button"
+    (click)="taskService.deleteTask(t)"
+  >
+    Delete
+  </button>
+  <button
+    appearance="flat"
+    [iconStart]="t.pinned ? '@tui.pin-off' : '@tui.pin'"
+    size="m"
+    tuiIconButton
+    tuiSwipeAction
+    type="button"
+    (click)="taskService.pinTask(t)"
+  >
+    {{ t.pinned ? 'Unpin' : 'Pin' }}
+  </button>
+  <button
     appearance="flat"
     iconStart="@tui.pencil"
     size="m"
@@ -69,16 +91,5 @@
     [queryParams]="{ returnUrl: router.url }"
   >
     Edit
-  </button>
-  <button
-    appearance="flat-destructive"
-    iconStart="@tui.trash-2"
-    size="m"
-    tuiIconButton
-    tuiSwipeAction
-    type="button"
-    (click)="taskService.deleteTask(t)"
-  >
-    Delete
   </button>
 </tui-swipe-actions>
