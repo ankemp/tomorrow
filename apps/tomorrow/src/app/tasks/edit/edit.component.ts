@@ -29,7 +29,7 @@ import { TuiAccordion, TuiAccordionComponent } from '@taiga-ui/experimental';
 import { TuiBadgeNotification } from '@taiga-ui/kit';
 import { TuiCardLarge, TuiForm, TuiHeader } from '@taiga-ui/layout';
 import { TuiTextareaModule } from '@taiga-ui/legacy';
-import { isNil } from 'es-toolkit';
+import { isNotNil } from 'es-toolkit';
 
 import { Attachments, Settings, SubTask, Task, Tasks } from '@tmrw/data-access';
 
@@ -171,10 +171,10 @@ export class EditComponent implements AfterViewInit {
         .open('Task updated', { appearance: 'success', icon: '@tui.check' })
         .subscribe();
       const returnUrl = this.activatedRoute.snapshot.queryParams['returnUrl'];
-      if (!isNil(returnUrl)) {
+      if (isNotNil(returnUrl)) {
         this.router.navigate([returnUrl], { replaceUrl: true });
       } else {
-        this.router.navigate(['/tasks', taskId, 'view'], { replaceUrl: true });
+        this.router.navigate(['/tasks', taskId], { replaceUrl: true });
       }
     }
   }
