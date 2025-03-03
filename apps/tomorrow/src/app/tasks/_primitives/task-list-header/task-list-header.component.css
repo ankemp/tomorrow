@@ -18,3 +18,7 @@
     margin-right: 0.5rem;
   }
 }
+
+tui-data-list [tuiOption] {
+  justify-content: unset;
+}

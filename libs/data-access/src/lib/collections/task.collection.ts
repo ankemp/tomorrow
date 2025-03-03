@@ -12,7 +12,7 @@ export type TaskSort =
   | 'date_asc'
   | 'priority_desc'
   | 'priority_asc';
-export const SORT_DEFAULT: TaskSort = 'date_desc';
+export const SORT_DEFAULT: TaskSort = 'date_asc';
 
 export function parseTaskSort(sort: TaskSort): {
   field: string;
@@ -96,6 +96,7 @@ class TaskCollection extends Collection<Task> {
   }
 
   searchTasks(query: string) {
+    const { field, order } = parseTaskSort(SORT_DEFAULT);
     return this.find(
       {
         $or: [
@@ -104,7 +105,7 @@ class TaskCollection extends Collection<Task> {
         ],
       },
       {
-        sort: { date: 1 },
+        sort: { [field]: order },
       },
     );
   }
@@ -120,6 +121,7 @@ class TaskCollection extends Collection<Task> {
   }
 
   getPinnedTasks(includeCompleted = true) {
+    const { field, order } = parseTaskSort(SORT_DEFAULT);
     return this.find(
       {
         pinned: true,
@@ -127,12 +129,13 @@ class TaskCollection extends Collection<Task> {
         // completedAt: includeCompleted ? { $ne: null } : null,
       },
       {
-        sort: { date: 1 },
+        sort: { [field]: order },
       },
     );
   }
 
   getOverdueTasks() {
+    const { field, order } = parseTaskSort(SORT_DEFAULT);
     return this.find(
       {
         date: { $lt: startOfToday() },
@@ -140,12 +143,13 @@ class TaskCollection extends Collection<Task> {
         $or: [{ pinned: false }, { pinned: { $exists: false } }],
       },
       {
-        sort: { date: 1 },
+        sort: { [field]: order },
       },
     );
   }
 
   getTodaysIncompleteTasks() {
+    const { field, order } = parseTaskSort(SORT_DEFAULT);
     return this.find(
       {
         date: { $gte: startOfToday(), $lt: endOfToday() },
@@ -153,7 +157,7 @@ class TaskCollection extends Collection<Task> {
         $or: [{ pinned: false }, { pinned: { $exists: false } }],
       },
       {
-        sort: { date: 1 },
+        sort: { [field]: order },
       },
     );
   }
@@ -186,13 +190,14 @@ class TaskCollection extends Collection<Task> {
   }
 
   getByCategory(category: string, includeCompleted = false) {
+    const { field, order } = parseTaskSort(SORT_DEFAULT);
     return this.find(
       {
         category,
         completedAt: includeCompleted ? { $ne: null } : null,
       },
       {
-        sort: { date: 1 },
+        sort: { [field]: order },
       },
     );
   }
