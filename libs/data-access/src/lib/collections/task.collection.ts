@@ -12,7 +12,7 @@ export type TaskSort =
   | 'date_asc'
   | 'priority_desc'
   | 'priority_asc';
-export const SORT_DEFAULT: TaskSort = 'date_asc';
+export const TASK_SORT_DEFAULT: TaskSort = 'date_asc';
 
 export function parseTaskSort(sort: TaskSort): {
   field: string;
@@ -96,7 +96,7 @@ class TaskCollection extends Collection<Task> {
   }
 
   searchTasks(query: string) {
-    const { field, order } = parseTaskSort(SORT_DEFAULT);
+    const { field, order } = parseTaskSort(TASK_SORT_DEFAULT);
     return this.find(
       {
         $or: [
@@ -121,7 +121,7 @@ class TaskCollection extends Collection<Task> {
   }
 
   getPinnedTasks(includeCompleted = true) {
-    const { field, order } = parseTaskSort(SORT_DEFAULT);
+    const { field, order } = parseTaskSort(TASK_SORT_DEFAULT);
     return this.find(
       {
         pinned: true,
@@ -135,7 +135,7 @@ class TaskCollection extends Collection<Task> {
   }
 
   getOverdueTasks() {
-    const { field, order } = parseTaskSort(SORT_DEFAULT);
+    const { field, order } = parseTaskSort(TASK_SORT_DEFAULT);
     return this.find(
       {
         date: { $lt: startOfToday() },
@@ -149,7 +149,7 @@ class TaskCollection extends Collection<Task> {
   }
 
   getTodaysIncompleteTasks() {
-    const { field, order } = parseTaskSort(SORT_DEFAULT);
+    const { field, order } = parseTaskSort(TASK_SORT_DEFAULT);
     return this.find(
       {
         date: { $gte: startOfToday(), $lt: endOfToday() },
@@ -190,7 +190,7 @@ class TaskCollection extends Collection<Task> {
   }
 
   getByCategory(category: string, includeCompleted = false) {
-    const { field, order } = parseTaskSort(SORT_DEFAULT);
+    const { field, order } = parseTaskSort(TASK_SORT_DEFAULT);
     return this.find(
       {
         category,

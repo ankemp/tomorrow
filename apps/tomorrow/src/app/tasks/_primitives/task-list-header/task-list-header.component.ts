@@ -3,10 +3,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  effect,
   input,
   model,
-  output,
   signal,
 } from '@angular/core';
 import { TuiElasticSticky } from '@taiga-ui/addon-mobile';
@@ -19,7 +17,7 @@ import {
 } from '@taiga-ui/core';
 import { TuiHeader } from '@taiga-ui/layout';
 
-import { SORT_DEFAULT, TaskSort } from '@tmrw/data-access';
+import { TaskSort } from '@tmrw/data-access';
 
 @Component({
   selector: 'tw-task-list-header',
@@ -47,17 +45,15 @@ export class TaskListHeaderComponent {
   readonly subtitle = input<string>();
   readonly headerSize = input<TuiHeader['size']>('m');
   readonly sticky = input<boolean>(true);
-  readonly canSort = input<boolean>(false);
 
-  readonly sortChanged = output<TaskSort>();
-
-  readonly sortMenuOpen = model<boolean>(false);
-  readonly sortState = signal<TaskSort>(SORT_DEFAULT);
+  readonly sortMenuOpen = signal<boolean>(false);
+  readonly sort = model<TaskSort>();
 
   readonly hasIcon = computed(() => !!this.icon());
   readonly hasSubtitle = computed(() => !!this.subtitle());
+  readonly canSort = computed(() => this.sort());
   readonly sortStateIcon = computed(() => {
-    switch (this.sortState()) {
+    switch (this.sort()) {
       case 'date_desc':
         return '@tui.clock-arrow-down';
       case 'date_asc':
@@ -66,17 +62,13 @@ export class TaskListHeaderComponent {
         return '@tui.arrow-down-0-1';
       case 'priority_asc':
         return '@tui.arrow-up-1-0';
+      default:
+        return '@tui.arrow-down-up';
     }
   });
 
-  constructor() {
-    effect(() => {
-      this.sortChanged.emit(this.sortState());
-    });
-  }
-
   setSort(sort: TaskSort) {
-    this.sortState.set(sort);
+    this.sort.set(sort);
     this.sortMenuOpen.set(false);
   }
 }

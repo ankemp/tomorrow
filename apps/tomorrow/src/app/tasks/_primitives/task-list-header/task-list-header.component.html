@@ -32,7 +32,7 @@
           <button
             tuiOption
             iconStart="@tui.clock-arrow-up"
-            [iconEnd]="sortState() === 'date_asc' ? '@tui.check' : ''"
+            [iconEnd]="sort() === 'date_asc' ? '@tui.check' : ''"
             (click)="setSort('date_asc')"
           >
             Earliest Due
@@ -40,7 +40,7 @@
           <button
             tuiOption
             iconStart="@tui.clock-arrow-down"
-            [iconEnd]="sortState() === 'date_desc' ? '@tui.check' : ''"
+            [iconEnd]="sort() === 'date_desc' ? '@tui.check' : ''"
             (click)="setSort('date_desc')"
           >
             Latest Due
@@ -50,7 +50,7 @@
           <button
             tuiOption
             iconStart="@tui.arrow-down-0-1"
-            [iconEnd]="sortState() === 'priority_desc' ? '@tui.check' : ''"
+            [iconEnd]="sort() === 'priority_desc' ? '@tui.check' : ''"
             (click)="setSort('priority_desc')"
           >
             High to Low
@@ -58,7 +58,7 @@
           <button
             tuiOption
             iconStart="@tui.arrow-up-1-0"
-            [iconEnd]="sortState() === 'priority_asc' ? '@tui.check' : ''"
+            [iconEnd]="sort() === 'priority_asc' ? '@tui.check' : ''"
             (click)="setSort('priority_asc')"
           >
             Low to High

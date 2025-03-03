@@ -34,8 +34,7 @@
     title="Today"
     headerSize="s"
     icon="@tui.clock-12"
-    [canSort]="true"
-    (sortChanged)="todaysSort.set($event)"
+    [(sort)]="todaysSort"
   >
     @if (todaysTasks().length > 0) {
       <tui-chip size="s">
@@ -60,8 +59,7 @@
     title="Upcoming"
     headerSize="s"
     icon="@tui.calendar-days"
-    [canSort]="true"
-    (sortChanged)="upcomingSort.set($event)"
+    [(sort)]="upcomingSort"
   >
     @if (upcomingTasks().length > 0) {
       <tw-bulk-complete-tasks-button [tasks]="upcomingTasks()" />

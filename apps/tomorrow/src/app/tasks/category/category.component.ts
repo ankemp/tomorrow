@@ -20,7 +20,7 @@ import {
   isTomorrow,
 } from 'date-fns';
 
-import { Task, Tasks } from '@tmrw/data-access';
+import { Task, TASK_SORT_DEFAULT, Tasks, TaskSort } from '@tmrw/data-access';
 
 import { BulkCompleteTasksButtonComponent } from '../_primitives/bulk-complete-tasks-button.component';
 import { EmptyStateComponent } from '../_primitives/empty-state/empty-state.component';
@@ -65,6 +65,7 @@ export class CategoryComponent {
       .filter((t) => !t.completedAt)
       .reduce((acc, task) => acc + (task.duration ?? 0), 0);
   });
+  readonly todaysSort = signal<TaskSort>(TASK_SORT_DEFAULT);
 
   readonly tomorrowTasks = computed(() => {
     return this.categoryTasks().filter((task) => {
@@ -76,6 +77,7 @@ export class CategoryComponent {
       .filter((t) => !t.completedAt)
       .reduce((acc, task) => acc + (task.duration ?? 0), 0);
   });
+  readonly tomorrowSort = signal<TaskSort>(TASK_SORT_DEFAULT);
 
   readonly futureTasks = computed(() => {
     return this.categoryTasks().filter((task) => {

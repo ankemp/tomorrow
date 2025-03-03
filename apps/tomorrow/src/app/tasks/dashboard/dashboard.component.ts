@@ -15,8 +15,8 @@ import { TuiChip } from '@taiga-ui/kit';
 
 import {
   Settings,
-  SORT_DEFAULT,
   Task,
+  TASK_SORT_DEFAULT,
   Tasks,
   TaskSort,
 } from '@tmrw/data-access';
@@ -56,9 +56,9 @@ export class DashboardComponent {
   readonly pinnedTasks = signal<Task[]>([]);
   readonly overDueTasks = signal<Task[]>([]);
   readonly todaysTasks = signal<Task[]>([]);
-  readonly todaysSort = signal<TaskSort>(SORT_DEFAULT);
+  readonly todaysSort = signal<TaskSort>(TASK_SORT_DEFAULT);
   readonly upcomingTasks = signal<Task[]>([]);
-  readonly upcomingSort = signal<TaskSort>(SORT_DEFAULT);
+  readonly upcomingSort = signal<TaskSort>(TASK_SORT_DEFAULT);
   readonly isReady = Tasks.isReady();
   readonly hasPinnedTasks = computed(() => this.pinnedTasks().length > 0);
   readonly hasOverdueTasks = computed(() => this.overDueTasks().length > 0);
