@@ -4,7 +4,6 @@ import {
   Component,
   effect,
   forwardRef,
-  model,
   signal,
 } from '@angular/core';
 import {
@@ -34,7 +33,7 @@ import { FormatDurationPipe } from '../../_primitives/format-duration.pipe';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DurationComponent implements ControlValueAccessor {
-  readonly duration = model();
+  readonly duration = signal<number | null>(null);
 
   readonly disabled = signal(false);
 

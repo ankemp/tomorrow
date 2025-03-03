@@ -6,7 +6,6 @@ import {
   effect,
   Inject,
   inject,
-  model,
   PLATFORM_ID,
   signal,
 } from '@angular/core';
@@ -79,7 +78,7 @@ export class TaskComponent {
   readonly attachmentsStore = inject(Attachments);
   readonly taskService = inject(TaskService);
 
-  readonly menuOpen = model(false);
+  readonly menuOpen = signal(false);
   readonly task = signal<Task | null>(null);
 
   readonly taskExists = computed(() => {
