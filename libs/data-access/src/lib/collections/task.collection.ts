@@ -80,7 +80,7 @@ class TaskCollection extends Collection<Task> {
     );
   }
 
-  pinTask(task: Task) {
+  toggleTaskPin(task: Task) {
     this.updateOne({ id: task.id }, { $set: { pinned: !task.pinned } });
   }
 

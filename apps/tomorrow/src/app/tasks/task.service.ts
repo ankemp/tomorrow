@@ -89,13 +89,43 @@ export class TaskService {
   }
 
   pinTask(task: Task) {
-    Tasks.pinTask(task);
-    this.alerts
-      .open(task.pinned ? 'Task unpinned' : 'Task pinned', {
-        appearance: task.pinned ? 'destructive' : 'success',
-        icon: task.pinned ? '@tui.pin-off' : '@tui.pin',
-      })
-      .subscribe();
+    const isPinned = !!task.pinned;
+    const alertMessage = isPinned ? 'Task unpinned' : 'Task pinned';
+    const alertAppearance = isPinned ? 'destructive' : 'success';
+    const alertIcon = isPinned ? '@tui.pin-off' : '@tui.pin';
+    const count = Tasks.getPinnedTasks().count();
+    if (count >= 3 && !isPinned) {
+      this.dialogs
+        .open<boolean>(TUI_CONFIRM, {
+          label: 'Pin Limit Reached',
+          data: {
+            content: `You have ${count} pinned tasks. For better organization, consider using tags or priorities instead of adding more pins. Pin this task anyway?`,
+            yes: 'Pin Anyway',
+            no: 'Cancel',
+          },
+        })
+        .pipe(
+          switchMap((response) => (response ? of(true) : EMPTY)),
+          tap(() => {
+            Tasks.toggleTaskPin(task);
+          }),
+          switchMap(() => {
+            return this.alerts.open(alertMessage, {
+              appearance: alertAppearance,
+              icon: alertIcon,
+            });
+          }),
+        )
+        .subscribe();
+    } else {
+      Tasks.toggleTaskPin(task);
+      this.alerts
+        .open(alertMessage, {
+          appearance: alertAppearance,
+          icon: alertIcon,
+        })
+        .subscribe();
+    }
   }
 
   deleteTask(task: Task) {
