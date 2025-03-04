@@ -1,19 +1,21 @@
+import { TaskSort } from '../collections/task.collection';
+
 export type SettingsState = {
-  lastSyncTime: number;
+  _encryptionKey: string | null;
+  autoCompleteTasks: 'always' | 'never' | 'ask';
+  defaultReminderCategory: string | null;
   defaultReminderTime: string;
   defaultReminderTimeAfterCreation: number; // in minutes
-  defaultReminderCategory: string | null;
+  deviceId: string | null;
+  encryption: boolean;
+  locale: string;
+  remoteSync: boolean;
+  sort: Record<string, TaskSort>; // saveKey, sort
   startOfWeek: string;
+  syncDevices: Record<string, string>; // id, userAgent
   timeFormat: string;
   timeSpecificity: 'always' | 'never' | 'optional';
-  autoCompleteTasks: 'always' | 'never' | 'ask';
-  locale: string;
   userId: string | null;
-  deviceId: string | null;
-  remoteSync: boolean;
-  syncDevices: Record<string, string>; // id, userAgent
-  encryption: boolean;
-  _encryptionKey: string | null;
 };
 
 export interface QRCodeData {

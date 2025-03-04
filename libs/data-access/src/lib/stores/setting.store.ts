@@ -15,27 +15,27 @@ import { catchError, EMPTY, firstValueFrom, map } from 'rxjs';
 
 import { generateSymmetricKey } from '@tmrw/encryption';
 
-import { Tasks } from '../collections/task.collection';
+import { Tasks, TaskSort } from '../collections/task.collection';
 import { QRCodeData, SettingsState } from '../models/settings.state';
 import { parseUserAgent } from '../utils/user-agent-parser';
 // import { syncManager } from '../sync-manager';
 
 const initialState: SettingsState = {
-  lastSyncTime: 0,
+  _encryptionKey: null,
+  autoCompleteTasks: 'ask',
+  defaultReminderCategory: null,
   defaultReminderTime: '08:00',
   defaultReminderTimeAfterCreation: 60,
-  defaultReminderCategory: null,
-  startOfWeek: 'Sunday',
-  timeFormat: '12h',
-  autoCompleteTasks: 'ask',
-  timeSpecificity: 'always',
-  locale: 'en-US', // TODO: Get from browser(?)
-  userId: null,
   deviceId: null,
-  remoteSync: false,
-  syncDevices: {},
   encryption: false,
-  _encryptionKey: null,
+  locale: 'en-US', // TODO: Get from browser(?)
+  remoteSync: false,
+  sort: {},
+  startOfWeek: 'Sunday',
+  syncDevices: {},
+  timeFormat: '12h',
+  timeSpecificity: 'always',
+  userId: null,
 };
 
 export const Settings = signalStore(
@@ -135,6 +135,9 @@ export const Settings = signalStore(
     ): void {
       patchState(store, { timeSpecificity });
     },
+    updateSort(saveKey: string, sort: TaskSort): void {
+      patchState(store, { sort: { ...getState(store).sort, [saveKey]: sort } });
+    },
     setDeviceId(): void {
       const deviceId = window.crypto.randomUUID();
       patchState(store, {
@@ -165,9 +168,6 @@ export const Settings = signalStore(
       // TODO: Clear old data from remote server.
       patchState(store, { encryption });
       // syncManager.sync('tasks', {force: true});
-    },
-    setLastSynced(): void {
-      patchState(store, { lastSyncTime: Date.now() });
     },
     importUser({ userId, encryption, key }: QRCodeData): void {
       patchState(store, {
@@ -221,15 +221,16 @@ function pushUserSettings(http: HttpClient, settings: SettingsState) {
   return firstValueFrom(
     http
       .post<void>(`api/users/${settings.userId}`, {
-        syncDevices: settings.syncDevices,
+        autoCompleteTasks: settings.autoCompleteTasks,
+        defaultReminderCategory: settings.defaultReminderCategory,
         defaultReminderTime: settings.defaultReminderTime,
         defaultReminderTimeAfterCreation:
           settings.defaultReminderTimeAfterCreation,
-        defaultReminderCategory: settings.defaultReminderCategory,
-        startOfWeek: settings.startOfWeek,
-        timeFormat: settings.timeFormat,
-        autoCompleteTasks: settings.autoCompleteTasks,
         locale: settings.locale,
+        startOfWeek: settings.startOfWeek,
+        sort: settings.sort,
+        syncDevices: settings.syncDevices,
+        timeFormat: settings.timeFormat,
       })
       .pipe(
         catchError((error) => {

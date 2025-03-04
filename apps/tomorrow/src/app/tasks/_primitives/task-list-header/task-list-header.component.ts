@@ -3,8 +3,11 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
+  inject,
   input,
-  model,
+  linkedSignal,
+  output,
   signal,
 } from '@angular/core';
 import { TuiElasticSticky } from '@taiga-ui/addon-mobile';
@@ -16,8 +19,9 @@ import {
   TuiTitle,
 } from '@taiga-ui/core';
 import { TuiHeader } from '@taiga-ui/layout';
+import { isNotNil } from 'es-toolkit';
 
-import { TaskSort } from '@tmrw/data-access';
+import { Settings, TASK_SORT_DEFAULT, TaskSort } from '@tmrw/data-access';
 
 @Component({
   selector: 'tw-task-list-header',
@@ -40,18 +44,31 @@ import { TaskSort } from '@tmrw/data-access';
   },
 })
 export class TaskListHeaderComponent {
+  private readonly settings = inject(Settings);
+  readonly sortSaveKey = input<string | null>(null);
   readonly icon = input<string>();
   readonly title = input.required<string>();
   readonly subtitle = input<string>();
   readonly headerSize = input<TuiHeader['size']>('m');
   readonly sticky = input<boolean>(true);
+  readonly canSort = input<boolean>(false);
 
   readonly sortMenuOpen = signal<boolean>(false);
-  readonly sort = model<TaskSort>();
+  readonly sortChanged = output<TaskSort>();
 
   readonly hasIcon = computed(() => !!this.icon());
   readonly hasSubtitle = computed(() => !!this.subtitle());
-  readonly canSort = computed(() => this.sort());
+  readonly sort = linkedSignal(() => {
+    const saveKey = this.sortSaveKey();
+    if (isNotNil(saveKey)) {
+      const sort = this.settings.sort()[saveKey];
+      if (isNotNil(sort)) {
+        return sort;
+      }
+    }
+    return TASK_SORT_DEFAULT;
+  });
+
   readonly sortStateIcon = computed(() => {
     switch (this.sort()) {
       case 'date_desc':
@@ -67,8 +84,19 @@ export class TaskListHeaderComponent {
     }
   });
 
+  constructor() {
+    effect(() => {
+      this.sortChanged.emit(this.sort());
+    });
+  }
+
   setSort(sort: TaskSort) {
-    this.sort.set(sort);
+    const saveKey = this.sortSaveKey();
+    if (isNotNil(saveKey)) {
+      this.settings.updateSort(saveKey, sort);
+    } else {
+      this.sort.set(sort);
+    }
     this.sortMenuOpen.set(false);
   }
 }
