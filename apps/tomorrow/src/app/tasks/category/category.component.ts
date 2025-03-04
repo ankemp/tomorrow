@@ -93,6 +93,7 @@ export class CategoryComponent {
     if (isPlatformBrowser(platformId)) {
       effect((onCleanup) => {
         // TODO: Move filtering to the Tasks service instead of using computed
+        // TODO: Add sorting
         const c = Tasks.getByCategory(this.title());
         this.categoryTasks.set(c.fetch());
         onCleanup(() => {

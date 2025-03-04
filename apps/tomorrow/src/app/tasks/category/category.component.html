@@ -16,12 +16,7 @@
 </div>
 
 <div class="task-list-group">
-  <tw-task-list-header
-    title="Today"
-    headerSize="xs"
-    icon="@tui.clock-12"
-    [(sort)]="todaysSort"
-  >
+  <tw-task-list-header title="Today" headerSize="xs" icon="@tui.clock-12">
     @if (todaysTasks().length > 0) {
       <tui-chip size="s">
         <tui-icon icon="@tui.clock" />
@@ -40,12 +35,7 @@
 </div>
 
 <div class="task-list-group">
-  <tw-task-list-header
-    title="Tomorrow"
-    headerSize="xs"
-    icon="@tui.clock-3"
-    [(sort)]="tomorrowSort"
-  >
+  <tw-task-list-header title="Tomorrow" headerSize="xs" icon="@tui.clock-3">
     @if (tomorrowTasks().length > 0) {
       <tui-chip size="s">
         <tui-icon icon="@tui.clock" />
