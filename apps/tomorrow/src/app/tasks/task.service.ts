@@ -31,13 +31,14 @@ export class TaskService {
             data: {
               content: `All subtasks are complete. Mark "${task.title}" as complete?`,
               yes: 'Mark Complete',
-              no: 'Cancel',
+              no: 'Leave Incomplete',
             },
           })
           .pipe(
             switchMap((response) => (response ? of(true) : EMPTY)),
             tap(() => {
               this.toggleTask(task);
+              this.router.navigate(['/tasks']);
             }),
           )
           .subscribe();
