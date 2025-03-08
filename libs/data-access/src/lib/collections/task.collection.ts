@@ -203,11 +203,21 @@ class TaskCollection extends Collection<Task> {
   }
 
   attachUserId(userId: string) {
-    this.updateMany({}, { $set: { userId } });
+    return this.updateMany(
+      {
+        userId: { $exists: false },
+      },
+      { $set: { userId } },
+    );
   }
 
   detachUserId() {
-    this.updateMany({}, { $unset: { userId: '' } });
+    return this.updateMany(
+      {
+        userId: { $exists: true },
+      },
+      { $unset: { userId: '' } },
+    );
   }
 }
 

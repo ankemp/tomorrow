@@ -178,8 +178,9 @@ export const Settings = signalStore(
       });
     },
     resetUser() {
+      // TODO: Remove user from remote server
       patchState(store, {
-        userId: window.crypto.randomUUID(),
+        userId: null,
         _encryptionKey: null,
         remoteSync: false,
         encryption: false,
