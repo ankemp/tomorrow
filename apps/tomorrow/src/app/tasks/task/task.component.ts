@@ -88,21 +88,27 @@ export class TaskComponent {
   readonly hasSubTasks = computed(() => {
     return (this.task()?.subTasks?.length ?? 0) > 0;
   });
-
+  readonly subTasks = computed(() => {
+    if (this.showCompletedSubtasks()) {
+      return this.task()?.subTasks;
+    }
+    return this.task()?.subTasks.filter((task) => {
+      return !task.completedAt;
+    });
+  });
+  readonly showCompletedSubtasks = signal(true);
   readonly subTaskCount = computed(() => {
     if (this.hasSubTasks()) {
       return this.task()!.subTasks!.length;
     }
     return 0;
   });
-
   readonly subTaskCompletedCount = computed(() => {
     if (this.hasSubTasks()) {
       return this.task()!.subTasks!.filter((t) => !!t.completedAt).length;
     }
     return 0;
   });
-
   readonly subTasksPercentComplete = computed(() => {
     if (this.hasSubTasks()) {
       const total = this.task()!.subTasks!.length;
@@ -115,9 +121,7 @@ export class TaskComponent {
   });
 
   readonly hasAttachments = this.attachmentsStore.hasAttachments;
-
   readonly attachments = this.attachmentsStore.files;
-
   readonly attachmentCount = computed(() => {
     if (this.hasAttachments()) {
       return this.attachments().length;
@@ -128,14 +132,11 @@ export class TaskComponent {
   readonly hasNotes = computed(() => {
     return !!this.task()?.notes;
   });
-
   readonly truncateNotes = signal(true);
   private readonly truncateThreshold = 200;
-
   readonly shouldTruncateNotes = computed(() => {
     return (this.task()?.notes?.length ?? 0) > this.truncateThreshold;
   });
-
   readonly notes = computed(() => {
     const fullNotes = this.task()?.notes || '';
 

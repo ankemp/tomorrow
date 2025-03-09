@@ -71,6 +71,18 @@
         <div tuiAccessories>
           <button
             appearance="action"
+            tuiIconButton
+            [iconStart]="
+              showCompletedSubtasks()
+                ? '@tui.circle-slash'
+                : '@tui.circle-check'
+            "
+            (click)="showCompletedSubtasks.set(!showCompletedSubtasks())"
+          >
+            {{ showCompletedSubtasks() ? 'Hide' : 'Show' }} Completed
+          </button>
+          <button
+            appearance="action"
             iconStart="@tui.clipboard-list"
             tuiIconButton
             (click)="navigateToEditWithAccordion(2)"
@@ -89,7 +101,7 @@
         [value]="subTaskCompletedCount()"
         size="m"
       ></progress>
-      @for (subtask of t.subTasks; track $index) {
+      @for (subtask of subTasks(); track $index) {
         @let isCompleted = !!subtask.completedAt;
         <div tuiCell>
           <button
