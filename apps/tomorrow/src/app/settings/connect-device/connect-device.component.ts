@@ -34,7 +34,6 @@ import { isNotNil } from 'es-toolkit';
 import {
   LOAD_WASM,
   NgxScannerQrcodeComponent,
-  NgxScannerQrcodeModule,
   ScannerQRCodeDevice,
   ScannerQRCodeSymbolType,
 } from 'ngx-scanner-qrcode';
@@ -69,7 +68,7 @@ LOAD_WASM().subscribe();
     TuiCardLarge,
     TuiCell,
     TuiHeader,
-    NgxScannerQrcodeModule,
+    NgxScannerQrcodeComponent,
   ],
   templateUrl: './connect-device.component.html',
   styleUrl: './connect-device.component.css',
