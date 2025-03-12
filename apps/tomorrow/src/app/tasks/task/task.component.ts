@@ -138,7 +138,9 @@ export class TaskComponent {
     return (this.task()?.notes?.length ?? 0) > this.truncateThreshold;
   });
   readonly notes = computed(() => {
-    const fullNotes = this.task()?.notes || '';
+    let fullNotes = this.task()?.notes || '';
+
+    fullNotes = this.makeLinksClickable(fullNotes);
 
     if (
       !this.shouldTruncateNotes() ||
@@ -186,5 +188,29 @@ export class TaskComponent {
   pinTask(task: Task) {
     this.taskService.pinTask(task);
     this.menuOpen.set(false);
+  }
+
+  makeLinksClickable(text: string) {
+    // Regular expressions for links and phone numbers
+    const urlRegex = /(https?:\/\/[^\s]+)|(www\.[^\s]+)/g;
+    const phoneRegex =
+      /(\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})/g;
+
+    // Replace URLs with clickable <a> tags
+    let linkedText = text.replace(urlRegex, (url) => {
+      let href = url;
+      if (!href.startsWith('http')) {
+        href = `http://${href}`;
+      }
+      return `<a href="${href}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+    });
+
+    // Replace phone numbers with clickable tel: links
+    linkedText = linkedText.replace(phoneRegex, (phoneNumber) => {
+      const cleanNumber = phoneNumber.replace(/[^+\d]/g, ''); // Remove all non-numeric characters except +
+      return `<a href="tel:${cleanNumber}">${phoneNumber}</a>`;
+    });
+
+    return linkedText;
   }
 }

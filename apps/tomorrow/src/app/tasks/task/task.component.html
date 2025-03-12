@@ -46,7 +46,10 @@
       </div>
     </header>
     @if (t.description) {
-      <div>{{ t.description }}</div>
+      <div
+        style="white-space: pre-line"
+        [innerHTML]="makeLinksClickable(t.description)"
+      ></div>
     }
     @if (t.location) {
       <div>
@@ -197,7 +200,7 @@
     </header>
     @if (hasNotes()) {
       <tui-elastic-container>
-        <div style="white-space: pre-line">{{ notes() }}</div>
+        <div style="white-space: pre-line" [innerHTML]="notes()"></div>
         @if (shouldTruncateNotes()) {
           <button
             tuiLink
