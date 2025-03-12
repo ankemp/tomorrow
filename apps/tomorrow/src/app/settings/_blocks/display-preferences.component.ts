@@ -6,28 +6,42 @@ import {
   inject,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TUI_DARK_MODE, TuiButton } from '@taiga-ui/core';
+import { TUI_DARK_MODE, TuiIcon } from '@taiga-ui/core';
+import { TuiSegmented } from '@taiga-ui/kit';
 
 import { PreferencesCardComponent } from '../_primitives/preferences-card.component';
 
 @Component({
   selector: 'tw-display-preferences',
-  imports: [CommonModule, FormsModule, TuiButton, PreferencesCardComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    TuiIcon,
+    TuiSegmented,
+    PreferencesCardComponent,
+  ],
   template: `
     <tw-preferences-card title="Display" icon="@tui.palette">
       <div class="switch-container">
         <div tuiLabel>
           Theme
 
-          <button
-            appearance="action"
-            size="xs"
-            [iconStart]="themeIcon()"
-            tuiButton
-            (click)="darkMode.set(!darkMode())"
-          >
-            {{ darkMode() ? 'Go Light' : 'Go Dark' }}
-          </button>
+          <tui-segmented [activeItemIndex]="darkModeIndex()">
+            <button
+              title="light"
+              type="button"
+              (click)="darkMode.set(!darkMode())"
+            >
+              <tui-icon icon="@tui.sun" />
+            </button>
+            <button
+              title="dark"
+              type="button"
+              (click)="darkMode.set(!darkMode())"
+            >
+              <tui-icon icon="@tui.moon" />
+            </button>
+          </tui-segmented>
         </div>
       </div>
     </tw-preferences-card>
@@ -38,7 +52,7 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
 export class DisplayPreferencesComponent {
   readonly darkMode = inject(TUI_DARK_MODE);
 
-  readonly themeIcon = computed(() => {
-    return this.darkMode() ? '@tui.sun' : '@tui.moon';
+  readonly darkModeIndex = computed(() => {
+    return this.darkMode() ? 1 : 0;
   });
 }
