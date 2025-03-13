@@ -95,13 +95,13 @@ export class TaskComponent {
   });
 
   readonly ongoingTimerIndex = computed(() => {
-    return this.task()?.timers.findIndex((t) => !t.end) ?? -1;
+    return this.task()?.timers?.findIndex((t) => !t.end) ?? -1;
   });
   readonly ongoingTimer = computed(() => {
-    return this.task()?.timers.find((t) => !t.end);
+    return this.task()?.timers?.find((t) => !t.end) ?? undefined;
   });
   readonly completedTimers = computed(() => {
-    return this.task()?.timers.filter((t) => !!t.end);
+    return this.task()?.timers?.filter((t) => !!t.end) ?? [];
   });
   readonly totalElapsedTime = computed(() => {
     const completedTimers = this.completedTimers();

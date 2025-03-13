@@ -339,7 +339,7 @@
               tuiButton
               (click)="taskService.toggleTimer(t)"
             >
-              {{ ongoingTimer() ? 'Stop' : 'Start' }} Timer
+              {{ ongoingTimerIndex() > -1 ? 'Stop' : 'Start' }} Timer
             </button>
           </div>
         </ng-template>
