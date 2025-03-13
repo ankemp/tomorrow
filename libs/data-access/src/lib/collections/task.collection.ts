@@ -3,6 +3,7 @@ import angularReactivityAdapter from '@signaldb/angular';
 import { Collection, createIndex } from '@signaldb/core';
 import createIndexedDBAdapter from '@signaldb/indexeddb';
 import { endOfToday, startOfToday, startOfTomorrow } from 'date-fns';
+import { isNil } from 'es-toolkit';
 
 import { Task } from '../models/task.model';
 import { syncManager } from '../sync-manager';
@@ -78,6 +79,44 @@ class TaskCollection extends Collection<Task> {
         },
       },
     );
+  }
+
+  startTimer(task: Task) {
+    this.updateOne(
+      { id: task.id },
+      {
+        $push: {
+          timers: {
+            start: new Date(),
+            end: null,
+          },
+        },
+      },
+    );
+  }
+
+  stopTimer(task: Task, timerIndex: number) {
+    this.updateOne(
+      { id: task.id },
+      {
+        $set: {
+          [`timers.${timerIndex}.end`]: new Date(),
+        },
+      },
+    );
+  }
+
+  toggleTimer(task: Task) {
+    if (!Array.isArray(task.timers)) {
+      this.startTimer(task);
+    } else {
+      const incompleteTimerIndex = task.timers.findIndex((t) => isNil(t.end));
+      if (incompleteTimerIndex > -1) {
+        this.stopTimer(task, incompleteTimerIndex);
+      } else {
+        this.startTimer(task);
+      }
+    }
   }
 
   toggleTaskPin(task: Task) {

@@ -5,6 +5,11 @@ export interface SubTask {
   completedAt: Date | null;
 }
 
+export interface TaskTimer {
+  start: Date;
+  end: Date | null;
+}
+
 export interface Task extends BaseModel {
   title: string;
   date: Date;
@@ -17,6 +22,7 @@ export interface Task extends BaseModel {
   duration: number | null;
   subTasks: SubTask[];
   attachments: string[];
+  timers: TaskTimer[];
   notes: string | null;
   userId: string | null;
 }

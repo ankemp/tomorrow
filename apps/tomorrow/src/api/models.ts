@@ -7,7 +7,7 @@ import {
   Sequelize,
 } from 'sequelize';
 
-import type { SubTask, Task } from '@tmrw/data-access';
+import type { SubTask, Task, TaskTimer } from '@tmrw/data-access';
 
 const isDevMode =
   !process.env['NODE_ENV'] || process.env['NODE_ENV'] === 'development';
@@ -33,12 +33,12 @@ export class PlainTask
   declare duration: CreationOptional<number>;
   declare subTasks: CreationOptional<SubTask[]>;
   declare attachments: CreationOptional<string[]>;
+  declare timers: CreationOptional<TaskTimer[]>;
   declare notes: CreationOptional<string>;
   declare completedAt: CreationOptional<Date>;
   declare userId: CreationOptional<string>;
 }
 
-// ...existing PlainTask.init code...
 PlainTask.init(
   {
     id: { type: DataTypes.STRING, primaryKey: true },
@@ -52,6 +52,7 @@ PlainTask.init(
     duration: { type: DataTypes.INTEGER },
     subTasks: { type: DataTypes.JSON },
     attachments: { type: DataTypes.JSON },
+    timers: { type: DataTypes.JSON },
     notes: { type: DataTypes.TEXT },
     completedAt: { type: DataTypes.DATE },
     userId: { type: DataTypes.STRING },

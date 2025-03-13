@@ -50,6 +50,7 @@
         [innerHTML]="makeLinksClickable(t.description)"
       ></div>
     }
+    <!-- TODO: Improve look of location & duration -->
     @if (t.location) {
       <div>
         <tui-icon icon="@tui.map-pin" />
@@ -63,6 +64,64 @@
       </div>
     }
   </section>
+
+  @if (t.timers) {
+    <section
+      class="current-timer"
+      tuiAppearance="neutral"
+      tuiCardLarge="compact"
+    >
+      <header tuiHeader="xs">
+        <h3 tuiTitle>Task Timer</h3>
+      </header>
+      @let timer = ongoingTimer();
+      @if (timer) {
+        <tw-timer [timer]="timer" />
+      } @else {
+        <tw-empty-state title="No Timer Running" size="s" />
+      }
+      <div class="button-group">
+        <button
+          tuiButton
+          size="m"
+          iconStart="@tui.circle-play"
+          (click)="taskService.startTimer(t)"
+          [disabled]="timer"
+        >
+          Start
+        </button>
+        <button
+          tuiButton
+          size="m"
+          iconStart="@tui.circle-stop"
+          (click)="taskService.stopTimer(t, ongoingTimerIndex())"
+          [disabled]="!timer"
+        >
+          Stop
+        </button>
+      </div>
+      <header tuiHeader="xs">
+        <h4 tuiTitle>Completed Timers</h4>
+        <div tuiAccessories>
+          <tui-chip size="s">{{
+            totalElapsedTime() | formatDuration
+          }}</tui-chip>
+        </div>
+      </header>
+      <!-- TODO: Improve UX if there are many timers -->
+      @for (timer of completedTimers(); track $index) {
+        <div tuiCell="s">
+          <div tuiTitle>
+            {{ timer.start | date: 'short' }} - {{ timer.end | date: 'short' }}
+          </div>
+          <tui-chip size="xs">{{
+            taskTimerToMinutes(timer) | formatDuration
+          }}</tui-chip>
+          <!-- TODO: Actions: edit, delete -->
+        </div>
+      }
+    </section>
+  }
 
   <section tuiCardLarge="compact">
     <header tuiHeader="xs">
@@ -273,14 +332,15 @@
               tuiButton
             >
               Reschedule
-            </button>
+            </button> -->
             <button
               appearance="secondary-grayscale"
               iconStart="@tui.timer"
               tuiButton
+              (click)="taskService.toggleTimer(t)"
             >
-              Start Timer
-            </button> -->
+              {{ ongoingTimer() ? 'Stop' : 'Start' }} Timer
+            </button>
           </div>
         </ng-template>
       </div>

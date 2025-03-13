@@ -17,9 +17,9 @@ import {
   TuiButton,
   TuiDataList,
   TuiDropdown,
-  TuiGroup,
   TuiIcon,
   TuiLink,
+  TuiTitle,
 } from '@taiga-ui/core';
 import {
   TuiBadge,
@@ -29,14 +29,22 @@ import {
   TuiProgress,
 } from '@taiga-ui/kit';
 import { TuiCardLarge, TuiCell, TuiHeader } from '@taiga-ui/layout';
+import { differenceInMinutes, roundToNearestMinutes } from 'date-fns';
 
-import { Attachments, Settings, Task, Tasks } from '@tmrw/data-access';
+import {
+  Attachments,
+  Settings,
+  Task,
+  Tasks,
+  TaskTimer,
+} from '@tmrw/data-access';
 
 import { ActionBarComponent } from '../../core/action-bar/action-bar-portal.component';
 import { EmptyStateComponent } from '../_primitives/empty-state/empty-state.component';
 import { FormatDatePipe } from '../_primitives/format-date.pipe';
 import { FormatDurationPipe } from '../_primitives/format-duration.pipe';
 import { PriorityPinComponent } from '../_primitives/priority-pin.component';
+import { TaskTimerComponent } from '../_primitives/timer.component';
 import { TaskService } from '../task.service';
 
 @Component({
@@ -49,10 +57,10 @@ import { TaskService } from '../task.service';
     TuiAutoColorPipe,
     TuiButton,
     TuiDropdown,
-    TuiGroup,
     TuiDataList,
     TuiIcon,
     TuiLink,
+    TuiTitle,
     TuiBadge,
     TuiChip,
     TuiFiles,
@@ -65,6 +73,7 @@ import { TaskService } from '../task.service';
     EmptyStateComponent,
     FormatDatePipe,
     FormatDurationPipe,
+    TaskTimerComponent,
     PriorityPinComponent,
   ],
   providers: [Attachments, TaskService],
@@ -83,6 +92,26 @@ export class TaskComponent {
 
   readonly taskExists = computed(() => {
     return !!this.task();
+  });
+
+  readonly ongoingTimerIndex = computed(() => {
+    return this.task()?.timers.findIndex((t) => !t.end) ?? -1;
+  });
+  readonly ongoingTimer = computed(() => {
+    return this.task()?.timers.find((t) => !t.end);
+  });
+  readonly completedTimers = computed(() => {
+    return this.task()?.timers.filter((t) => !!t.end);
+  });
+  readonly totalElapsedTime = computed(() => {
+    const completedTimers = this.completedTimers();
+    if (!completedTimers) {
+      return 0;
+    } else {
+      return completedTimers.reduce((acc, t) => {
+        return acc + this.taskTimerToMinutes(t);
+      }, 0);
+    }
   });
 
   readonly hasSubTasks = computed(() => {
@@ -212,5 +241,17 @@ export class TaskComponent {
     });
 
     return linkedText;
+  }
+
+  taskTimerToMinutes(timer: TaskTimer): number {
+    if (timer.start && timer.end) {
+      return Math.abs(
+        differenceInMinutes(
+          roundToNearestMinutes(timer.start),
+          roundToNearestMinutes(timer.end),
+        ),
+      );
+    }
+    return 0;
   }
 }

@@ -89,6 +89,18 @@ export class TaskService {
     }
   }
 
+  startTimer(task: Task) {
+    Tasks.startTimer(task);
+  }
+
+  stopTimer(task: Task, timerIndex: number) {
+    Tasks.stopTimer(task, timerIndex);
+  }
+
+  toggleTimer(task: Task) {
+    Tasks.toggleTimer(task);
+  }
+
   pinTask(task: Task) {
     const isPinned = !!task.pinned;
     const alertMessage = isPinned ? 'Task unpinned' : 'Task pinned';

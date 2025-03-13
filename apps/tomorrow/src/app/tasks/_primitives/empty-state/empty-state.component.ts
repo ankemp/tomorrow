@@ -6,7 +6,14 @@ import {
   input,
   output,
 } from '@angular/core';
-import { TuiAppearance, TuiButton, TuiIcon, TuiTitle } from '@taiga-ui/core';
+import {
+  TuiAppearance,
+  TuiButton,
+  TuiIcon,
+  TuiSizeL,
+  TuiSizeS,
+  TuiTitle,
+} from '@taiga-ui/core';
 import { TuiSkeleton } from '@taiga-ui/kit';
 import { TuiCell } from '@taiga-ui/layout';
 
@@ -31,6 +38,7 @@ export class EmptyStateComponent {
   readonly subtitle = input<string>();
   readonly action = input<string>();
   readonly skeleton = input<boolean>(false);
+  readonly size = input<TuiSizeL | TuiSizeS>('l');
 
   readonly actionClicked = output<void>();
 
