@@ -2,13 +2,15 @@
   display: block;
 }
 
-[tuisubtitle] > * + * {
-  margin-left: 0.25rem;
-}
-
 section {
   &.meta {
     --t-radius: 0 !important;
+
+    [tuisubtitle] {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+    }
   }
 
   &:not(.meta) {
