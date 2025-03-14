@@ -101,6 +101,9 @@ export class TaskComponent {
   readonly completedTimers = computed(() => {
     return this.task()?.timers?.filter((t) => !!t.end) ?? [];
   });
+  readonly completedTimerCount = computed(() => {
+    return this.completedTimers().length;
+  });
   readonly totalElapsedTime = computed(() => {
     const completedTimers = this.completedTimers();
     if (!completedTimers) {
