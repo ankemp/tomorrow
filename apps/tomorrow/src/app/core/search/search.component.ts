@@ -13,7 +13,6 @@ import {
   TuiAppearance,
   TuiAutoColorPipe,
   TuiButton,
-  TuiDropdown,
   TuiIcon,
   TuiTitle,
 } from '@taiga-ui/core';
@@ -35,7 +34,6 @@ import { FormatDatePipe } from '../../tasks/_primitives/format-date.pipe';
     TuiAppearance,
     TuiAutoColorPipe,
     TuiButton,
-    TuiDropdown,
     TuiIcon,
     TuiTitle,
     TuiChip,
