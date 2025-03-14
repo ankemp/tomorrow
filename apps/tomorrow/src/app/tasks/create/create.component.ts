@@ -113,7 +113,7 @@ export class CreateComponent {
       this.alerts
         .open('Task created', { appearance: 'success', icon: '@tui.check' })
         .subscribe();
-      this.router.navigate(['/tasks', id]);
+      this.router.navigate(['/tasks', id], { replaceUrl: true });
     } else {
       // TODO: Handle invalid form, show invalid fields
       this.alerts
