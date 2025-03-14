@@ -7,7 +7,10 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TUI_DARK_MODE, TuiIcon } from '@taiga-ui/core';
-import { TuiSegmented } from '@taiga-ui/kit';
+import { TuiDataListWrapper, TuiSegmented } from '@taiga-ui/kit';
+import { TuiSelectModule } from '@taiga-ui/legacy';
+
+import { Settings } from '@tmrw/data-access';
 
 import { PreferencesCardComponent } from '../_primitives/preferences-card.component';
 
@@ -17,7 +20,9 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
     CommonModule,
     FormsModule,
     TuiIcon,
+    TuiDataListWrapper,
     TuiSegmented,
+    TuiSelectModule,
     PreferencesCardComponent,
   ],
   template: `
@@ -43,6 +48,26 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
             </button>
           </tui-segmented>
         </div>
+        <div tuiLabel>
+          Category Display
+          <tui-select
+            [ngModel]="settings.categoryDisplay()"
+            (ngModelChange)="settings.updateCategoryDisplay($event)"
+            [valueContent]="categoryDisplayValueTemplate"
+          >
+            Selected display mode
+            <tui-data-list-wrapper
+              *tuiDataList
+              [items]="['name', 'icon', 'name_and_icon']"
+              [itemContent]="categoryDisplayValueTemplate"
+            />
+            <ng-template #categoryDisplayValueTemplate let-item>
+              <span style="text-transform: capitalize;">
+                {{ item.replaceAll('_', ' ') }}
+              </span>
+            </ng-template>
+          </tui-select>
+        </div>
       </div>
     </tw-preferences-card>
   `,
@@ -51,6 +76,7 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
 })
 export class DisplayPreferencesComponent {
   readonly darkMode = inject(TUI_DARK_MODE);
+  readonly settings = inject(Settings);
 
   readonly darkModeIndex = computed(() => {
     return this.darkMode() ? 1 : 0;

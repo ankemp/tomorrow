@@ -3,6 +3,7 @@ import { TaskSort } from '../collections/task.collection';
 export type SettingsState = {
   _encryptionKey: string | null;
   autoCompleteTasks: 'always' | 'never' | 'ask';
+  categoryDisplay: 'name' | 'icon' | 'name_and_icon';
   defaultReminderCategory: string | null;
   defaultReminderTime: string;
   defaultReminderTimeAfterCreation: number; // in minutes

@@ -4,7 +4,6 @@ import { Router, RouterModule } from '@angular/router';
 import { TuiRipple, TuiSwipeActions } from '@taiga-ui/addon-mobile';
 import {
   TuiAppearance,
-  TuiAutoColorPipe,
   TuiButton,
   TuiIcon,
   TuiSurface,
@@ -16,6 +15,7 @@ import { TuiCell } from '@taiga-ui/layout';
 import { Settings, Task } from '@tmrw/data-access';
 
 import { TaskService } from '../../task.service';
+import { CategoryChipComponent } from '../category-chip.component';
 import { FormatDatePipe } from '../format-date.pipe';
 import { FormatDurationPipe } from '../format-duration.pipe';
 import { PriorityPinComponent } from '../priority-pin.component';
@@ -28,7 +28,6 @@ import { PriorityPinComponent } from '../priority-pin.component';
     TuiRipple,
     TuiSwipeActions,
     TuiAppearance,
-    TuiAutoColorPipe,
     TuiButton,
     TuiIcon,
     TuiSurface,
@@ -36,6 +35,7 @@ import { PriorityPinComponent } from '../priority-pin.component';
     TuiChip,
     TuiFade,
     TuiCell,
+    CategoryChipComponent,
     FormatDatePipe,
     FormatDurationPipe,
     PriorityPinComponent,

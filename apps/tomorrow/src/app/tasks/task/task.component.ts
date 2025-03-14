@@ -13,7 +13,6 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TuiDropdownMobile } from '@taiga-ui/addon-mobile';
 import {
   TuiAppearance,
-  TuiAutoColorPipe,
   TuiButton,
   TuiDataList,
   TuiDropdown,
@@ -39,6 +38,7 @@ import {
 } from '@tmrw/data-access';
 
 import { ActionBarComponent } from '../../core/action-bar/action-bar-portal.component';
+import { CategoryChipComponent } from '../_primitives/category-chip.component';
 import { EmptyStateComponent } from '../_primitives/empty-state/empty-state.component';
 import { FormatDatePipe } from '../_primitives/format-date.pipe';
 import { FormatDurationPipe } from '../_primitives/format-duration.pipe';
@@ -53,7 +53,6 @@ import { TaskService } from '../task.service';
     RouterModule,
     TuiDropdownMobile,
     TuiAppearance,
-    TuiAutoColorPipe,
     TuiButton,
     TuiDropdown,
     TuiDataList,
@@ -68,6 +67,7 @@ import { TaskService } from '../task.service';
     TuiCell,
     TuiHeader,
     ActionBarComponent,
+    CategoryChipComponent,
     EmptyStateComponent,
     FormatDatePipe,
     FormatDurationPipe,

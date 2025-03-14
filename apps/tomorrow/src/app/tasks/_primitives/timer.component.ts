@@ -6,7 +6,6 @@ import {
   input,
   linkedSignal,
 } from '@angular/core';
-import { TuiCell } from '@taiga-ui/layout';
 import { intervalToDuration } from 'date-fns';
 
 import { TaskTimer } from '@tmrw/data-access';
@@ -15,12 +14,8 @@ const ELAPSED_TIME_FORMAT = '--:--:--';
 
 @Component({
   selector: 'tw-timer',
-  imports: [CommonModule, TuiCell],
-  template: `
-    <div tuiCell>
-      <span>{{ elapsedTime() }}</span>
-    </div>
-  `,
+  imports: [CommonModule],
+  template: `<span>{{ elapsedTime() }}</span>`,
   styles: `
     :host {
       display: block;

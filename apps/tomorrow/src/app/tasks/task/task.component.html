@@ -6,13 +6,7 @@
         {{ t.title }}
 
         <div tuiSubtitle>
-          <tui-chip
-            size="xs"
-            appearance="custom"
-            [style.background-color]="t.category | tuiAutoColor"
-          >
-            {{ t.category }}
-          </tui-chip>
+          <tw-category-chip [category]="t.category" size="xs" />
           <tui-chip
             appearance="secondary-grayscale"
             iconStart="@tui.clock"

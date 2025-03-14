@@ -11,6 +11,7 @@ import {
   withState,
 } from '@ngrx/signals';
 import { TuiDayOfWeek, TuiTimeMode } from '@taiga-ui/cdk';
+import { omit } from 'es-toolkit';
 import { catchError, EMPTY, firstValueFrom, map } from 'rxjs';
 
 import { generateSymmetricKey } from '@tmrw/encryption';
@@ -18,11 +19,19 @@ import { generateSymmetricKey } from '@tmrw/encryption';
 import { Tasks, TaskSort } from '../collections/task.collection';
 import { QRCodeData, SettingsState } from '../models/settings.state';
 import { parseUserAgent } from '../utils/user-agent-parser';
-// import { syncManager } from '../sync-manager';
+
+const NO_SYNC_KEYS: (keyof SettingsState)[] = [
+  '_encryptionKey',
+  'deviceId',
+  'encryption',
+  'remoteSync',
+  'userId',
+];
 
 const initialState: SettingsState = {
   _encryptionKey: null,
   autoCompleteTasks: 'ask',
+  categoryDisplay: 'name',
   defaultReminderCategory: null,
   defaultReminderTime: '08:00',
   defaultReminderTimeAfterCreation: 60,
@@ -138,6 +147,11 @@ export const Settings = signalStore(
     updateSort(saveKey: string, sort: TaskSort): void {
       patchState(store, { sort: { ...getState(store).sort, [saveKey]: sort } });
     },
+    updateCategoryDisplay(
+      categoryDisplay: 'name' | 'icon' | 'name_and_icon',
+    ): void {
+      patchState(store, { categoryDisplay });
+    },
     setDeviceId(): void {
       const deviceId = window.crypto.randomUUID();
       patchState(store, {
@@ -221,18 +235,7 @@ export const Settings = signalStore(
 function pushUserSettings(http: HttpClient, settings: SettingsState) {
   return firstValueFrom(
     http
-      .post<void>(`api/users/${settings.userId}`, {
-        autoCompleteTasks: settings.autoCompleteTasks,
-        defaultReminderCategory: settings.defaultReminderCategory,
-        defaultReminderTime: settings.defaultReminderTime,
-        defaultReminderTimeAfterCreation:
-          settings.defaultReminderTimeAfterCreation,
-        locale: settings.locale,
-        startOfWeek: settings.startOfWeek,
-        sort: settings.sort,
-        syncDevices: settings.syncDevices,
-        timeFormat: settings.timeFormat,
-      })
+      .post<void>(`api/users/${settings.userId}`, omit(settings, NO_SYNC_KEYS))
       .pipe(
         catchError((error) => {
           console.error('Failed to push user settings', error);
