@@ -59,40 +59,36 @@
     }
   </section>
 
-  @if (t.timers) {
-    <section
-      class="current-timer"
-      tuiAppearance="neutral"
-      tuiCardLarge="compact"
-    >
-      <header tuiHeader="xs">
-        <h3 tuiTitle>Task Timer</h3>
-      </header>
-      @let timer = ongoingTimer();
-      @if (timer) {
-        <tw-timer [timer]="timer" />
-        <button
-          tuiButton
-          appearance="secondary-destructive"
-          size="m"
-          iconStart="@tui.circle-stop"
-          (click)="taskService.stopTimer(t, ongoingTimerIndex())"
-          [disabled]="!timer"
-        >
-          Stop
-        </button>
-      } @else {
-        <button
-          tuiButton
-          appearance="positive"
-          size="m"
-          iconStart="@tui.circle-play"
-          (click)="taskService.startTimer(t)"
-          [disabled]="timer"
-        >
-          Start
-        </button>
-      }
+  <section class="current-timer" tuiAppearance="neutral" tuiCardLarge="compact">
+    <header tuiHeader="xs">
+      <h3 tuiTitle>Task Timer</h3>
+    </header>
+    @let timer = ongoingTimer();
+    @if (timer) {
+      <tw-timer [timer]="timer" />
+      <button
+        tuiButton
+        appearance="secondary-destructive"
+        size="m"
+        iconStart="@tui.circle-stop"
+        (click)="taskService.stopTimer(t, ongoingTimerIndex())"
+        [disabled]="!timer"
+      >
+        Stop
+      </button>
+    } @else {
+      <button
+        tuiButton
+        appearance="positive"
+        size="m"
+        iconStart="@tui.circle-play"
+        (click)="taskService.startTimer(t)"
+        [disabled]="timer"
+      >
+        Start
+      </button>
+    }
+    @if (t.timers) {
       <header tuiHeader="xs">
         <h4 tuiTitle>Completed Timers ({{ completedTimerCount() }})</h4>
         <div tuiAccessories>
@@ -140,19 +136,19 @@
               Delete
             </button>
             <!-- <button
-              tuiButton
-              size="l"
-              appearance="secondary"
-              iconStart="@tui.pencil"
-              (click)="timerDropdownOpen.set(-1)"
-            >
-              Edit
-            </button> -->
+                tuiButton
+                size="l"
+                appearance="secondary"
+                iconStart="@tui.pencil"
+                (click)="timerDropdownOpen.set(-1)"
+              >
+                Edit
+              </button> -->
           </div>
         </ng-template>
       }
-    </section>
-  }
+    }
+  </section>
 
   <section tuiCardLarge="compact">
     <header tuiHeader="xs">
