@@ -16,9 +16,6 @@ section {
   &:not(.meta) {
     background-color: unset;
   }
-
-  &.current-timer {
-  }
 }
 
 .action-group {

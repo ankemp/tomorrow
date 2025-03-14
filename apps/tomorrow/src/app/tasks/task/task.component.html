@@ -107,11 +107,49 @@
           <div tuiTitle>
             {{ timer.start | date: 'short' }} - {{ timer.end | date: 'short' }}
           </div>
-          <tui-chip size="xs">{{
-            taskTimerToMinutes(timer) | formatDuration
-          }}</tui-chip>
-          <!-- TODO: Actions: edit, delete -->
+          <tui-chip size="xs">
+            {{ taskTimerToMinutes(timer) | formatDuration }}
+          </tui-chip>
+          <button
+            tuiDropdownMobile="Timer Actions"
+            appearance="action-grayscale"
+            iconStart="@tui.ellipsis-vertical"
+            tuiIconButton
+            type="button"
+            [tuiAppearanceState]="
+              timerDropdownOpen() === $index ? 'active' : null
+            "
+            [tuiDropdown]="timerDropdown"
+            [tuiDropdownManual]="timerDropdownOpen() === $index"
+            (click)="toggleTimerDropdown($index)"
+          >
+            Menu
+          </button>
         </div>
+        <ng-template #timerDropdown>
+          <div class="action-grid">
+            <button
+              tuiButton
+              size="l"
+              appearance="secondary-destructive"
+              iconStart="@tui.trash-2"
+              (click)="
+                taskService.removeTimer(t, $index); timerDropdownOpen.set(-1)
+              "
+            >
+              Delete
+            </button>
+            <!-- <button
+              tuiButton
+              size="l"
+              appearance="secondary"
+              iconStart="@tui.pencil"
+              (click)="timerDropdownOpen.set(-1)"
+            >
+              Edit
+            </button> -->
+          </div>
+        </ng-template>
       }
     </section>
   }
@@ -282,9 +320,9 @@
           Mark {{ t.completedAt ? 'Incomplete' : 'Complete' }}
         </button>
         <button
-          [tuiDropdownMobile]="t.title"
+          [tuiDropdownMobile]="`${t.title} Actions`"
           appearance="secondary-grayscale"
-          iconStart="@tui.ellipsis"
+          iconStart="@tui.ellipsis-vertical"
           tuiIconButton
           type="button"
           [tuiAppearanceState]="menuOpen() ? 'active' : null"

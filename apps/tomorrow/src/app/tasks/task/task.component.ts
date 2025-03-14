@@ -92,6 +92,7 @@ export class TaskComponent {
     return !!this.task();
   });
 
+  readonly timerDropdownOpen = signal<number>(-1);
   readonly ongoingTimerIndex = computed(() => {
     return this.task()?.timers?.findIndex((t) => !t.end) ?? -1;
   });
@@ -218,6 +219,12 @@ export class TaskComponent {
   pinTask(task: Task) {
     this.taskService.pinTask(task);
     this.menuOpen.set(false);
+  }
+
+  toggleTimerDropdown(index: number): void {
+    this.timerDropdownOpen.update((state) => {
+      return state === index ? -1 : index;
+    });
   }
 
   makeLinksClickable(text: string) {

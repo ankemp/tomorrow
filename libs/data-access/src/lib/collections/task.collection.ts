@@ -119,6 +119,17 @@ class TaskCollection extends Collection<Task> {
     }
   }
 
+  removeTimer(task: Task, timerIndex: number) {
+    this.updateOne(
+      { id: task.id },
+      {
+        $pull: {
+          timers: task.timers[timerIndex],
+        },
+      },
+    );
+  }
+
   toggleTaskPin(task: Task) {
     this.updateOne({ id: task.id }, { $set: { pinned: !task.pinned } });
   }

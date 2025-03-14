@@ -101,6 +101,10 @@ export class TaskService {
     Tasks.toggleTimer(task);
   }
 
+  removeTimer(task: Task, timerIndex: number) {
+    Tasks.removeTimer(task, timerIndex);
+  }
+
   pinTask(task: Task) {
     const isPinned = !!task.pinned;
     const alertMessage = isPinned ? 'Task unpinned' : 'Task pinned';
