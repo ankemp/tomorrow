@@ -71,21 +71,9 @@
       @let timer = ongoingTimer();
       @if (timer) {
         <tw-timer [timer]="timer" />
-      } @else {
-        <tw-empty-state title="No Timer Running" size="s" />
-      }
-      <div class="button-group">
         <button
           tuiButton
-          size="m"
-          iconStart="@tui.circle-play"
-          (click)="taskService.startTimer(t)"
-          [disabled]="timer"
-        >
-          Start
-        </button>
-        <button
-          tuiButton
+          appearance="secondary-destructive"
           size="m"
           iconStart="@tui.circle-stop"
           (click)="taskService.stopTimer(t, ongoingTimerIndex())"
@@ -93,7 +81,18 @@
         >
           Stop
         </button>
-      </div>
+      } @else {
+        <button
+          tuiButton
+          appearance="positive"
+          size="m"
+          iconStart="@tui.circle-play"
+          (click)="taskService.startTimer(t)"
+          [disabled]="timer"
+        >
+          Start
+        </button>
+      }
       <header tuiHeader="xs">
         <h4 tuiTitle>Completed Timers</h4>
         <div tuiAccessories>
