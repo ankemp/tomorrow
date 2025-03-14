@@ -22,7 +22,6 @@ import {
   TuiTitle,
 } from '@taiga-ui/core';
 import {
-  TuiBadge,
   TuiChip,
   TuiElasticContainer,
   TuiFiles,
@@ -61,7 +60,6 @@ import { TaskService } from '../task.service';
     TuiIcon,
     TuiLink,
     TuiTitle,
-    TuiBadge,
     TuiChip,
     TuiFiles,
     TuiProgress,

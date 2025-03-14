@@ -13,23 +13,23 @@
           >
             {{ t.category }}
           </tui-chip>
-          <tui-badge
+          <tui-chip
             appearance="secondary-grayscale"
             iconStart="@tui.clock"
-            size="l"
+            size="xs"
             class="tui-space_left-1"
           >
             {{ t.date | formatDate }}
-          </tui-badge>
+          </tui-chip>
           @if (t.completedAt) {
-            <tui-badge
+            <tui-chip
               appearance="secondary-grayscale"
               iconStart="@tui.circle-check"
-              size="l"
+              size="xs"
               class="tui-space_left-1"
             >
               {{ t.completedAt | formatDate }}
-            </tui-badge>
+            </tui-chip>
           }
           @if (t.priority && t.priority > 0) {
             <tui-chip size="xs" style="--pin-top: 9px; --pin-left: 3px">
