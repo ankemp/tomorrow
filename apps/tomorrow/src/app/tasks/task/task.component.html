@@ -122,31 +122,35 @@
             Menu
           </button>
         </div>
-        <ng-template #timerDropdown>
-          <div class="action-grid">
-            <button
-              tuiButton
-              size="l"
-              appearance="secondary-destructive"
-              iconStart="@tui.trash-2"
-              (click)="
-                taskService.removeTimer(t, $index); timerDropdownOpen.set(-1)
-              "
-            >
-              Delete
-            </button>
-            <!-- <button
-                tuiButton
-                size="l"
-                appearance="secondary"
-                iconStart="@tui.pencil"
-                (click)="timerDropdownOpen.set(-1)"
-              >
-                Edit
-              </button> -->
-          </div>
-        </ng-template>
       }
+      <ng-template #timerDropdown>
+        @let index = timerDropdownOpen();
+        <div class="action-grid">
+          <button
+            tuiButton
+            size="l"
+            appearance="secondary-destructive"
+            iconStart="@tui.trash-2"
+            (click)="
+              taskService.removeTimer(t, index); timerDropdownOpen.set(-1)
+            "
+          >
+            Delete
+          </button>
+          <button
+            tuiButton
+            size="l"
+            appearance="secondary"
+            iconStart="@tui.pencil"
+            (click)="
+              taskService.openTimerEditDialog(t, index);
+              timerDropdownOpen.set(-1)
+            "
+          >
+            Edit
+          </button>
+        </div>
+      </ng-template>
     }
   </section>
 
@@ -223,6 +227,7 @@
   <section tuiCardLarge="compact">
     <header tuiHeader="xs">
       <h3 tuiTitle>Attachments ({{ attachmentCount() }})</h3>
+      <!-- TODO: Show total attachment size -->
       @if (hasAttachments()) {
         <div tuiAccessories>
           <button
@@ -328,6 +333,7 @@
           Menu
         </button>
         <ng-template #dropdown>
+          <!-- TODO: Make action-grid a component(?) -->
           <div class="action-grid">
             <button
               appearance="secondary-destructive"

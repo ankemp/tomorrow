@@ -1,15 +1,25 @@
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { TuiAlertService, TuiDialogService } from '@taiga-ui/core';
+import { TuiSheetDialogService } from '@taiga-ui/addon-mobile';
+import { TuiAlertService } from '@taiga-ui/core';
 import { TUI_CONFIRM } from '@taiga-ui/kit';
+import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { EMPTY, of, switchMap, tap } from 'rxjs';
 
-import { Attachments, Settings, Task, Tasks } from '@tmrw/data-access';
+import {
+  Attachments,
+  Settings,
+  Task,
+  Tasks,
+  TaskTimer,
+} from '@tmrw/data-access';
+
+import { TimerUpdateComponent } from './_blocks/timer-update.component';
 
 @Injectable()
 export class TaskService {
   readonly router = inject(Router);
-  readonly dialogs = inject(TuiDialogService);
+  readonly dialogs = inject(TuiSheetDialogService);
   readonly alerts = inject(TuiAlertService);
   readonly settings = inject(Settings);
   readonly attachmentsStore = inject(Attachments);
@@ -167,6 +177,29 @@ export class TaskService {
           return this.alerts.open('Task deleted', {
             appearance: 'destructive',
             icon: '@tui.trash-2',
+          });
+        }),
+      )
+      .subscribe();
+  }
+
+  openTimerEditDialog(task: Task, timerIndex: number): void {
+    this.dialogs
+      .open<TaskTimer>(new PolymorpheusComponent(TimerUpdateComponent), {
+        label: `Edit Timer #${timerIndex + 1}`,
+        data: {
+          task,
+          timerIndex,
+        },
+      })
+      .pipe(
+        tap((taskTimer) => {
+          Tasks.updateTimer(task, timerIndex, taskTimer);
+        }),
+        switchMap(() => {
+          return this.alerts.open('Timer updated', {
+            appearance: 'success',
+            icon: '@tui.timer',
           });
         }),
       )

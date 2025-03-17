@@ -5,7 +5,7 @@ import createIndexedDBAdapter from '@signaldb/indexeddb';
 import { endOfToday, startOfToday, startOfTomorrow } from 'date-fns';
 import { isNil } from 'es-toolkit';
 
-import { Task } from '../models/task.model';
+import { Task, TaskTimer } from '../models/task.model';
 import { syncManager } from '../sync-manager';
 
 export type TaskSort =
@@ -117,6 +117,17 @@ class TaskCollection extends Collection<Task> {
         this.startTimer(task);
       }
     }
+  }
+
+  updateTimer(task: Task, timerIndex: number, timer: TaskTimer) {
+    this.updateOne(
+      { id: task.id },
+      {
+        $set: {
+          [`timers.${timerIndex}`]: timer,
+        },
+      },
+    );
   }
 
   removeTimer(task: Task, timerIndex: number) {
