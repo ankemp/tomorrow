@@ -36,7 +36,7 @@ import {
   set,
 } from 'date-fns';
 
-import { Settings } from '@tmrw/data-access';
+import { Settings, SettingsState } from '@tmrw/data-access';
 
 class DateTimeTransformer extends TuiValueTransformer<
   [TuiDay | null, TuiTime | null],
@@ -117,6 +117,9 @@ class DateTransformer extends TuiValueTransformer<TuiDay | null, Date | null> {
 export class DatePickerComponent implements ControlValueAccessor {
   readonly settings = inject(Settings);
   readonly showPresets = input(true);
+  readonly specificityOverride = input<SettingsState['timeSpecificity'] | null>(
+    null,
+  );
 
   readonly datePickerPreset = model<
     'today' | 'tomorrow' | 'weekend' | 'custom' | null
@@ -129,41 +132,49 @@ export class DatePickerComponent implements ControlValueAccessor {
 
   readonly disabled = signal(false);
 
+  timeSpecificity = computed(() => {
+    return this.specificityOverride() || this.settings.timeSpecificity();
+  });
+
   constructor() {
     effect(() => {
-      const preset = this.datePickerPreset();
-      const today = new Date();
-      const [hours, minutes] = this.settings
-        .defaultReminderTime()
-        .split(':')
-        .map(Number);
-      const dateValues: DateValues = {
-        hours,
-        minutes,
-        seconds: 0,
-        milliseconds: 0,
-      };
+      if (this.showPresets()) {
+        const preset = this.datePickerPreset();
+        const today = new Date();
+        const [hours, minutes] = this.settings
+          .defaultReminderTime()
+          .split(':')
+          .map(Number);
+        const dateValues: DateValues = {
+          hours,
+          minutes,
+          seconds: 0,
+          milliseconds: 0,
+        };
 
-      switch (preset) {
-        case 'today': {
-          let setValue = set(today, dateValues);
-          if (isAfter(today, setValue)) {
-            setValue = addMinutes(
-              today,
-              this.settings.defaultReminderTimeAfterCreation(),
-            );
+        switch (preset) {
+          case 'today': {
+            let setValue = set(today, dateValues);
+            if (isAfter(today, setValue)) {
+              setValue = addMinutes(
+                today,
+                this.settings.defaultReminderTimeAfterCreation(),
+              );
+            }
+            this.date.set(setValue);
+            break;
           }
-          this.date.set(setValue);
-          break;
+          case 'tomorrow': {
+            this.date.set(set(addDays(today, 1), dateValues));
+            break;
+          }
+          case 'weekend': {
+            this.date.set(set(nextSaturday(today), dateValues));
+            break;
+          }
         }
-        case 'tomorrow': {
-          this.date.set(set(addDays(today, 1), dateValues));
-          break;
-        }
-        case 'weekend': {
-          this.date.set(set(nextSaturday(today), dateValues));
-          break;
-        }
+      } else {
+        this.datePickerPreset.set('custom');
       }
     });
     effect(() => {

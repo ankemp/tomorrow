@@ -1,55 +1,57 @@
-<div class="presets">
-  <label tuiChip>
-    Today
-    <input
-      name="date"
-      appearance="outline-grayscale"
-      tuiChip
-      type="radio"
-      value="today"
-      [(ngModel)]="datePickerPreset"
-      [disabled]="disabled()"
-    />
-  </label>
-  <label tuiChip>
-    Tomorrow
-    <input
-      name="date"
-      appearance="outline-grayscale"
-      tuiChip
-      type="radio"
-      value="tomorrow"
-      [(ngModel)]="datePickerPreset"
-      [disabled]="disabled()"
-    />
-  </label>
-  <label tuiChip>
-    Weekend
-    <input
-      name="date"
-      appearance="outline-grayscale"
-      tuiChip
-      type="radio"
-      value="weekend"
-      [(ngModel)]="datePickerPreset"
-      [disabled]="disabled()"
-    />
-  </label>
-  <label iconStart="@tui.calendar-clock" tuiChip>
-    Custom
-    <input
-      name="date"
-      appearance="outline-grayscale"
-      tuiChip
-      type="radio"
-      value="custom"
-      [(ngModel)]="datePickerPreset"
-      [disabled]="disabled()"
-    />
-  </label>
-</div>
+@if (showPresets()) {
+  <div class="presets">
+    <label tuiChip>
+      Today
+      <input
+        name="date"
+        appearance="outline-grayscale"
+        tuiChip
+        type="radio"
+        value="today"
+        [(ngModel)]="datePickerPreset"
+        [disabled]="disabled()"
+      />
+    </label>
+    <label tuiChip>
+      Tomorrow
+      <input
+        name="date"
+        appearance="outline-grayscale"
+        tuiChip
+        type="radio"
+        value="tomorrow"
+        [(ngModel)]="datePickerPreset"
+        [disabled]="disabled()"
+      />
+    </label>
+    <label tuiChip>
+      Weekend
+      <input
+        name="date"
+        appearance="outline-grayscale"
+        tuiChip
+        type="radio"
+        value="weekend"
+        [(ngModel)]="datePickerPreset"
+        [disabled]="disabled()"
+      />
+    </label>
+    <label iconStart="@tui.calendar-clock" tuiChip>
+      Custom
+      <input
+        name="date"
+        appearance="outline-grayscale"
+        tuiChip
+        type="radio"
+        value="custom"
+        [(ngModel)]="datePickerPreset"
+        [disabled]="disabled()"
+      />
+    </label>
+  </div>
+}
 
-@if (showDatePicker() && settings.timeSpecificity() === 'always') {
+@if (showDatePicker() && timeSpecificity() === 'always') {
   <tui-input-date-time
     [timeMode]="settings.tuiTimeFormat()"
     [(ngModel)]="date"
@@ -58,7 +60,7 @@
     Choose date and time
   </tui-input-date-time>
 }
-@if (showDatePicker() && settings.timeSpecificity() === 'never') {
+@if (showDatePicker() && timeSpecificity() === 'never') {
   <tui-input-date [(ngModel)]="date" [disabled]="disabled()">
     Choose date
   </tui-input-date>
