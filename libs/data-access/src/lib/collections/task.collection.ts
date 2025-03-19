@@ -4,8 +4,9 @@ import { Collection, createIndex } from '@signaldb/core';
 import createIndexedDBAdapter from '@signaldb/indexeddb';
 import { endOfToday, startOfToday, startOfTomorrow } from 'date-fns';
 import { isNil } from 'es-toolkit';
+import { parse, unparse } from 'papaparse';
 
-import { Task, TaskTimer } from '../models/task.model';
+import { Task, TASK_HEADERS, TaskTimer } from '../models/task.model';
 import { syncManager } from '../sync-manager';
 
 export type TaskSort =
@@ -279,6 +280,42 @@ class TaskCollection extends Collection<Task> {
       },
       { $unset: { userId: '' } },
     );
+  }
+
+  exportAll(): string {
+    const tasks = this.find();
+    const data = tasks.fetch();
+    const csv = unparse(
+      data.map(({ id, ...task }) => {
+        return {
+          ...task,
+          subTasks: task.subTasks
+            ? unparse(task.subTasks, { header: false })
+            : undefined,
+          timers: task.timers
+            ? unparse(task.timers, { header: false })
+            : undefined,
+        };
+      }),
+      { header: true, columns: TASK_HEADERS },
+    );
+    return csv;
+  }
+
+  import(csv: string): string[] {
+    const tasks = parse<any>(csv, { header: true });
+    const data = tasks.data.map(({ id, ...task }) => {
+      return {
+        ...task,
+        pinned: task.pinned === 'true',
+        date: new Date(task.date),
+        priority: +task.priority,
+        duration: +task.duration,
+        subTasks: task.subTasks ? parse(task.subTasks, { header: true }) : [],
+        timers: task.timers ? parse(task.timers, { header: true }) : [],
+      };
+    }) as Task[];
+    return this.insertMany(data);
   }
 }
 

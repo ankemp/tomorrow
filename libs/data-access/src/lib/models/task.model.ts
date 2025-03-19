@@ -10,6 +10,23 @@ export interface TaskTimer {
   end: Date | null;
 }
 
+export const TASK_HEADERS = Object.keys({
+  id: '',
+  title: '',
+  date: new Date(),
+  category: '',
+  priority: null,
+  description: null,
+  pinned: false,
+  completedAt: new Date(),
+  location: null,
+  duration: null,
+  subTasks: [],
+  attachments: [],
+  timers: [],
+  notes: null,
+  userId: null,
+} satisfies Task);
 export interface Task extends BaseModel {
   title: string;
   date: Date;

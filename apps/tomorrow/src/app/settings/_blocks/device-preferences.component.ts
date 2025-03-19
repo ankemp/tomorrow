@@ -19,7 +19,7 @@ import { TuiCell } from '@taiga-ui/layout';
 import { NgMathPipesModule } from 'ngx-pipes';
 import { EMPTY, of, switchMap, tap } from 'rxjs';
 
-import { Attachments, Settings } from '@tmrw/data-access';
+import { Attachments, Settings, Tasks } from '@tmrw/data-access';
 
 import { version } from '../../../environments/version';
 import { Context } from '../../core/context.store';
@@ -90,7 +90,7 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
         appearance="secondary-destructive"
         size="s"
         tuiButton
-        (click)="clearStorage()"
+        (click)="clearDeviceData()"
       >
         Clear device data
       </button>
@@ -101,6 +101,22 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
         (click)="resetUser()"
       >
         Reset user scope
+      </button>
+      <button
+        appearance="secondary"
+        size="s"
+        tuiButton
+        (click)="downloadData()"
+      >
+        Backup data
+      </button>
+      <button
+        appearance="secondary"
+        size="s"
+        tuiButton
+        (click)="restoreBackup()"
+      >
+        Restore backup
       </button>
     </tw-preferences-card>
   `,
@@ -144,7 +160,7 @@ export class DevicePreferencesComponent {
     return `https://github.com/ankemp/tomorrow/commit/${this.version}`;
   }
 
-  clearStorage() {
+  clearDeviceData(): void {
     this.dialogs
       .open<boolean>(TUI_CONFIRM, {
         label: 'Confirm Data Deletion',
@@ -159,6 +175,7 @@ export class DevicePreferencesComponent {
         switchMap((response) => (response ? of(true) : EMPTY)),
         tap(() => {
           this.attachmentsStore.clearStorage();
+          Tasks.removeMany({});
         }),
         switchMap(() => {
           return this.alerts.open('Data deleted', {
@@ -170,7 +187,7 @@ export class DevicePreferencesComponent {
       .subscribe();
   }
 
-  resetUser() {
+  resetUser(): void {
     this.dialogs
       .open<boolean>(TUI_CONFIRM, {
         label: 'Reset User Scope',
@@ -194,5 +211,69 @@ export class DevicePreferencesComponent {
         }),
       )
       .subscribe();
+  }
+
+  downloadData(): void {
+    const backup = () => {
+      const data = Tasks.exportAll();
+      localStorage.setItem('backup', data);
+    };
+
+    if (localStorage.getItem('backup')) {
+      this.dialogs
+        .open<boolean>(TUI_CONFIRM, {
+          label: 'Backup Data',
+          data: {
+            content: 'Overwrite existing backup?',
+            yes: 'Overwrite',
+            no: 'Cancel',
+          },
+        })
+        .pipe(
+          switchMap((response) => (response ? of(true) : EMPTY)),
+          tap(() => {
+            backup();
+          }),
+          switchMap(() => {
+            return this.alerts.open('Data saved', {
+              appearance: 'positive',
+              icon: '@tui.check',
+            });
+          }),
+        )
+        .subscribe();
+    } else {
+      backup();
+      this.alerts
+        .open('Data saved', {
+          appearance: 'positive',
+          icon: '@tui.check',
+        })
+        .subscribe();
+    }
+
+    // TODO: Implement download
+    // const blob = new Blob([data], { type: 'text/csv;charset=utf-8;' });
+    // const url = URL.createObjectURL(blob);
+    // const link = document.createElement('a');
+    // link.href = url;
+    // link.setAttribute('download', 'tasks_backup.csv');
+    // document.body.appendChild(link);
+    // link.click();
+    // document.body.removeChild(link);
+    // URL.revokeObjectURL(url);
+  }
+
+  restoreBackup(): void {
+    const csv = localStorage.getItem('backup');
+    if (csv) {
+      const ids = Tasks.import(csv);
+      this.alerts
+        .open(`Imported ${ids.length} tasks`, {
+          appearance: 'positive',
+          icon: '@tui.check',
+        })
+        .subscribe();
+    }
   }
 }
