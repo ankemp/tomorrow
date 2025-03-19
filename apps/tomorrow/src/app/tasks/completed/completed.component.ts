@@ -13,9 +13,9 @@ import { isAfter, isFuture, isToday, isYesterday } from 'date-fns';
 
 import { Task, Tasks } from '@tmrw/data-access';
 
-import { EmptyStateComponent } from '../_primitives/empty-state/empty-state.component';
-import { TaskListCardComponent } from '../_primitives/task-list-card/task-list-card.component';
-import { TaskListHeaderComponent } from '../_primitives/task-list-header/task-list-header.component';
+import { EmptyStateComponent } from '../_blocks/empty-state/empty-state.component';
+import { TaskListCardComponent } from '../_blocks/task-list-card/task-list-card.component';
+import { TaskListHeaderComponent } from '../_blocks/task-list-header/task-list-header.component';
 
 @Component({
   selector: 'tw-completed',

@@ -15,10 +15,10 @@ import { TuiCell } from '@taiga-ui/layout';
 import { Settings, Task } from '@tmrw/data-access';
 
 import { TaskService } from '../../task.service';
-import { CategoryChipComponent } from '../category-chip.component';
-import { FormatDatePipe } from '../format-date.pipe';
-import { FormatDurationPipe } from '../format-duration.pipe';
-import { PriorityPinComponent } from '../priority-pin.component';
+import { CategoryChipComponent } from '../../_primitives/category-chip.component';
+import { FormatDatePipe } from '../../_primitives/format-date.pipe';
+import { FormatDurationPipe } from '../../_primitives/format-duration.pipe';
+import { PriorityPinComponent } from '../../_primitives/priority-pin.component';
 
 @Component({
   selector: 'tw-task-list-card',

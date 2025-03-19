@@ -22,13 +22,13 @@ import {
 } from '@tmrw/data-access';
 
 import { ActionBarComponent } from '../../core/action-bar/action-bar-portal.component';
-import { BulkCompleteTasksButtonComponent } from '../_primitives/bulk-complete-tasks-button.component';
-import { BulkMoveTasksToTodayButtonComponent } from '../_primitives/bulk-move-tasks-to-today-button.component';
-import { CategoryCardComponent } from '../_primitives/category-card/category-card.component';
-import { EmptyStateComponent } from '../_primitives/empty-state/empty-state.component';
+import { BulkCompleteTasksButtonComponent } from '../_blocks/bulk-complete-tasks-button.component';
+import { BulkMoveTasksToTodayButtonComponent } from '../_blocks/bulk-move-tasks-to-today-button.component';
+import { CategoryCardComponent } from '../_blocks/category-card/category-card.component';
+import { EmptyStateComponent } from '../_blocks/empty-state/empty-state.component';
 import { FormatDurationPipe } from '../_primitives/format-duration.pipe';
-import { TaskListCardComponent } from '../_primitives/task-list-card/task-list-card.component';
-import { TaskListHeaderComponent } from '../_primitives/task-list-header/task-list-header.component';
+import { TaskListCardComponent } from '../_blocks/task-list-card/task-list-card.component';
+import { TaskListHeaderComponent } from '../_blocks/task-list-header/task-list-header.component';
 
 @Component({
   selector: 'tw-dashboard',
