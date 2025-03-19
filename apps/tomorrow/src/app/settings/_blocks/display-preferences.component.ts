@@ -6,9 +6,9 @@ import {
   inject,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TUI_DARK_MODE, TuiIcon } from '@taiga-ui/core';
+import { TUI_DARK_MODE, TuiIcon, TuiLabel } from '@taiga-ui/core';
 import { TuiDataListWrapper, TuiSegmented } from '@taiga-ui/kit';
-import { TuiSelectModule } from '@taiga-ui/legacy';
+import { TUI_TEXTFIELD_SIZE, TuiSelectModule } from '@taiga-ui/legacy';
 
 import { Settings } from '@tmrw/data-access';
 
@@ -20,15 +20,24 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
     CommonModule,
     FormsModule,
     TuiIcon,
+    TuiLabel,
     TuiDataListWrapper,
     TuiSegmented,
     TuiSelectModule,
     PreferencesCardComponent,
   ],
+  providers: [
+    {
+      provide: TUI_TEXTFIELD_SIZE,
+      useValue: {
+        size: 'm',
+      },
+    },
+  ],
   template: `
     <tw-preferences-card title="Display" icon="@tui.palette">
       <div class="switch-container">
-        <div tuiLabel>
+        <label tuiLabel>
           Theme
 
           <tui-segmented [activeItemIndex]="darkModeIndex()">
@@ -47,8 +56,8 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
               <tui-icon icon="@tui.moon" />
             </button>
           </tui-segmented>
-        </div>
-        <div tuiLabel>
+        </label>
+        <label tuiLabel>
           Category Display
           <tui-select
             [ngModel]="settings.categoryDisplay()"
@@ -67,7 +76,7 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
               </span>
             </ng-template>
           </tui-select>
-        </div>
+        </label>
       </div>
     </tw-preferences-card>
   `,

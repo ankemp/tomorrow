@@ -2,13 +2,14 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TuiContext, TuiTime, TuiValueTransformer } from '@taiga-ui/cdk';
-import { TuiAutoColorPipe } from '@taiga-ui/core';
+import { TuiAutoColorPipe, TuiLabel } from '@taiga-ui/core';
 import {
   TUI_TIME_VALUE_TRANSFORMER,
   TuiChip,
   TuiDataListWrapper,
 } from '@taiga-ui/kit';
 import {
+  TUI_TEXTFIELD_SIZE,
   TuiInputSliderModule,
   TuiInputTimeModule,
   tuiInputTimeOptionsProvider,
@@ -40,6 +41,7 @@ class TimeTransformer extends TuiValueTransformer<
     CommonModule,
     FormsModule,
     TuiAutoColorPipe,
+    TuiLabel,
     TuiChip,
     TuiDataListWrapper,
     TuiInputSliderModule,
@@ -57,11 +59,17 @@ class TimeTransformer extends TuiValueTransformer<
     tuiInputTimeOptionsProvider({
       nativePicker: true,
     }),
+    {
+      provide: TUI_TEXTFIELD_SIZE,
+      useValue: {
+        size: 'm',
+      },
+    },
   ],
   template: `
     <tw-preferences-card title="Task" icon="@tui.clock">
       <div class="switch-container">
-        <div tuiLabel>
+        <label tuiLabel>
           Default Task Time
           <tui-input-time
             [ngModel]="settings.defaultReminderTime()"
@@ -71,8 +79,8 @@ class TimeTransformer extends TuiValueTransformer<
           >
             Choose a time
           </tui-input-time>
-        </div>
-        <div tuiLabel>
+        </label>
+        <label tuiLabel>
           Time Format
           <tui-select
             [ngModel]="settings.timeFormat()"
@@ -81,8 +89,8 @@ class TimeTransformer extends TuiValueTransformer<
             Select format
             <tui-data-list-wrapper *tuiDataList [items]="['12h', '24h']" />
           </tui-select>
-        </div>
-        <div tuiLabel>
+        </label>
+        <label tuiLabel>
           Default Time Until Due (minutes)
           <tui-input-slider
             [ngModel]="settings.defaultReminderTimeAfterCreation()"
@@ -97,8 +105,8 @@ class TimeTransformer extends TuiValueTransformer<
           >
             Minutes Until Due
           </tui-input-slider>
-        </div>
-        <div tuiLabel>
+        </label>
+        <label tuiLabel>
           Start of Week
           <tui-select
             [ngModel]="settings.startOfWeek()"
@@ -118,13 +126,13 @@ class TimeTransformer extends TuiValueTransformer<
               ]"
             />
           </tui-select>
-        </div>
-        <div tuiLabel>
+        </label>
+        <label tuiLabel>
           Default Task Category
           <tui-select
             [ngModel]="settings.defaultReminderCategory()"
             (ngModelChange)="settings.updateDefaultReminderCategory($event)"
-            [valueContent]="reminderValueTemplate"
+            [valueContent]="reminderSelectTemplate"
           >
             Select Category
             <tui-data-list-wrapper
@@ -132,10 +140,22 @@ class TimeTransformer extends TuiValueTransformer<
               [items]="[null, 'Work', 'Personal', 'Shopping', 'Health']"
               [itemContent]="reminderValueTemplate"
             />
+            <ng-template #reminderSelectTemplate let-item>
+              <ng-container
+                [ngTemplateOutlet]="reminderChipTemplate"
+                [ngTemplateOutletContext]="{ $implicit: item, size: 'xxs' }"
+              />
+            </ng-template>
             <ng-template #reminderValueTemplate let-item>
+              <ng-container
+                [ngTemplateOutlet]="reminderChipTemplate"
+                [ngTemplateOutletContext]="{ $implicit: item, size: 'xs' }"
+              />
+            </ng-template>
+            <ng-template #reminderChipTemplate let-item let-size="size">
               @if (item) {
                 <tui-chip
-                  size="xs"
+                  [size]="size"
                   appearance="custom"
                   [style.background-color]="item | tuiAutoColor"
                 >
@@ -146,8 +166,8 @@ class TimeTransformer extends TuiValueTransformer<
               }
             </ng-template>
           </tui-select>
-        </div>
-        <div tuiLabel>
+        </label>
+        <label tuiLabel>
           Time Specificity
           <tui-select
             [ngModel]="settings.timeSpecificity()"
@@ -165,8 +185,8 @@ class TimeTransformer extends TuiValueTransformer<
               <span style="text-transform: capitalize;">{{ item }}</span>
             </ng-template>
           </tui-select>
-        </div>
-        <div tuiLabel>
+        </label>
+        <label tuiLabel>
           Complete Tasks When Subtasks are Done
           <tui-select
             [ngModel]="settings.autoCompleteTasks()"
@@ -183,7 +203,7 @@ class TimeTransformer extends TuiValueTransformer<
               <span style="text-transform: capitalize;">{{ item }}</span>
             </ng-template>
           </tui-select>
-        </div>
+        </label>
       </div>
     </tw-preferences-card>
   `,
