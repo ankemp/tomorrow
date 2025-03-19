@@ -8,6 +8,11 @@
   white-space: nowrap;
 }
 
+.check-button {
+  --tui-background-neutral-1-pressed: transparent;
+  max-width: 32px;
+}
+
 .completed .title {
   text-decoration: line-through;
 }
