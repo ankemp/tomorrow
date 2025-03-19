@@ -309,6 +309,7 @@ class TaskCollection extends Collection<Task> {
         ...task,
         pinned: task.pinned === 'true',
         date: new Date(task.date),
+        completedAt: task.completedAt ? new Date(task.completedAt) : null,
         priority: +task.priority,
         duration: +task.duration,
         subTasks: task.subTasks ? parse(task.subTasks, { header: true }) : [],
