@@ -328,6 +328,9 @@ class TaskCollection extends Collection<Task> {
             dynamicTyping: { start: true, end: true },
           }).data;
         }
+        if (field === 'timers' || (field === 'subTasks' && !value)) {
+          return [];
+        }
         return value;
       },
     });
