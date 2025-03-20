@@ -286,14 +286,17 @@ class TaskCollection extends Collection<Task> {
     const tasks = this.find();
     const data = tasks.fetch();
     const csv = unparse(
-      data.map(({ id, ...task }) => {
+      data.map((task) => {
         return {
           ...task,
           subTasks: task.subTasks
-            ? unparse(task.subTasks, { header: false })
+            ? unparse(task.subTasks, {
+                header: true,
+                columns: ['title', 'completedAt'],
+              })
             : undefined,
           timers: task.timers
-            ? unparse(task.timers, { header: false })
+            ? unparse(task.timers, { header: true, columns: ['start', 'end'] })
             : undefined,
         };
       }),
@@ -303,19 +306,32 @@ class TaskCollection extends Collection<Task> {
   }
 
   import(csv: string): string[] {
-    const tasks = parse<any>(csv, { header: true });
-    const data = tasks.data.map(({ id, ...task }) => {
-      return {
-        ...task,
-        pinned: task.pinned === 'true',
-        date: new Date(task.date),
-        completedAt: task.completedAt ? new Date(task.completedAt) : null,
-        priority: +task.priority,
-        duration: +task.duration,
-        subTasks: task.subTasks ? parse(task.subTasks, { header: true }) : [],
-        timers: task.timers ? parse(task.timers, { header: true }) : [],
-      };
-    }) as Task[];
+    const tasks = parse<Task>(csv, {
+      header: true,
+      dynamicTyping: {
+        pinned: true,
+        date: true,
+        completedAt: true,
+        priority: true,
+        duration: true,
+      },
+      transform: (value: string, field: string | number) => {
+        if (field === 'subTasks' && value) {
+          return parse(value, {
+            header: true,
+            dynamicTyping: { completedAt: true },
+          }).data;
+        }
+        if (field === 'timers' && value) {
+          return parse(value, {
+            header: true,
+            dynamicTyping: { start: true, end: true },
+          }).data;
+        }
+        return value;
+      },
+    });
+    const data = tasks.data.map(({ id, ...task }) => task);
     return this.insertMany(data);
   }
 }
