@@ -16,11 +16,13 @@ import { EMPTY, fromEvent, iif, map, merge, pipe, switchMap, tap } from 'rxjs';
 interface ContextState {
   isOnline: boolean;
   isUpdating: boolean;
+  updateReady: boolean;
 }
 
 const initialState: ContextState = {
   isOnline: navigator.onLine,
   isUpdating: false,
+  updateReady: false,
 };
 
 export const Context = signalStore(
@@ -69,7 +71,7 @@ export const Context = signalStore(
                 },
               );
             case 'VERSION_READY':
-              patchState(store, { isUpdating: false });
+              patchState(store, { isUpdating: false, updateReady: true });
               return store.alertService.open(
                 'New version installed. Please reload the app.',
                 {

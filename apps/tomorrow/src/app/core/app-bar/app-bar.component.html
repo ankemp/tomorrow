@@ -53,3 +53,8 @@
     Offline. Changes will sync automatically.
   </tui-notification>
 }
+@if (context.updateReady()) {
+  <tui-notification @tuiSlideInBottom size="s" appearance="info">
+    Update available. Refresh to apply.
+  </tui-notification>
+}
