@@ -317,16 +317,26 @@ class TaskCollection extends Collection<Task> {
       },
       transform: (value: string, field: string | number) => {
         if (field === 'subTasks' && value) {
-          return parse(value, {
-            header: true,
-            dynamicTyping: { completedAt: true },
-          }).data;
+          const parsed = parse(
+            value.startsWith('title,completedAt')
+              ? value
+              : `title,completedAt\n${value}`,
+            {
+              header: true,
+              dynamicTyping: { completedAt: true },
+            },
+          );
+          return parsed.data;
         }
         if (field === 'timers' && value) {
-          return parse(value, {
-            header: true,
-            dynamicTyping: { start: true, end: true },
-          }).data;
+          const parsed = parse(
+            value.startsWith('start,end') ? value : `start,end\n${value}`,
+            {
+              header: true,
+              dynamicTyping: { start: true, end: true },
+            },
+          );
+          return parsed.data;
         }
         if (field === 'timers' || (field === 'subTasks' && !value)) {
           return [];
