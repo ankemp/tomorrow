@@ -305,8 +305,8 @@ class TaskCollection extends Collection<Task> {
     return csv;
   }
 
-  import(csv: string): string[] {
-    const tasks = parse<Task>(csv, {
+  import(input: string): string[] {
+    const csv = parse<Task>(input, {
       header: true,
       dynamicTyping: {
         pinned: true,
@@ -316,6 +316,9 @@ class TaskCollection extends Collection<Task> {
         duration: true,
       },
       transform: (value: string, field: string | number) => {
+        if (field === 'id' && value.length === 0) {
+          return undefined;
+        }
         if (field === 'subTasks' && value) {
           const parsed = parse(
             value.startsWith('title,completedAt')
@@ -341,10 +344,19 @@ class TaskCollection extends Collection<Task> {
         if (field === 'timers' || (field === 'subTasks' && !value)) {
           return [];
         }
+        if (field === 'attachments') {
+          return [];
+        }
         return value;
       },
     });
-    const data = tasks.data.map(({ id, ...task }) => task);
+    const data = csv.data.map((task) => {
+      if (!task.id) {
+        const { id, ...rest } = task;
+        return rest;
+      }
+      return task;
+    });
     return this.insertMany(data);
   }
 }

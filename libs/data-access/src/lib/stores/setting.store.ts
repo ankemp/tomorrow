@@ -193,6 +193,7 @@ export const Settings = signalStore(
     },
     resetUser() {
       // TODO: Remove user from remote server
+      Tasks.detachUserId();
       patchState(store, {
         userId: null,
         _encryptionKey: null,
