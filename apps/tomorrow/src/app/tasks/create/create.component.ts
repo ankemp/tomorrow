@@ -70,6 +70,7 @@ export class CreateComponent {
     date: this.fb.control<Date | null>(null, [Validators.required]),
     category: this.fb.control<string | null>(null, [Validators.required]),
     priority: this.fb.control<number>(0),
+    pinned: this.fb.control<boolean>(false),
     description: this.fb.control<string>(''),
     location: this.fb.control<string>(''),
     duration: this.fb.control<number>(0),

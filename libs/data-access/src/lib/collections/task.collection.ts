@@ -24,6 +24,12 @@ export function parseTaskSort(sort: TaskSort): {
   return { field, order: order === 'asc' ? 1 : -1 };
 }
 
+const NOT_PINNED = [
+  { pinned: false },
+  { pinned: { $exists: false } },
+  { pinned: null },
+];
+
 class TaskCollection extends Collection<Task> {
   constructor() {
     super({
@@ -202,7 +208,7 @@ class TaskCollection extends Collection<Task> {
       {
         date: { $lt: startOfToday() },
         completedAt: null,
-        $or: [{ pinned: false }, { pinned: { $exists: false } }],
+        $or: [...NOT_PINNED],
       },
       {
         sort: { [field]: order },
@@ -216,7 +222,7 @@ class TaskCollection extends Collection<Task> {
       {
         date: { $gte: startOfToday(), $lt: endOfToday() },
         completedAt: null,
-        $or: [{ pinned: false }, { pinned: { $exists: false } }],
+        $or: [...NOT_PINNED],
       },
       {
         sort: { [field]: order },
@@ -229,7 +235,7 @@ class TaskCollection extends Collection<Task> {
     return this.find(
       {
         date: { $gte: startOfToday(), $lt: endOfToday() },
-        $or: [{ pinned: false }, { pinned: { $exists: false } }],
+        $or: [...NOT_PINNED],
       },
       {
         sort: { [field]: order },
@@ -242,7 +248,7 @@ class TaskCollection extends Collection<Task> {
     return this.find(
       {
         date: { $gt: startOfTomorrow() },
-        $or: [{ pinned: false }, { pinned: { $exists: false } }],
+        $or: [...NOT_PINNED],
       },
       {
         sort: { [field]: order },
@@ -283,6 +289,7 @@ class TaskCollection extends Collection<Task> {
   }
 
   exportAll(): string {
+    // TODO: Handle attachments
     const tasks = this.find();
     const data = tasks.fetch();
     const csv = unparse(

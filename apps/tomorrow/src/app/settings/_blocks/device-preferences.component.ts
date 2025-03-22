@@ -268,6 +268,7 @@ export class DevicePreferencesComponent {
     const csv = localStorage.getItem('backup');
     if (csv) {
       const ids = Tasks.import(csv);
+      // TODO: Handle errors
       this.alerts
         .open(`Imported ${ids.length} tasks`, {
           appearance: 'positive',
