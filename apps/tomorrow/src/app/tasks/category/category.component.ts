@@ -24,9 +24,9 @@ import { Task, TASK_SORT_DEFAULT, Tasks, TaskSort } from '@tmrw/data-access';
 
 import { BulkCompleteTasksButtonComponent } from '../_blocks/bulk-complete-tasks-button.component';
 import { EmptyStateComponent } from '../_blocks/empty-state/empty-state.component';
-import { FormatDurationPipe } from '../_primitives/format-duration.pipe';
 import { TaskListCardComponent } from '../_blocks/task-list-card/task-list-card.component';
 import { TaskListHeaderComponent } from '../_blocks/task-list-header/task-list-header.component';
+import { FormatDurationPipe } from '../_primitives/format-duration.pipe';
 
 @Component({
   selector: 'tw-category',
