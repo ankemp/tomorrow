@@ -17,7 +17,7 @@ import { Task, Tasks } from '@tmrw/data-access';
   template: `
     <button
       appearance="flat-grayscale"
-      size="m"
+      [size]="size()"
       tuiIconButton
       iconStart="@tui.check-check"
       type="button"
@@ -37,6 +37,7 @@ export class BulkCompleteTasksButtonComponent {
   private readonly dialogs = inject(TuiDialogService);
   private readonly alerts = inject(TuiAlertService);
   readonly tasks = input.required<Task[]>();
+  readonly size = input<TuiButton['size']>('m');
 
   completeAll(tasks: Task[]) {
     this.dialogs

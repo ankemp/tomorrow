@@ -20,8 +20,8 @@
 @if (hasOverdueTasks()) {
   <section class="task-list-grid">
     <tw-task-list-header title="Overdue" headerSize="s" icon="@tui.clock-9">
-      <tw-bulk-move-tasks-to-today-button [tasks]="overDueTasks()" />
-      <tw-bulk-complete-tasks-button [tasks]="overDueTasks()" />
+      <tw-bulk-move-tasks-to-today-button [tasks]="overDueTasks()" size="s" />
+      <tw-bulk-complete-tasks-button [tasks]="overDueTasks()" size="s" />
     </tw-task-list-header>
     @for (task of overDueTasks(); track task.id) {
       <tw-task-list-card [task]="task" />
@@ -39,11 +39,11 @@
     sortSaveKey="dashboard-today"
   >
     @if (todaysTasks().length > 0) {
-      <tui-chip size="s">
+      <tui-chip size="xs">
         <tui-icon icon="@tui.clock" />
         {{ todaysTasksDuration() | formatDuration }}
       </tui-chip>
-      <tw-bulk-complete-tasks-button [tasks]="todaysTasks()" />
+      <tw-bulk-complete-tasks-button size="s" [tasks]="todaysTasks()" />
     }
   </tw-task-list-header>
   @for (task of todaysTasks(); track task.id) {
@@ -66,7 +66,7 @@
     sortSaveKey="dashboard-upcoming"
   >
     @if (upcomingTasks().length > 0) {
-      <tw-bulk-complete-tasks-button [tasks]="upcomingTasks()" />
+      <tw-bulk-complete-tasks-button [tasks]="upcomingTasks()" size="s" />
     }
   </tw-task-list-header>
   @for (task of upcomingTasks(); track task.id) {

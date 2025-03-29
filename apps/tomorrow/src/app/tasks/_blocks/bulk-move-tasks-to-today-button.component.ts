@@ -18,7 +18,7 @@ import { Settings, Task, Tasks } from '@tmrw/data-access';
   template: `
     <button
       appearance="flat-grayscale"
-      size="m"
+      [size]="size()"
       tuiIconButton
       iconStart="@tui.redo-dot"
       type="button"
@@ -39,6 +39,7 @@ export class BulkMoveTasksToTodayButtonComponent {
   private readonly alerts = inject(TuiAlertService);
   private readonly settings = inject(Settings);
   readonly tasks = input.required<Task[]>();
+  readonly size = input<TuiButton['size']>('m');
 
   moveToToday(tasks: Task[]) {
     this.dialogs

@@ -68,6 +68,18 @@ export class TaskListHeaderComponent {
     }
     return TASK_SORT_DEFAULT;
   });
+  readonly buttonSize = computed<TuiButton['size']>(() => {
+    switch (this.headerSize()) {
+      case 'xs':
+      case 's':
+      case 'm':
+      case 'l':
+      case 'xl':
+        return this.headerSize() as TuiButton['size'];
+      default:
+        return 'm';
+    }
+  });
 
   readonly sortStateIcon = computed(() => {
     switch (this.sort()) {

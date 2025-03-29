@@ -15,7 +15,7 @@
         type="button"
         appearance="flat-grayscale"
         [tuiAppearanceState]="sortMenuOpen() ? 'active' : null"
-        size="m"
+        [size]="buttonSize()"
         tuiIconButton
         [iconStart]="sortStateIcon()"
         tuiDropdownOpen
