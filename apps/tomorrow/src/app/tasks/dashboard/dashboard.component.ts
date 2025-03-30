@@ -57,6 +57,7 @@ export class DashboardComponent {
   readonly overDueTasks = signal<Task[]>([]);
   readonly todaysTasks = signal<Task[]>([]);
   readonly todaysSort = signal<TaskSort>(TASK_SORT_DEFAULT);
+  readonly hideTodaysCompletedTasks = signal<boolean>(false);
   readonly upcomingTasks = signal<Task[]>([]);
   readonly upcomingSort = signal<TaskSort>(TASK_SORT_DEFAULT);
   readonly isReady = Tasks.isReady();
@@ -88,7 +89,8 @@ export class DashboardComponent {
 
       effect((onCleanup) => {
         const sort = this.todaysSort();
-        const tt = Tasks.getTodaysTasks(sort);
+        const hideCompleted = this.hideTodaysCompletedTasks();
+        const tt = Tasks.getTodaysTasks({ sort, hideCompleted });
         this.todaysTasks.set(tt.fetch());
         onCleanup(() => {
           tt.cleanup();
@@ -97,7 +99,7 @@ export class DashboardComponent {
 
       effect((onCleanup) => {
         const sort = this.upcomingSort();
-        const ut = Tasks.getUpcomingTasks(sort);
+        const ut = Tasks.getUpcomingTasks({ sort });
         this.upcomingTasks.set(ut.fetch());
         onCleanup(() => {
           ut.cleanup();
