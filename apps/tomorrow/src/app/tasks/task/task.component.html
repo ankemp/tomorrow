@@ -11,7 +11,6 @@
             appearance="secondary-grayscale"
             iconStart="@tui.clock"
             size="xs"
-            class="tui-space_left-1"
           >
             {{ t.date | formatDate }}
           </tui-chip>
@@ -20,7 +19,6 @@
               appearance="secondary-grayscale"
               iconStart="@tui.circle-check"
               size="xs"
-              class="tui-space_left-1"
             >
               {{ t.completedAt | formatDate }}
             </tui-chip>
@@ -28,6 +26,24 @@
           @if (t.priority && t.priority > 0) {
             <tui-chip size="xs" style="--pin-top: 9px; --pin-left: 3px">
               <tw-priority-pin [priority]="t.priority" [showLabel]="true" />
+            </tui-chip>
+          }
+          @if (t.location) {
+            <tui-chip
+              appearance="secondary-grayscale"
+              iconStart="@tui.map-pin"
+              size="xs"
+            >
+              {{ t.location }}
+            </tui-chip>
+          }
+          @if (t.duration) {
+            <tui-chip
+              appearance="secondary-grayscale"
+              iconStart="@tui.clock"
+              size="xs"
+            >
+              {{ t.duration | formatDuration }}
             </tui-chip>
           }
         </div>
@@ -43,19 +59,6 @@
         style="white-space: pre-line"
         [innerHTML]="makeLinksClickable(t.description)"
       ></div>
-    }
-    <!-- TODO: Improve look of location & duration -->
-    @if (t.location) {
-      <div>
-        <tui-icon icon="@tui.map-pin" />
-        {{ t.location }}
-      </div>
-    }
-    @if (t.duration) {
-      <div>
-        <tui-icon icon="@tui.clock" />
-        {{ t.duration | formatDuration }}
-      </div>
     }
   </section>
 
