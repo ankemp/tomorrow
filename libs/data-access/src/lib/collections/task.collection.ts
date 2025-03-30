@@ -2,7 +2,7 @@ import { isDevMode } from '@angular/core';
 import angularReactivityAdapter from '@signaldb/angular';
 import { Collection, createIndex } from '@signaldb/core';
 import createIndexedDBAdapter from '@signaldb/indexeddb';
-import { endOfToday, startOfToday, startOfTomorrow } from 'date-fns';
+import { addDays, endOfToday, startOfToday, startOfTomorrow } from 'date-fns';
 import { isNil } from 'es-toolkit';
 import { parse, unparse } from 'papaparse';
 
@@ -183,9 +183,15 @@ class TaskCollection extends Collection<Task> {
   }
 
   getCompletedTasks() {
-    return this.find({
-      completedAt: { $ne: null },
-    });
+    const { field, order } = parseTaskSort(TASK_SORT_DEFAULT);
+    return this.find(
+      {
+        completedAt: { $ne: null },
+      },
+      {
+        sort: { [field]: order },
+      },
+    );
   }
 
   getPinnedTasks(includeCompleted = true) {
@@ -230,11 +236,17 @@ class TaskCollection extends Collection<Task> {
     );
   }
 
-  getTodaysTasks(sort: TaskSort) {
+  getTodaysTasks({
+    sort = TASK_SORT_DEFAULT,
+    hideCompleted = false,
+  }: { sort?: TaskSort; hideCompleted?: boolean } = {}) {
     const { field, order } = parseTaskSort(sort);
     return this.find(
       {
         date: { $gte: startOfToday(), $lt: endOfToday() },
+        completedAt: hideCompleted
+          ? { $or: [null, { $exists: false }] }
+          : { $exists: true },
         $or: [...NOT_PINNED],
       },
       {
@@ -243,7 +255,10 @@ class TaskCollection extends Collection<Task> {
     );
   }
 
-  getUpcomingTasks(sort: TaskSort, limit = 5) {
+  getUpcomingTasks({
+    sort = TASK_SORT_DEFAULT,
+    limit = 5,
+  }: { sort?: TaskSort; limit?: number } = {}) {
     const { field, order } = parseTaskSort(sort);
     return this.find(
       {
@@ -252,7 +267,7 @@ class TaskCollection extends Collection<Task> {
       },
       {
         sort: { [field]: order },
-        limit: limit,
+        ...(limit > 0 ? { limit } : {}),
       },
     );
   }
@@ -372,9 +387,7 @@ export const Tasks = new TaskCollection();
 
 function createRandomTask() {
   const randomTitle = `Task ${Math.floor(Math.random() * 1000)}`;
-  const randomDate = new Date(
-    Date.now() + Math.floor(Math.random() * 8) * 24 * 60 * 60 * 1000,
-  );
+  const randomDate = addDays(new Date(), Math.floor(Math.random() * 8));
   const categories = ['Work', 'Personal', 'Health', 'Shopping'];
   const randomCategory =
     categories[Math.floor(Math.random() * categories.length)];

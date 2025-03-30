@@ -1,0 +1,22 @@
+:host {
+  display: block;
+  padding: 1rem;
+}
+
+h2 {
+  margin-bottom: 1rem;
+}
+
+section {
+  display: block;
+  width: 100%;
+
+  & + section {
+    margin-top: 1rem;
+  }
+}
+
+.task-list-grid {
+  display: grid;
+  gap: 1rem;
+}

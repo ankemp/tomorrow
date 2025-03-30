@@ -67,6 +67,26 @@ export const Settings = signalStore(
     dateFnsTimeFormat: computed(() =>
       state.timeFormat() === '12h' ? 'hh:mm a' : 'HH:mm',
     ),
+    dateFnsStartOfWeek: computed(() => {
+      const startOfWeek = state.startOfWeek();
+      switch (startOfWeek) {
+        default:
+        case 'Sunday':
+          return 0;
+        case 'Monday':
+          return 1;
+        case 'Tuesday':
+          return 2;
+        case 'Wednesday':
+          return 3;
+        case 'Thursday':
+          return 4;
+        case 'Friday':
+          return 5;
+        case 'Saturday':
+          return 6;
+      }
+    }),
     jwtKey: computed(() => {
       const key = state._encryptionKey();
       return key ? JSON.parse(key) : null;

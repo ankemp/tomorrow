@@ -79,14 +79,24 @@
   }
 </section>
 
-<section class="view-completed-container">
+<section class="end-of-list-container">
   <a
     appearance="action-grayscale"
     tuiButton
-    iconStart="@tui.history"
+    size="s"
+    iconStart="@tui.calendar-clock"
     [routerLink]="['/tasks', 'completed']"
   >
     View Completed Tasks
+  </a>
+  <a
+    appearance="action-grayscale"
+    tuiButton
+    size="s"
+    iconStart="@tui.calendar-fold"
+    [routerLink]="['/tasks', 'upcoming']"
+  >
+    View Upcoming Tasks
   </a>
 </section>
 

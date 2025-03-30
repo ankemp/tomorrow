@@ -22,6 +22,11 @@ export default [
       ),
   },
   {
+    path: 'upcoming',
+    loadComponent: () =>
+      import('./upcoming/upcoming.component').then((m) => m.UpcomingComponent),
+  },
+  {
     path: 'new',
     loadComponent: () =>
       import('./create/create.component').then((m) => m.CreateComponent),

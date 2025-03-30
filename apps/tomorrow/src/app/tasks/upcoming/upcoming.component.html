@@ -1,0 +1,38 @@
+<h2 tuiTitle="m">Upcoming tasks</h2>
+
+<section class="task-list-grid">
+  <tw-task-list-header title="Today" headerSize="s" icon="@tui.clock-12" />
+  @for (task of todaysTasks(); track task.id) {
+    <tw-task-list-card [task]="task" [strikeThrough]="false" />
+  } @empty {
+    <tw-empty-state
+      title="No Tasks Today"
+      [skeleton]="(isReady | async) === null"
+    />
+  }
+</section>
+
+<section class="task-list-grid">
+  <tw-task-list-header title="Tomorrow" headerSize="s" icon="@tui.clock-3" />
+  @for (task of tomorrowsTasks(); track task.id) {
+    <tw-task-list-card [task]="task" [strikeThrough]="false" />
+  } @empty {
+    <tw-empty-state
+      title="No Tasks Tomorrow"
+      [skeleton]="(isReady | async) === null"
+    />
+  }
+</section>
+
+@for (group of futureTasks(); track group.date) {
+  <section class="task-list-grid">
+    <tw-task-list-header
+      [title]="group.date"
+      headerSize="s"
+      icon="@tui.calendar-days"
+    />
+    @for (task of group.tasks; track task.id) {
+      <tw-task-list-card [task]="task" [strikeThrough]="false" />
+    }
+  </section>
+}
