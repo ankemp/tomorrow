@@ -51,7 +51,7 @@ export class CompletedComponent {
         };
       })
       .toSorted((a, b) => {
-        return isAfter(a.date, b.date) ? 1 : -1;
+        return isAfter(a.date, b.date) ? -1 : 1;
       });
   });
 
