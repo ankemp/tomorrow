@@ -157,7 +157,11 @@
     }
   </section>
 
-  <section tuiCardLarge="compact">
+  <section
+    class="subtasks"
+    [class.hide-completed]="!showCompletedSubtasks()"
+    tuiCardLarge="compact"
+  >
     <header tuiHeader="xs">
       <h3 tuiTitle>
         Subtasks ({{ subTaskCompletedCount() }}/{{ subTaskCount() }})
@@ -198,7 +202,7 @@
       ></progress>
       @for (subtask of subTasks(); track $index) {
         @let isCompleted = !!subtask.completedAt;
-        <div tuiCell>
+        <div tuiCell class="subtask-item" [class.completed]="isCompleted">
           <button
             appearance="flat"
             [iconStart]="isCompleted ? '@tui.circle-check' : '@tui.circle'"

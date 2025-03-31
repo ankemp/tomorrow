@@ -120,11 +120,11 @@ export class TaskComponent {
     return (this.task()?.subTasks?.length ?? 0) > 0;
   });
   readonly subTasks = computed(() => {
-    if (this.showCompletedSubtasks()) {
-      return this.task()?.subTasks;
-    }
-    return this.task()?.subTasks.filter((task) => {
-      return !task.completedAt;
+    return this.task()?.subTasks.map((st) => {
+      return {
+        ...st,
+        title: this.makeLinksClickable(st.title),
+      };
     });
   });
   readonly showCompletedSubtasks = signal(true);

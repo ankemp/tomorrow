@@ -18,6 +18,16 @@ section {
   }
 }
 
+.subtasks {
+  &.hide-completed {
+    .subtask-item {
+      &.completed {
+        display: none;
+      }
+    }
+  }
+}
+
 .action-group {
   display: flex;
   justify-content: space-between;
