@@ -57,7 +57,7 @@
     @if (t.description) {
       <div
         style="white-space: pre-line"
-        [innerHTML]="makeLinksClickable(t.description)"
+        [innerHTML]="convertTextToClickableLinks(t.description)"
       ></div>
     }
   </section>
@@ -215,7 +215,8 @@
             {{ isCompleted ? 'Undo' : 'Done' }}
           </button>
           <div tuiTitle>
-            {{ subtask.title }}
+            <span [innerHTML]="convertTextToClickableLinks(subtask.title)">
+            </span>
             @if (isCompleted) {
               <div tuiSubtitle>{{ subtask.completedAt! | formatDate }}</div>
             }

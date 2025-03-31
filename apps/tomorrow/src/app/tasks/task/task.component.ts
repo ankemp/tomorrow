@@ -120,12 +120,7 @@ export class TaskComponent {
     return (this.task()?.subTasks?.length ?? 0) > 0;
   });
   readonly subTasks = computed(() => {
-    return this.task()?.subTasks.map((st) => {
-      return {
-        ...st,
-        title: this.makeLinksClickable(st.title),
-      };
-    });
+    return this.task()?.subTasks;
   });
   readonly showCompletedSubtasks = signal(true);
   readonly subTaskCount = computed(() => {
@@ -171,7 +166,7 @@ export class TaskComponent {
   readonly notes = computed(() => {
     let fullNotes = this.task()?.notes || '';
 
-    fullNotes = this.makeLinksClickable(fullNotes);
+    fullNotes = this.convertTextToClickableLinks(fullNotes);
 
     if (
       !this.shouldTruncateNotes() ||
@@ -228,7 +223,7 @@ export class TaskComponent {
     });
   }
 
-  makeLinksClickable(text: string) {
+  convertTextToClickableLinks(text: string) {
     // Regular expressions for links and phone numbers
     const urlRegex = /(https?:\/\/[^\s]+)|(www\.[^\s]+)/g;
     const phoneRegex =
