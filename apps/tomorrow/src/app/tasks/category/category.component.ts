@@ -94,7 +94,9 @@ export class CategoryComponent {
       effect((onCleanup) => {
         // TODO: Move filtering to the Tasks service instead of using computed
         // TODO: Add sorting
-        const c = Tasks.getByCategory(this.title());
+        const c = Tasks.getByCategory({
+          category: this.title(),
+        });
         this.categoryTasks.set(c.fetch());
         onCleanup(() => {
           c.cleanup();

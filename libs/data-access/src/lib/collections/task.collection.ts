@@ -30,6 +30,11 @@ const NOT_PINNED = [
   { pinned: null },
 ];
 
+const INCLUDE_COMPLETED = (include: boolean) =>
+  include
+    ? { $or: [{ completedAt: null }, { completedAt: { $exists: false } }] }
+    : { completedAt: null };
+
 class TaskCollection extends Collection<Task> {
   constructor() {
     super({
@@ -199,8 +204,7 @@ class TaskCollection extends Collection<Task> {
     return this.find(
       {
         pinned: true,
-        // FIXME: not working as expected
-        // completedAt: includeCompleted ? { $ne: null } : null,
+        ...INCLUDE_COMPLETED(includeCompleted),
       },
       {
         sort: { [field]: order },
@@ -238,15 +242,13 @@ class TaskCollection extends Collection<Task> {
 
   getTodaysTasks({
     sort = TASK_SORT_DEFAULT,
-    hideCompleted = false,
-  }: { sort?: TaskSort; hideCompleted?: boolean } = {}) {
+    includeCompleted = true,
+  }: { sort?: TaskSort; includeCompleted?: boolean } = {}) {
     const { field, order } = parseTaskSort(sort);
     return this.find(
       {
         date: { $gte: startOfToday(), $lt: endOfToday() },
-        completedAt: hideCompleted
-          ? { $or: [null, { $exists: false }] }
-          : { $exists: true },
+        ...INCLUDE_COMPLETED(includeCompleted),
         $or: [...NOT_PINNED],
       },
       {
@@ -272,12 +274,18 @@ class TaskCollection extends Collection<Task> {
     );
   }
 
-  getByCategory(category: string, includeCompleted = false) {
+  getByCategory({
+    category,
+    includeCompleted = false,
+  }: {
+    category: string;
+    includeCompleted?: boolean;
+  }) {
     const { field, order } = parseTaskSort(TASK_SORT_DEFAULT);
     return this.find(
       {
         category,
-        completedAt: includeCompleted ? { $ne: null } : null,
+        ...INCLUDE_COMPLETED(includeCompleted),
       },
       {
         sort: { [field]: order },
@@ -384,6 +392,7 @@ class TaskCollection extends Collection<Task> {
 }
 
 export const Tasks = new TaskCollection();
+Tasks.setDebugMode(isDevMode());
 
 function createRandomTask() {
   const randomTitle = `Task ${Math.floor(Math.random() * 1000)}`;

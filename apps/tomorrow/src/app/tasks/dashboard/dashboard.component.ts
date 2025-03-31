@@ -54,15 +54,15 @@ import { FormatDurationPipe } from '../_primitives/format-duration.pipe';
 export class DashboardComponent {
   readonly settings = inject(Settings);
   readonly pinnedTasks = signal<Task[]>([]);
-  readonly overDueTasks = signal<Task[]>([]);
+  readonly overdueTasks = signal<Task[]>([]);
   readonly todaysTasks = signal<Task[]>([]);
   readonly todaysSort = signal<TaskSort>(TASK_SORT_DEFAULT);
-  readonly hideTodaysCompletedTasks = signal<boolean>(false);
+  readonly includeTodaysCompletedTasks = signal<boolean>(true);
   readonly upcomingTasks = signal<Task[]>([]);
   readonly upcomingSort = signal<TaskSort>(TASK_SORT_DEFAULT);
   readonly isReady = Tasks.isReady();
   readonly hasPinnedTasks = computed(() => this.pinnedTasks().length > 0);
-  readonly hasOverdueTasks = computed(() => this.overDueTasks().length > 0);
+  readonly hasOverdueTasks = computed(() => this.overdueTasks().length > 0);
   readonly todaysTasksDuration = computed(() => {
     return this.todaysTasks()
       .filter((t) => !t.completedAt)
@@ -81,7 +81,7 @@ export class DashboardComponent {
 
       effect((onCleanup) => {
         const ot = Tasks.getOverdueTasks();
-        this.overDueTasks.set(ot.fetch());
+        this.overdueTasks.set(ot.fetch());
         onCleanup(() => {
           ot.cleanup();
         });
@@ -89,8 +89,8 @@ export class DashboardComponent {
 
       effect((onCleanup) => {
         const sort = this.todaysSort();
-        const hideCompleted = this.hideTodaysCompletedTasks();
-        const tt = Tasks.getTodaysTasks({ sort, hideCompleted });
+        const includeCompleted = this.includeTodaysCompletedTasks();
+        const tt = Tasks.getTodaysTasks({ sort, includeCompleted });
         this.todaysTasks.set(tt.fetch());
         onCleanup(() => {
           tt.cleanup();

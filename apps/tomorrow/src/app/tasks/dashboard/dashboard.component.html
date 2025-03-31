@@ -20,10 +20,10 @@
 @if (hasOverdueTasks()) {
   <section class="task-list-grid">
     <tw-task-list-header title="Overdue" headerSize="s" icon="@tui.clock-9">
-      <tw-bulk-move-tasks-to-today-button [tasks]="overDueTasks()" size="s" />
-      <tw-bulk-complete-tasks-button [tasks]="overDueTasks()" size="s" />
+      <tw-bulk-move-tasks-to-today-button [tasks]="overdueTasks()" size="s" />
+      <tw-bulk-complete-tasks-button [tasks]="overdueTasks()" size="s" />
     </tw-task-list-header>
-    @for (task of overDueTasks(); track task.id) {
+    @for (task of overdueTasks(); track task.id) {
       <tw-task-list-card [task]="task" />
     }
   </section>
@@ -38,6 +38,19 @@
     (sortChanged)="todaysSort.set($event)"
     sortSaveKey="dashboard-today"
   >
+    <button
+      appearance="flat-grayscale"
+      size="s"
+      tuiIconButton
+      [iconStart]="
+        includeTodaysCompletedTasks()
+          ? '@tui.circle-slash'
+          : '@tui.circle-check'
+      "
+      (click)="includeTodaysCompletedTasks.set(!includeTodaysCompletedTasks())"
+    >
+      {{ includeTodaysCompletedTasks() ? 'Hide' : 'Show' }} Completed
+    </button>
     @if (todaysTasks().length > 0) {
       <tui-chip size="xs">
         <tui-icon icon="@tui.clock" />
@@ -65,6 +78,7 @@
     (sortChanged)="upcomingSort.set($event)"
     sortSaveKey="dashboard-upcoming"
   >
+    <!-- TODO: Add hide completed button -->
     @if (upcomingTasks().length > 0) {
       <tw-bulk-complete-tasks-button [tasks]="upcomingTasks()" size="s" />
     }
