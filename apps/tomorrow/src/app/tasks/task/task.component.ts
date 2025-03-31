@@ -195,7 +195,8 @@ export class TaskComponent {
     activatedRoute: ActivatedRoute,
   ) {
     if (isPlatformBrowser(platformId)) {
-      effect((onCleanup) => {
+      effect(async (onCleanup) => {
+        await Tasks.isReady();
         const t = Tasks.getTaskById(activatedRoute.snapshot.params['id']);
         if (t) {
           this.task.set(t);
