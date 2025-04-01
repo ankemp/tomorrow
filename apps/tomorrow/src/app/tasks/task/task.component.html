@@ -24,9 +24,7 @@
             </tui-chip>
           }
           @if (t.priority && t.priority > 0) {
-            <tui-chip size="xs" style="--pin-top: 9px; --pin-left: 3px">
-              <tw-priority-pin [priority]="t.priority" [showLabel]="true" />
-            </tui-chip>
+            <tw-priority-pin [priority]="t.priority" size="xs" />
           }
           @if (t.location) {
             <tui-chip

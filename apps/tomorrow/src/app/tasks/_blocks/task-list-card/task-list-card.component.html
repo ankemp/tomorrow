@@ -22,6 +22,9 @@
         {{ t.date | formatDate: fullDateFormat() }}
       </div>
       <div class="chips">
+        @if (showCategory()) {
+          <tw-category-chip size="xs" [category]="t.category" />
+        }
         @if (showDuration() && t.duration) {
           <tui-chip size="xs" appearance="neutral">
             <tui-icon icon="@tui.clock" />
@@ -34,11 +37,8 @@
             {{ completedSubtaskCount() }} / {{ subtaskCount() }}
           </tui-chip>
         }
-        @if (showCategory()) {
-          <tw-category-chip size="xs" [category]="t.category" />
-        }
         @if (showPriority() && t.priority && t.priority > 0) {
-          <tw-priority-pin [priority]="t.priority" />
+          <tw-priority-pin [priority]="t.priority" size="xs" />
         }
       </div>
     </div>

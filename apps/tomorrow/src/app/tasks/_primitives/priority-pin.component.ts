@@ -5,44 +5,27 @@ import {
   computed,
   input,
 } from '@angular/core';
-import { TuiPin } from '@taiga-ui/kit';
+import { TuiChip, TuiPin } from '@taiga-ui/kit';
 
 @Component({
   selector: 'tw-priority-pin',
-  imports: [CommonModule, TuiPin],
+  imports: [CommonModule, TuiChip],
   template: `
-    <tui-pin [style.background-color]="color()" />
-    @if (showLabel()) {
-      <span class="label">{{ label() }}</span>
-    }
+    <tui-chip [size]="size()" [style.background-color]="color()">{{
+      label()
+    }}</tui-chip>
   `,
   styles: `
     :host {
       display: flex;
       flex-direction: row;
     }
-
-    tui-pin {
-      left: var(--pin-left, 0);
-      position: relative;
-      top: var(--pin-top, 0);
-
-      &.low {
-        background-color: var(--tui-status-positive);
-      }
-      &.medium {
-        background-color: var(--tui-status-warning);
-      }
-      &.high {
-        background-color: var(--tui-status-negative);
-      }
-    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PriorityPinComponent {
   readonly priority = input.required<number>();
-  readonly showLabel = input<boolean>(false);
+  readonly size = input<TuiChip['size']>('xs');
 
   readonly color = computed(() => {
     const priority = this.priority();
