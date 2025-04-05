@@ -6,6 +6,7 @@ import {
   effect,
   Inject,
   inject,
+  linkedSignal,
   PLATFORM_ID,
   signal,
 } from '@angular/core';
@@ -24,9 +25,15 @@ import {
   TuiChip,
   TuiElasticContainer,
   TuiFiles,
+  TuiPreview,
+  TuiPreviewDialogDirective,
   TuiProgress,
 } from '@taiga-ui/kit';
 import { TuiCardLarge, TuiCell, TuiHeader } from '@taiga-ui/layout';
+import {
+  PolymorpheusOutlet,
+  PolymorpheusTemplate,
+} from '@taiga-ui/polymorpheus';
 import { differenceInMinutes, roundToNearestMinutes } from 'date-fns';
 
 import {
@@ -61,11 +68,15 @@ import { TaskService } from '../task.service';
     TuiTitle,
     TuiChip,
     TuiFiles,
+    TuiPreview,
+    TuiPreviewDialogDirective,
     TuiProgress,
     TuiElasticContainer,
     TuiCardLarge,
     TuiCell,
     TuiHeader,
+    PolymorpheusOutlet,
+    PolymorpheusTemplate,
     ActionBarComponent,
     CategoryChipComponent,
     EmptyStateComponent,
@@ -153,6 +164,20 @@ export class TaskComponent {
       return this.attachments().length;
     }
     return 0;
+  });
+  readonly previewFileIndex = signal(-1);
+  readonly previewFile = computed(() => {
+    return this.attachments()[this.previewFileIndex()];
+  });
+  readonly previewFileBlob = computed(() => {
+    const file = this.previewFile();
+    if (file && file.type.includes('image')) {
+      return URL.createObjectURL(file);
+    }
+    return null;
+  });
+  readonly filePreviewOpen = linkedSignal(() => {
+    return this.previewFileIndex() !== -1;
   });
 
   readonly hasNotes = computed(() => {
@@ -256,5 +281,14 @@ export class TaskComponent {
       );
     }
     return 0;
+  }
+
+  downloadAttachment(file: File) {
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(file);
+    link.download = file.name;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 }

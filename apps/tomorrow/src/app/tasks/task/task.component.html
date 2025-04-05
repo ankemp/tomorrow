@@ -250,25 +250,65 @@
     @if (hasAttachments()) {
       <tui-files>
         @for (attachment of attachments(); track $index) {
-          @if (attachment) {
-            <tui-file
-              size="l"
-              state="normal"
-              [leftContent]="icon"
-              [file]="attachment"
-            />
-            <ng-template #icon>
-              @if (attachment.type.includes('image')) {
-                <tui-icon icon="@tui.image" />
-              } @else {
-                <tui-icon icon="@tui.paperclip" />
-              }
-            </ng-template>
-          } @else {
-            <!-- TODO: Create view to handle if a file is missing/errored -->
-          }
+          <tui-file
+            size="l"
+            state="normal"
+            [leftContent]="icon"
+            [file]="attachment"
+            (click)="previewFileIndex.set($index)"
+          />
+          <ng-template #icon>
+            @if (attachment.type.includes('image')) {
+              <tui-icon icon="@tui.image" />
+            } @else {
+              <tui-icon icon="@tui.paperclip" />
+            }
+          </ng-template>
         }
       </tui-files>
+      <ng-template [(tuiPreviewDialog)]="filePreviewOpen">
+        @let file = previewFile();
+        <tui-preview>
+          <tui-preview-title>{{ file.name }}</tui-preview-title>
+          <tui-preview-pagination
+            [length]="attachmentCount()"
+            [(index)]="previewFileIndex"
+          />
+
+          <button
+            iconStart="@tui.download"
+            tuiIconButton
+            tuiPreviewAction
+            type="button"
+            (click)="downloadAttachment(file)"
+          >
+            Download
+          </button>
+          <button
+            iconStart="@tui.x"
+            tuiIconButton
+            tuiPreviewAction
+            type="button"
+            (click)="previewFileIndex.set(-1)"
+          >
+            Close
+          </button>
+
+          @if (file.type.includes('image')) {
+            <img
+              *polymorpheusOutlet="previewFileBlob() as src"
+              alt="preview"
+              [src]="src"
+            />
+          } @else {
+            <!-- TODO: improve file preview support -->
+            <div tuiTheme="dark" class="t-container" style="text-align: center">
+              <tui-icon icon="@tui.file" class="t-icon" />
+              <div>Preview unavailable</div>
+            </div>
+          }
+        </tui-preview>
+      </ng-template>
     } @else {
       <tw-empty-state
         title="No Attachments"
