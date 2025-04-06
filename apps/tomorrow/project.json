@@ -30,7 +30,7 @@
           {
             "glob": "**/outlined/*",
             "input": "node_modules/@taiga-ui/icons-material/src",
-            "output": "assets/taiga-ui/icons/outlined"
+            "output": "assets/taiga-ui/icons"
           },
           {
             "glob": "**/*",
