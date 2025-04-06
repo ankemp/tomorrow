@@ -1,3 +1,4 @@
+import { Changeset } from '@signaldb/core/index';
 import createIndexedDBAdapter from '@signaldb/indexeddb';
 import { SyncManager } from '@signaldb/sync';
 
@@ -17,33 +18,31 @@ function getSettings(): SettingsState {
 export const syncManager = new SyncManager({
   autostart: false,
   persistenceAdapter: (name) => createIndexedDBAdapter(name),
-  pull: async ({ apiPath }, { lastFinishedSyncStart }) => {
+  pull: async ({ apiPath, jsonReviver }, { lastFinishedSyncStart }) => {
     const settings = getSettings();
 
-    let data: any[] = await fetch(
+    let changes: Changeset<any> = await fetch(
       `${apiPath}/user/${settings.userId}?since=${lastFinishedSyncStart}&encrypted=${settings.encryption}`,
-    ).then((res) => res.json());
+    )
+      .then((res) => res.text())
+      .then((text) => JSON.parse(text, jsonReviver || undefined));
 
     if (settings.encryption) {
       const key = settings._encryptionKey as string;
-      data = await Promise.all(
-        data.map(async (item) => {
-          const content = await decryptContent(key, item.encryptedData);
-
-          return JSON.parse(content);
+      changes = {
+        added: changes.added.map(async (item) => {
+          const decrypted = await decryptContent(key, item.encryptContent);
+          return JSON.parse(decrypted, jsonReviver || undefined);
         }),
-      );
+        modified: changes.modified.map(async (item) => {
+          const decrypted = await decryptContent(key, item.encryptContent);
+          return JSON.parse(decrypted, jsonReviver || undefined);
+        }),
+        removed: changes.removed,
+      };
     }
 
-    data = data.map((item) => {
-      return {
-        ...item,
-        date: new Date(item.date),
-        completedAt: item.completedAt ? new Date(item.completedAt) : null,
-      };
-    });
-
-    return { items: data };
+    return { changes };
   },
   push: async ({ apiPath }, { changes }) => {
     const settings = getSettings();

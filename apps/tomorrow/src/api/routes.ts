@@ -1,4 +1,5 @@
 import express from 'express';
+import { Op } from 'sequelize';
 
 import { Task } from '@tmrw/data-access';
 
@@ -7,7 +8,7 @@ import {
   dispatchSignalDBChange,
   removeSseClient,
 } from './helpers';
-import { EncryptedTask, PlainTask, User } from './models';
+import { EncryptedTask, PlainTask, TASK_PROP_EXCLUDES, User } from './models';
 
 const apiRouter = express.Router();
 
@@ -85,24 +86,75 @@ apiRouter.delete('/tasks', async (req, res) => {
   res.sendStatus(200);
 });
 
-apiRouter.get('/tasks/user/:userId', (req, res) => {
-  const exclude = ['createdAt', 'updatedAt', 'deletedAt'];
-  const lastFinishedSyncStart = req.query['since'];
-  const whereClause = {
-    userId: req.params.userId,
-    updatedAt: lastFinishedSyncStart
-      ? { $gte: new Date(lastFinishedSyncStart as string) }
+apiRouter.get('/tasks/user/:userId', async (req, res) => {
+  const lastFinishedSyncStart = +(req.query['since'] as string);
+  const userId = req.params.userId;
+
+  const utcLastFinishedSyncStart = new Date(lastFinishedSyncStart);
+
+  const whereAdded = {
+    userId,
+    createdAt: lastFinishedSyncStart
+      ? { [Op.gte]: utcLastFinishedSyncStart }
       : undefined,
   };
 
-  if (req.query['encrypted'] === 'true') {
-    EncryptedTask.findAll({ attributes: { exclude }, where: whereClause }).then(
-      (tasks) => res.json(tasks),
-    );
-  } else {
-    PlainTask.findAll({ attributes: { exclude }, where: whereClause }).then(
-      (tasks) => res.json(tasks),
-    );
+  const whereModified = {
+    userId,
+    updatedAt: lastFinishedSyncStart
+      ? { [Op.gte]: utcLastFinishedSyncStart }
+      : undefined,
+    createdAt: lastFinishedSyncStart
+      ? { [Op.lt]: utcLastFinishedSyncStart }
+      : undefined,
+  };
+
+  const whereRemoved = {
+    userId,
+    deletedAt: lastFinishedSyncStart
+      ? { [Op.gte]: utcLastFinishedSyncStart }
+      : undefined,
+  };
+
+  try {
+    const added =
+      req.query['encrypted'] === 'true'
+        ? await EncryptedTask.findAll({
+            attributes: { exclude: TASK_PROP_EXCLUDES },
+            where: whereAdded,
+          })
+        : await PlainTask.findAll({
+            attributes: { exclude: TASK_PROP_EXCLUDES },
+            where: whereAdded,
+          });
+
+    const modified =
+      req.query['encrypted'] === 'true'
+        ? await EncryptedTask.findAll({
+            attributes: { exclude: TASK_PROP_EXCLUDES },
+            where: whereModified,
+          })
+        : await PlainTask.findAll({
+            attributes: { exclude: TASK_PROP_EXCLUDES },
+            where: whereModified,
+          });
+
+    const removed =
+      req.query['encrypted'] === 'true'
+        ? await EncryptedTask.findAll({
+            attributes: { exclude: TASK_PROP_EXCLUDES },
+            where: whereRemoved,
+          })
+        : await PlainTask.findAll({
+            attributes: { exclude: TASK_PROP_EXCLUDES },
+            where: whereRemoved,
+          });
+
+    res.json({ added, modified, removed });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: 'Failed to fetch changeset', details: error });
   }
 });
 
@@ -115,9 +167,8 @@ apiRouter.delete('/tasks/user/:userId', async (req, res) => {
 // User routes
 apiRouter.get('/users/:userId', async (req, res) => {
   const userId = req.params.userId;
-  const exclude = ['createdAt', 'updatedAt', 'deletedAt'];
   User.findOne({
-    attributes: { exclude },
+    attributes: { exclude: TASK_PROP_EXCLUDES },
     where: { id: userId },
   }).then((user) => res.json(user));
 });

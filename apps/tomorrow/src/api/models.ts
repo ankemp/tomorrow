@@ -18,6 +18,8 @@ const sequelize = new Sequelize({
   logging: isDevMode ? console.log : false,
 });
 
+export const TASK_PROP_EXCLUDES = ['createdAt', 'updatedAt', 'deletedAt'];
+
 export class PlainTask
   extends Model<InferAttributes<PlainTask>, InferCreationAttributes<PlainTask>>
   implements Task
