@@ -85,7 +85,7 @@ export class CreateComponent {
   constructor() {
     effect((onCleanup) => {
       const userId = this.settings.userId();
-      this.form.get('userId')?.setValue(userId);
+      this.form.get('userId')?.setValue(userId, { emitEvent: false });
       onCleanup(() => {
         this.attachmentsStore.dispose();
       });

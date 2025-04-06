@@ -35,6 +35,7 @@ import {
   PolymorpheusTemplate,
 } from '@taiga-ui/polymorpheus';
 import { differenceInMinutes, roundToNearestMinutes } from 'date-fns';
+import { isNil } from 'es-toolkit';
 
 import {
   Attachments,
@@ -125,6 +126,18 @@ export class TaskComponent {
         return acc + this.taskTimerToMinutes(t);
       }, 0);
     }
+  });
+  readonly estimatedTimeLeft = computed(() => {
+    const totalElapsedTime = this.totalElapsedTime();
+    const duration = this.task()?.duration;
+    if (isNil(duration)) {
+      return null;
+    }
+    const timeLeft = duration - totalElapsedTime;
+    if (timeLeft < 0) {
+      return 0;
+    }
+    return timeLeft;
   });
 
   readonly hasSubTasks = computed(() => {
