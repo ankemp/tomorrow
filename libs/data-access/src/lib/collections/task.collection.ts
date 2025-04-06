@@ -69,25 +69,43 @@ class TaskCollection extends Collection<Task> {
   }
 
   toggleSubtask(task: Task, subtaskIndex: number) {
+    const updatedSubTasks = [...task.subTasks];
+    const currentSubtask = updatedSubTasks[subtaskIndex];
+
+    if (currentSubtask.completedAt) {
+      this.setSubtaskToIncomplete(task, subtaskIndex);
+    } else {
+      this.setSubtaskCompleted(task, subtaskIndex);
+    }
+  }
+
+  setSubtaskToIncomplete(task: Task, subtaskIndex: number) {
+    const updatedSubTasks = [...task.subTasks];
+    updatedSubTasks[subtaskIndex] = {
+      ...updatedSubTasks[subtaskIndex],
+      completedAt: null,
+    };
     this.updateOne(
       { id: task.id },
       {
         $set: {
-          [`subTasks.${subtaskIndex}.completedAt`]: task.subTasks[subtaskIndex]
-            .completedAt
-            ? null
-            : new Date(),
+          subTasks: updatedSubTasks,
         },
       },
     );
   }
 
-  completeSubtask(task: Task, subtaskIndex: number) {
+  setSubtaskCompleted(task: Task, subtaskIndex: number) {
+    const updatedSubTasks = [...task.subTasks];
+    updatedSubTasks[subtaskIndex] = {
+      ...updatedSubTasks[subtaskIndex],
+      completedAt: new Date(),
+    };
     this.updateOne(
       { id: task.id },
       {
         $set: {
-          [`subTasks.${subtaskIndex}.completedAt`]: new Date(),
+          subTasks: updatedSubTasks,
         },
       },
     );
@@ -97,22 +115,30 @@ class TaskCollection extends Collection<Task> {
     this.updateOne(
       { id: task.id },
       {
-        $push: {
-          timers: {
-            start: new Date(),
-            end: null,
-          },
+        $set: {
+          timers: [
+            ...(task.timers || []),
+            {
+              start: new Date(),
+              end: null,
+            },
+          ],
         },
       },
     );
   }
 
   stopTimer(task: Task, timerIndex: number) {
+    const updatedTimers = [...task.timers];
+    updatedTimers[timerIndex] = {
+      ...updatedTimers[timerIndex],
+      end: new Date(),
+    };
     this.updateOne(
       { id: task.id },
       {
         $set: {
-          [`timers.${timerIndex}.end`]: new Date(),
+          timers: updatedTimers,
         },
       },
     );
@@ -132,11 +158,13 @@ class TaskCollection extends Collection<Task> {
   }
 
   updateTimer(task: Task, timerIndex: number, timer: TaskTimer) {
+    const updatedTimers = [...task.timers];
+    updatedTimers[timerIndex] = timer;
     this.updateOne(
       { id: task.id },
       {
         $set: {
-          [`timers.${timerIndex}`]: timer,
+          timers: updatedTimers,
         },
       },
     );
@@ -402,6 +430,9 @@ function createRandomTask() {
     categories[Math.floor(Math.random() * categories.length)];
   const randomPriority = [0, 1, 50, 99][Math.floor(Math.random() * 4)];
   const randomDuration = Math.floor(Math.random() * (1440 - 1) + 1);
+  const userId = localStorage.getItem('settings')
+    ? JSON.parse(localStorage.getItem('settings')!).userId
+    : null;
 
   return {
     title: randomTitle,
@@ -410,6 +441,7 @@ function createRandomTask() {
     completedAt: null,
     priority: randomPriority,
     ...(Math.random() < 0.5 ? { duration: randomDuration } : {}),
+    userId,
   } satisfies Partial<Task>;
 }
 
