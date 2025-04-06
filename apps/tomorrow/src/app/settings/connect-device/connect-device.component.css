@@ -1,5 +1,10 @@
 :host {
   display: block;
+  padding: 0 1rem;
+}
+
+section + section {
+  margin-top: 1rem;
 }
 
 .scanner-container {
@@ -26,8 +31,4 @@
       }
     }
   }
-}
-
-.connection-steps {
-  margin: 0 1rem 1rem;
 }
