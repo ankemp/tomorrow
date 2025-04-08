@@ -13,7 +13,7 @@ export type SettingsState = {
   remoteSync: boolean;
   sort: Record<string, TaskSort>; // saveKey, sort
   startOfWeek: string;
-  syncDevices: Record<string, string>; // id, userAgent
+  syncDevices: Record<string, string>; // deviceId, userAgent
   timeFormat: string;
   timeSpecificity: 'always' | 'never' | 'optional';
   userId: string | null;

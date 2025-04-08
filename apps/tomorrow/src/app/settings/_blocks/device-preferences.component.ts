@@ -175,6 +175,7 @@ export class DevicePreferencesComponent {
         switchMap((response) => (response ? of(true) : EMPTY)),
         tap(() => {
           this.attachmentsStore.clearStorage();
+          localStorage.removeItem('settings');
           Tasks.removeMany({});
         }),
         switchMap(() => {
