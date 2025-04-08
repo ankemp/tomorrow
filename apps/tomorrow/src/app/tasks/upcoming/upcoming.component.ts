@@ -78,7 +78,7 @@ export class UpcomingComponent {
         });
       });
       effect((onCleanup) => {
-        const c = Tasks.getTodaysTasks();
+        const c = Tasks.getTodaysTasks({ includeCompleted: false });
         this.todaysTasks.set(c.fetch());
         onCleanup(() => {
           c.cleanup();
