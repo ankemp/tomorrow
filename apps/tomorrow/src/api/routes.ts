@@ -87,10 +87,12 @@ apiRouter.delete('/tasks', async (req, res) => {
 });
 
 apiRouter.get('/tasks/user/:userId', async (req, res) => {
-  const lastFinishedSyncStart = +(req.query['since'] as string);
+  const lastFinishedSyncStart = req.query['since'] as string;
   const userId = req.params.userId;
 
-  const utcLastFinishedSyncStart = new Date(lastFinishedSyncStart);
+  const utcLastFinishedSyncStart = lastFinishedSyncStart
+    ? new Date(+lastFinishedSyncStart)
+    : new Date(0);
 
   const whereAdded = {
     userId,
