@@ -104,7 +104,7 @@ export const syncManager = new SyncManager({
       }),
     );
   },
-  registerRemoteChange: ({ apiPath }, onChange) => {
+  registerRemoteChange: ({ apiPath, jsonReviver }, onChange) => {
     const settings = getSettings();
     const eventSource = new EventSource(
       `${apiPath}/events/user/${settings.userId}`,
@@ -112,7 +112,7 @@ export const syncManager = new SyncManager({
 
     eventSource.onmessage = (event) => {
       try {
-        const data = JSON.parse(event.data);
+        const data = JSON.parse(event.data, jsonReviver);
         onChange(data);
       } catch (err) {
         console.error('Failed to parse remote change event data', err);
