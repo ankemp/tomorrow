@@ -52,7 +52,7 @@ jobs:
       - uses: nrwl/nx-set-shas@v4
 
       - name: Run Tests
-        run: echo "Skipping tests. No tests defined."
+        run: npx nx affected --target=test
 
   build-and-publish:
     runs-on: ubuntu-latest
