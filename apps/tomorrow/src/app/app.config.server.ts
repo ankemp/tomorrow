@@ -6,6 +6,8 @@ import { UNIVERSAL_PROVIDERS } from '@ng-web-apis/universal';
 import { appConfig } from './app.config';
 import { serverRoutes } from './app.routes.server';
 
+import 'fake-indexeddb/auto';
+
 const serverConfig: ApplicationConfig = {
   providers: [
     provideServerRendering(),
