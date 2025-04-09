@@ -53,6 +53,7 @@ export class TaskListCardComponent {
   readonly showSubtasks = input<boolean>(true);
   readonly showDuration = input<boolean>(true);
   readonly showPriority = input<boolean>(true);
+  readonly showOngoingTimer = input<boolean>(true);
   readonly strikeThrough = input<boolean>(true);
   readonly fullDateFormat = input<boolean>(false);
 
@@ -68,5 +69,9 @@ export class TaskListCardComponent {
 
   readonly subtaskCount = computed(() => {
     return this.task().subTasks?.length ?? 0;
+  });
+
+  readonly ongoingTimer = computed(() => {
+    return this.task().timers?.find((timer) => !timer.end);
   });
 }

@@ -93,8 +93,13 @@
       <header tuiHeader="xs">
         <h4 tuiTitle>Completed Timers ({{ completedTimerCount() }})</h4>
         <div tuiAccessories>
-          <tui-chip size="s">
-            {{ totalElapsedTime() | formatDuration }}
+          <tui-chip size="s" (click)="toggleTimerChip()">
+            @if (timerChip() === 'elapsed') {
+              {{ totalElapsedTime() | formatDuration }}
+            }
+            @if (timerChip() === 'remaining' && t.duration) {
+              {{ totalRemainingTime()! | formatDuration }}
+            }
             @if (t.duration) {
               <span> / {{ t.duration | formatDuration }}</span>
             }

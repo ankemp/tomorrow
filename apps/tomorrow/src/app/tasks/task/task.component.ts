@@ -30,10 +30,7 @@ import {
   TuiProgress,
 } from '@taiga-ui/kit';
 import { TuiCardLarge, TuiCell, TuiHeader } from '@taiga-ui/layout';
-import {
-  PolymorpheusOutlet,
-  PolymorpheusTemplate,
-} from '@taiga-ui/polymorpheus';
+import { PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
 import { differenceInMinutes, roundToNearestMinutes } from 'date-fns';
 import { isNil } from 'es-toolkit';
 
@@ -77,7 +74,6 @@ import { TaskService } from '../task.service';
     TuiCell,
     TuiHeader,
     PolymorpheusOutlet,
-    PolymorpheusTemplate,
     ActionBarComponent,
     CategoryChipComponent,
     EmptyStateComponent,
@@ -104,6 +100,7 @@ export class TaskComponent {
     return !!this.task();
   });
 
+  readonly timerChip = signal<'elapsed' | 'remaining'>('elapsed');
   readonly timerDropdownOpen = signal<number>(-1);
   readonly ongoingTimerIndex = computed(() => {
     return this.task()?.timers?.findIndex((t) => !t.end) ?? -1;
@@ -127,7 +124,7 @@ export class TaskComponent {
       }, 0);
     }
   });
-  readonly estimatedTimeLeft = computed(() => {
+  readonly totalRemainingTime = computed(() => {
     const totalElapsedTime = this.totalElapsedTime();
     const duration = this.task()?.duration;
     if (isNil(duration)) {
@@ -257,6 +254,15 @@ export class TaskComponent {
   toggleTimerDropdown(index: number): void {
     this.timerDropdownOpen.update((state) => {
       return state === index ? -1 : index;
+    });
+  }
+
+  toggleTimerChip() {
+    this.timerChip.update((state) => {
+      if (isNil(this.task()?.duration)) {
+        return 'elapsed';
+      }
+      return state === 'elapsed' ? 'remaining' : 'elapsed';
     });
   }
 

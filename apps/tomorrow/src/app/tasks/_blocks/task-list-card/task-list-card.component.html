@@ -31,6 +31,9 @@
             {{ t.duration | formatDuration }}
           </tui-chip>
         }
+        @if (showOngoingTimer() && ongoingTimer()) {
+          <tui-icon icon="@tui.timer" />
+        }
         @if (showSubtasks() && subtaskCount() > 0) {
           <tui-chip size="xs" appearance="neutral">
             <tui-icon icon="@tui.clipboard-list" />
