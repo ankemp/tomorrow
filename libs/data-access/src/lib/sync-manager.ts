@@ -1,15 +1,15 @@
+import { HttpClient, HttpParams } from '@angular/common/http';
+import angularReactivityAdapter from '@signaldb/angular';
 import { Changeset } from '@signaldb/core/index';
 import createIndexedDBAdapter from '@signaldb/indexeddb';
 import { SyncManager } from '@signaldb/sync';
+import { firstValueFrom, map } from 'rxjs';
 
 import { decryptContent, encryptContent } from '@tmrw/encryption';
 
 import { SettingsState } from './models/settings.state';
 
-const HEADERS = {
-  'Content-Type': 'application/json',
-};
-
+// TODO: Possible to replace this with settings store? Pass in though DI in appInit?
 function getSettings(): SettingsState {
   const settings = localStorage.getItem('settings');
   return settings ? JSON.parse(settings) : {};
@@ -17,115 +17,159 @@ function getSettings(): SettingsState {
 
 export const syncManager = new SyncManager({
   autostart: false,
+  reactivity: angularReactivityAdapter,
   persistenceAdapter: (name) => createIndexedDBAdapter(name),
-  pull: async ({ apiPath, jsonReviver }, { lastFinishedSyncStart }) => {
+  pull: ({ apiPath, httpClient, jsonReviver }, { lastFinishedSyncStart }) => {
     const settings = getSettings();
 
-    let changes: Changeset<any> = await fetch(
-      `${apiPath}/user/${settings.userId}?since=${lastFinishedSyncStart}&encrypted=${settings.encryption}`,
-    )
-      .then((res) => res.text())
-      .then((text) => JSON.parse(text, jsonReviver || undefined));
-
-    if (settings.encryption) {
-      const key = settings._encryptionKey as string;
-      changes = {
-        added: changes.added.map(async (item) => {
-          const decrypted = await decryptContent(key, item.encryptContent);
-          return JSON.parse(decrypted, jsonReviver || undefined);
-        }),
-        modified: changes.modified.map(async (item) => {
-          const decrypted = await decryptContent(key, item.encryptContent);
-          return JSON.parse(decrypted, jsonReviver || undefined);
-        }),
-        removed: changes.removed,
-      };
+    let params = new HttpParams();
+    if (settings.userId) {
+      params = params.append('userId', settings.userId);
+    }
+    if (settings.deviceId) {
+      params = params.append('deviceId', settings.deviceId);
+    }
+    params = params.append('encrypted', settings.encryption);
+    if (lastFinishedSyncStart) {
+      params = params.append('since', lastFinishedSyncStart);
     }
 
-    return { changes };
+    return firstValueFrom(
+      (httpClient as HttpClient)
+        .get(apiPath, {
+          params: params,
+          responseType: 'text',
+        })
+        .pipe(
+          map((text) => {
+            return JSON.parse(text, jsonReviver || undefined);
+          }),
+          map((changes: Changeset<any>) => {
+            if (!settings.encryption) {
+              return changes;
+            }
+            const key = settings._encryptionKey as string;
+            return {
+              added: changes.added.map(async (item) => {
+                const decrypted = await decryptContent(
+                  key,
+                  item.encryptContent,
+                );
+                return JSON.parse(decrypted, jsonReviver || undefined);
+              }),
+              modified: changes.modified.map(async (item) => {
+                const decrypted = await decryptContent(
+                  key,
+                  item.encryptContent,
+                );
+                return JSON.parse(decrypted, jsonReviver || undefined);
+              }),
+              removed: changes.removed,
+            };
+          }),
+          map((changes: Changeset<any>) => {
+            return { changes };
+          }),
+        ),
+    );
   },
-  push: async ({ apiPath }, { changes }) => {
+  push: async ({ apiPath, httpClient }, { changes }) => {
     const settings = getSettings();
     const key =
       settings && settings.encryption ? settings._encryptionKey : undefined;
 
-    await Promise.all(
-      changes.added.map(async (item) => {
-        const body = key
-          ? await encryptContent(key, JSON.stringify(item))
-          : item;
-
-        const response = await fetch(apiPath, {
-          method: 'POST',
-          headers: HEADERS,
-          body: JSON.stringify({
-            id: item.id,
+    if (changes.added.length > 0) {
+      await firstValueFrom(
+        (httpClient as HttpClient).post(
+          apiPath,
+          {
+            userId: settings.userId,
+            deviceId: settings.deviceId,
             encrypted: settings.encryption,
-            content: body,
-          }),
-        });
-        if (response.status >= 400 && response.status <= 499) return;
-        await response.text();
-      }),
-    );
+            changes: changes.added.map((item) => {
+              return {
+                id: item.id,
+                content: key ? encryptContent(key, JSON.stringify(item)) : item,
+              };
+            }),
+          },
+          { responseType: 'text' },
+        ),
+      );
+    }
 
-    await Promise.all(
-      changes.modified.map(async (item) => {
-        const body = key
-          ? await encryptContent(key, JSON.stringify(item))
-          : item;
-        const response = await fetch(apiPath, {
-          method: 'PUT',
-          headers: HEADERS,
-          body: JSON.stringify({
-            id: item.id,
+    if (changes.modified.length > 0) {
+      await firstValueFrom(
+        (httpClient as HttpClient).put(
+          apiPath,
+          {
+            userId: settings.userId,
+            deviceId: settings.deviceId,
             encrypted: settings.encryption,
-            content: body,
-          }),
-        });
-        if (response.status >= 400 && response.status <= 499) return;
-        await response.text();
-      }),
-    );
+            changes: changes.modified.map((item) => {
+              return {
+                id: item.id,
+                content: key ? encryptContent(key, JSON.stringify(item)) : item,
+              };
+            }),
+          },
+          { responseType: 'text' },
+        ),
+      );
+    }
 
-    await Promise.all(
-      changes.removed.map(async (item) => {
-        const response = await fetch(apiPath, {
-          method: 'DELETE',
-          headers: HEADERS,
-          body: JSON.stringify({
-            id: item.id,
-            content: item,
+    if (changes.removed.length > 0) {
+      await firstValueFrom(
+        (httpClient as HttpClient).delete(apiPath, {
+          body: {
+            userId: settings.userId,
+            deviceId: settings.deviceId,
             encrypted: settings.encryption,
-          }),
-        });
-        if (response.status >= 400 && response.status <= 499) return;
-        await response.text();
-      }),
-    );
+            changes: changes.removed.map((item) => {
+              return {
+                id: item.id,
+                content: key ? encryptContent(key, JSON.stringify(item)) : item,
+              };
+            }),
+          },
+          responseType: 'text',
+        }),
+      );
+    }
   },
-  // registerRemoteChange: ({ apiPath, jsonReviver }, onChange) => {
-  //   const settings = getSettings();
-  //   const eventSource = new EventSource(
-  //     `${apiPath}/events/user/${settings.userId}`,
-  //   );
+  registerRemoteChange: ({ apiPath, jsonReviver }, onChange) => {
+    const settings = getSettings();
+    const eventSource = new EventSource(
+      `${apiPath}/events/user/${settings.userId}?deviceId=${settings.deviceId}`,
+    );
 
-  //   eventSource.onmessage = (event) => {
-  //     try {
-  //       const data = JSON.parse(event.data, jsonReviver);
-  //       onChange(data);
-  //     } catch (err) {
-  //       console.error('Failed to parse remote change event data', err);
-  //     }
-  //   };
+    eventSource.addEventListener('task', (event) => {
+      try {
+        const data: Changeset<any> = JSON.parse(event.data, jsonReviver);
+        if (settings.encryption) {
+          const key = settings._encryptionKey as string;
+          data.added = data.added.map(async (item) => {
+            const decrypted = await decryptContent(key, item.encryptContent);
+            return JSON.parse(decrypted, jsonReviver || undefined);
+          });
+          data.modified = data.modified.map(async (item) => {
+            const decrypted = await decryptContent(key, item.encryptContent);
+            return JSON.parse(decrypted, jsonReviver || undefined);
+          });
+        }
+        onChange({ changes: data });
+      } catch (err) {
+        console.error('Failed to parse remote change event data', err);
+      }
+    });
 
-  //   eventSource.onerror = (err) => {
-  //     console.error('Error with remote change EventSource', err);
-  //     eventSource.close();
-  //   };
+    eventSource.onerror = (err) => {
+      console.error('Error with remote change EventSource', err);
+      eventSource.close();
+    };
 
-  //   return () => {
-  //     eventSource.close();
-  //   };
-  // },
+    return () => {
+      eventSource.close();
+    };
+  },
 });

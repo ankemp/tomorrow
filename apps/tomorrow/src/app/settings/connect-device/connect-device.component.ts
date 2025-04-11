@@ -48,7 +48,7 @@ import {
   tap,
 } from 'rxjs';
 
-import { QRCodeData, Settings, Tasks } from '@tmrw/data-access';
+import { QRCodeData, Settings, syncManager, Tasks } from '@tmrw/data-access';
 
 LOAD_WASM().subscribe();
 
@@ -178,9 +178,10 @@ export class ConnectDeviceComponent implements AfterViewInit {
       .pipe(
         switchMap((response) => (response ? of(true) : EMPTY)),
         tap(() => {
-          this.settings.importUser(data);
           Tasks.removeMany({ date: { $ne: null } });
+          this.settings.importUser(data);
           // TODO: Remove all files.
+          syncManager.sync('tasks', { force: true });
           this.router.navigate(['/settings']);
         }),
         switchMap(() => {

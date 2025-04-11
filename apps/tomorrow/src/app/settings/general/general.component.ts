@@ -59,7 +59,7 @@ export class GeneralComponent {
   readonly syncManager = syncManager;
 
   async forceSync() {
-    await syncManager.syncAll();
+    await syncManager.sync('tasks', { force: true });
     this.alerts
       .open('All data synced', {
         appearance: 'success',

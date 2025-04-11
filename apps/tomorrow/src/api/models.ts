@@ -25,6 +25,7 @@ export class PlainTask
   implements Task
 {
   declare id: string;
+  declare userId: string;
   declare title: string;
   declare date: Date;
   declare category: string;
@@ -38,12 +39,12 @@ export class PlainTask
   declare timers: CreationOptional<TaskTimer[]>;
   declare notes: CreationOptional<string>;
   declare completedAt: CreationOptional<Date>;
-  declare userId: CreationOptional<string>;
 }
 
 PlainTask.init(
   {
     id: { type: DataTypes.STRING, primaryKey: true },
+    userId: { type: DataTypes.STRING },
     title: { type: DataTypes.STRING },
     date: { type: DataTypes.DATE },
     category: { type: DataTypes.STRING },
@@ -57,7 +58,6 @@ PlainTask.init(
     timers: { type: DataTypes.JSON },
     notes: { type: DataTypes.TEXT },
     completedAt: { type: DataTypes.DATE },
-    userId: { type: DataTypes.STRING },
   },
   {
     sequelize,
@@ -70,12 +70,14 @@ export class EncryptedTask extends Model<
   InferCreationAttributes<EncryptedTask>
 > {
   declare id: string;
+  declare userId: string;
   declare encryptedData: string;
 }
 
 EncryptedTask.init(
   {
     id: { type: DataTypes.STRING, primaryKey: true },
+    userId: { type: DataTypes.STRING },
     encryptedData: { type: DataTypes.TEXT },
   },
   {

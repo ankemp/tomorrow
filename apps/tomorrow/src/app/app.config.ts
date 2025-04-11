@@ -13,10 +13,13 @@ import { provideRouter } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
 import { provideEventPlugins } from '@taiga-ui/event-plugins';
 
+import { provideSyncManager } from '@tmrw/data-access';
+
 import { appRoutes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideSyncManager(),
     provideServiceWorker('ngsw-worker.js', {
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000',

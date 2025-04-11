@@ -10,9 +10,10 @@ import {
   withProps,
   withState,
 } from '@ngrx/signals';
+import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { TuiDayOfWeek, TuiTimeMode } from '@taiga-ui/cdk';
 import { omit } from 'es-toolkit';
-import { catchError, EMPTY, firstValueFrom, map } from 'rxjs';
+import { catchError, concatMap, EMPTY, map, pipe, tap } from 'rxjs';
 
 import { generateSymmetricKey } from '@tmrw/encryption';
 
@@ -52,6 +53,53 @@ export const Settings = signalStore(
   withState(initialState),
   withProps(() => ({
     http: inject(HttpClient),
+  })),
+  withMethods((store) => ({
+    pushUserSettings: rxMethod<void>(
+      pipe(
+        map(() => {
+          const settings = getState(store);
+          return settings;
+        }),
+        concatMap((settings) => {
+          return store.http
+            .post(
+              `api/users/${settings.userId}`,
+              omit(settings, NO_SYNC_KEYS),
+              {
+                responseType: 'text',
+              },
+            )
+            .pipe(
+              catchError((error) => {
+                console.error('Failed to push user settings', error);
+                return EMPTY;
+              }),
+            );
+        }),
+      ),
+    ),
+    getUserSettings: rxMethod<void>(
+      pipe(
+        map(() => {
+          const settings = getState(store);
+          return settings;
+        }),
+        concatMap((settings) => {
+          return store.http
+            .get<Partial<SettingsState>>(`api/users/${settings.userId}`)
+            .pipe(
+              tap((state) => {
+                patchState(store, state);
+              }),
+              catchError((error) => {
+                console.error('Failed to get user settings', error);
+                return EMPTY;
+              }),
+            );
+        }),
+      ),
+    ),
   })),
   withComputed((state) => ({
     tuiTimeFormat: computed(
@@ -113,7 +161,6 @@ export const Settings = signalStore(
       return Object.entries(devices).map(([id, userAgent]) => {
         const { os, deviceType, browser, browserVersion } =
           parseUserAgent(userAgent);
-        const thisDevice = id === deviceId;
         let icon = '@tui.material.outlined.device_unknown';
         if (os === 'Android') {
           icon = '@tui.material.outlined.android';
@@ -124,7 +171,7 @@ export const Settings = signalStore(
         }
         return {
           id,
-          thisDevice,
+          thisDevice: id === deviceId,
           userAgent,
           label: `${deviceType} ${os} ${browser} ${browserVersion}`,
           os,
@@ -181,11 +228,12 @@ export const Settings = signalStore(
     },
     async updateRemoteSync(remoteSync: boolean): Promise<void> {
       const state = getState(store);
+      let userId = state.userId;
       if (remoteSync && !state.userId) {
-        const userId = window.crypto.randomUUID();
+        userId = window.crypto.randomUUID();
         patchState(store, { userId: userId });
-        Tasks.attachUserId(userId);
       }
+      Tasks.attachUserId(userId!);
       if (remoteSync && !state._encryptionKey) {
         const key = await generateSymmetricKey();
         const exportedKey = await window.crypto.subtle.exportKey('jwk', key);
@@ -213,13 +261,13 @@ export const Settings = signalStore(
     },
     resetUser() {
       // TODO: Remove user from remote server
-      Tasks.detachUserId();
       patchState(store, {
         userId: null,
         _encryptionKey: null,
         remoteSync: false,
         encryption: false,
       });
+      Tasks.detachUserId();
     },
   })),
   withHooks({
@@ -230,13 +278,7 @@ export const Settings = signalStore(
           const settings = JSON.parse(settingsString) as SettingsState;
           patchState(store, settings);
           if (settings.remoteSync && settings.userId) {
-            // TODO: investigate potential race condition here
-            // Seems like getting/pushing the settings are acting a bit wonky
-            getUserSettings(store.http, settings.userId).then(
-              (userSettings) => {
-                patchState(store, userSettings);
-              },
-            );
+            store.getUserSettings();
           }
         } else {
           store.setDeviceId();
@@ -245,35 +287,10 @@ export const Settings = signalStore(
           const state = getState(store);
           localStorage.setItem('settings', JSON.stringify(state));
           if (state.remoteSync && state.userId) {
-            pushUserSettings(store.http, state);
+            store.pushUserSettings();
           }
         });
       }
     },
   }),
 );
-
-function pushUserSettings(http: HttpClient, settings: SettingsState) {
-  return firstValueFrom(
-    http
-      .post<void>(`api/users/${settings.userId}`, omit(settings, NO_SYNC_KEYS))
-      .pipe(
-        catchError((error) => {
-          console.error('Failed to push user settings', error);
-          return EMPTY;
-        }),
-      ),
-  );
-}
-
-function getUserSettings(http: HttpClient, userId: string) {
-  return firstValueFrom(
-    http.get(`api/users/${userId}`).pipe(
-      map((settings) => settings as Partial<SettingsState>),
-      catchError((error) => {
-        console.error('Failed to get user settings', error);
-        return EMPTY;
-      }),
-    ),
-  );
-}

@@ -1,4 +1,5 @@
 export * from './lib/collections/task.collection';
+export * from './lib/initializers/sync-manager.initializer';
 export * from './lib/models/search.state';
 export * from './lib/models/settings.state';
 export * from './lib/models/task.model';

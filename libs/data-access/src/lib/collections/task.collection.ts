@@ -6,8 +6,8 @@ import { addDays, endOfToday, startOfToday, startOfTomorrow } from 'date-fns';
 import { isNil } from 'es-toolkit';
 import { parse, unparse } from 'papaparse';
 
+import { SettingsState } from '../models/settings.state';
 import { Task, TASK_HEADERS, TaskTimer } from '../models/task.model';
-import { syncManager } from '../sync-manager';
 
 export type TaskSort =
   | 'date_desc'
@@ -322,21 +322,11 @@ class TaskCollection extends Collection<Task> {
   }
 
   attachUserId(userId: string) {
-    return this.updateMany(
-      {
-        userId: { $exists: false },
-      },
-      { $set: { userId } },
-    );
+    return this.updateMany({}, { $set: { userId } });
   }
 
   detachUserId() {
-    return this.updateMany(
-      {
-        userId: { $exists: true },
-      },
-      { $unset: { userId: '' } },
-    );
+    return this.updateMany({}, { $unset: { userId: true } });
   }
 
   exportAll(): string {
@@ -423,6 +413,9 @@ export const Tasks = new TaskCollection();
 Tasks.setDebugMode(isDevMode());
 
 function createRandomTask() {
+  const settings: SettingsState = JSON.parse(
+    localStorage.getItem('settings') ?? '',
+  );
   const randomTitle = `Task ${Math.floor(Math.random() * 1000)}`;
   const randomDate = addDays(new Date(), Math.floor(Math.random() * 8));
   const categories = ['Work', 'Personal', 'Health', 'Shopping'];
@@ -430,9 +423,7 @@ function createRandomTask() {
     categories[Math.floor(Math.random() * categories.length)];
   const randomPriority = [0, 1, 50, 99][Math.floor(Math.random() * 4)];
   const randomDuration = Math.floor(Math.random() * (1440 - 1) + 1);
-  const userId = localStorage.getItem('settings')
-    ? JSON.parse(localStorage.getItem('settings')!).userId
-    : null;
+  const userId = settings && settings.remoteSync ? settings.userId : null;
 
   return {
     title: randomTitle,
@@ -451,31 +442,7 @@ if (isDevMode() && typeof window !== 'undefined') {
     for (let i = 0; i < count; i++) {
       tasks.push(createRandomTask());
     }
-    console.log('inserting tasks', tasks);
+    console.log('createRandomTask: ', tasks);
     Tasks.insertMany(tasks);
   };
 }
-
-syncManager.addCollection(Tasks, {
-  name: 'tasks',
-  apiPath: '/api/tasks',
-  jsonReviver: (key: string, value: any) => {
-    if (key === 'date' || key === 'completedAt') {
-      return value ? new Date(value) : null;
-    }
-    if (key === 'timers') {
-      return value?.map((timer: any) => ({
-        ...timer,
-        start: new Date(timer.start),
-        end: timer.end ? new Date(timer.end) : null,
-      }));
-    }
-    if (key === 'subTasks') {
-      return value?.map((task: any) => ({
-        ...task,
-        completedAt: task.completedAt ? new Date(task.completedAt) : null,
-      }));
-    }
-    return value;
-  },
-});

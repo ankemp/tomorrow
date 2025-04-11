@@ -1,3 +1,4 @@
+import { Changeset } from '@signaldb/core/index';
 import express from 'express';
 import { Op } from 'sequelize';
 
@@ -5,90 +6,154 @@ import { Task } from '@tmrw/data-access';
 
 import {
   addSseClient,
-  dispatchSignalDBChange,
+  dispatchServerSideEvent,
   removeSseClient,
 } from './helpers';
 import { EncryptedTask, PlainTask, TASK_PROP_EXCLUDES, User } from './models';
 
 const apiRouter = express.Router();
 
+type TaskEndpointBody =
+  | {
+      changes: { id: string; content: Task }[];
+      encrypted: false;
+      userId: string;
+      deviceId: string;
+    }
+  | {
+      changes: Array<{ id: string; content: string }>;
+      encrypted: true;
+      userId: string;
+      deviceId: string;
+    };
+
 // SSE endpoint
 apiRouter.get('/tasks/events/user/:userId', (req, res) => {
   const { userId } = req.params;
+  const deviceId = req.query['deviceId'] as string;
+  if (!userId || !deviceId) {
+    res.status(400);
+  }
   res.writeHead(200, {
     'Content-Type': 'text/event-stream',
     'Cache-Control': 'no-cache',
     Connection: 'keep-alive',
   });
   res.write('\n');
-  addSseClient(userId, res);
+  addSseClient(userId, deviceId, res);
 
   req.on('close', () => {
-    removeSseClient(userId, res);
+    removeSseClient(userId, deviceId);
   });
 });
 
 // Task routes
 apiRouter.post('/tasks', async (req, res) => {
-  if (req.body.encrypted) {
-    await EncryptedTask.create({
-      id: req.body.id,
-      encryptedData: req.body.content,
-    });
-  } else {
-    await PlainTask.create(req.body.content);
+  const { changes, encrypted, userId, deviceId } = req.body as TaskEndpointBody;
+
+  if (!userId || !deviceId) {
+    res.sendStatus(400);
   }
-  const userId = req.body.content?.userId || req.body.userId;
-  if (userId) {
-    dispatchSignalDBChange<Task>(userId, 'task-updated', {
-      added: [req.body.content],
+
+  // TODO: check if deviceID is in syncDevices
+
+  if (encrypted) {
+    await EncryptedTask.bulkCreate(
+      changes.map((change) => {
+        return {
+          id: change.id,
+          userId: userId,
+          encryptedData: change.content,
+        };
+      }),
+    );
+  } else {
+    await PlainTask.bulkCreate(changes.map((change) => change.content as any));
+  }
+
+  if (userId && deviceId) {
+    dispatchServerSideEvent<Changeset<any>>(userId, deviceId, 'task', {
+      added: changes.map((change) => change.content),
       modified: [],
       removed: [],
     });
   }
-  res.sendStatus(200);
+
+  res.sendStatus(201);
 });
 
 apiRouter.put('/tasks', async (req, res) => {
-  if (req.body?.encrypted) {
-    await EncryptedTask.update(
-      { encryptedData: req.body.content },
-      { where: { id: req.body.id } },
-    );
-  } else {
-    await PlainTask.update(req.body.content, { where: { id: req.body.id } });
+  const { changes, encrypted, userId, deviceId } = req.body as TaskEndpointBody;
+
+  if (!userId || !deviceId) {
+    res.sendStatus(400);
   }
-  const userId = req.body.content?.userId || req.body.userId;
-  if (userId) {
-    dispatchSignalDBChange(userId, 'task-updated', {
+
+  // TODO: check if deviceID is in syncDevices
+
+  if (encrypted) {
+    for (const change of changes) {
+      await EncryptedTask.update(
+        { encryptedData: change.content },
+        { where: { id: change.id } },
+      );
+    }
+  } else {
+    for (const change of changes) {
+      await PlainTask.update(change.content as any, {
+        where: { id: change.id },
+      });
+    }
+  }
+
+  if (userId && deviceId) {
+    dispatchServerSideEvent<Changeset<any>>(userId, deviceId, 'task', {
       added: [],
-      modified: [req.body.content],
+      modified: changes.map((change) => change.content),
       removed: [],
     });
   }
+
   res.sendStatus(200);
 });
 
 apiRouter.delete('/tasks', async (req, res) => {
-  if (req.body?.encrypted) {
-    await EncryptedTask.destroy({ where: { id: req.body.id } });
-  } else {
-    await PlainTask.destroy({ where: { id: req.body.id } });
+  const { changes, encrypted, userId, deviceId } = req.body as TaskEndpointBody;
+
+  if (!userId || !deviceId) {
+    res.sendStatus(400);
   }
-  const userId = req.body.userId;
-  if (userId) {
-    dispatchSignalDBChange<Task>(userId, 'task-updated', {
+
+  // TODO: check if deviceID is in syncDevices
+
+  const ids = changes.map((change) => change.id);
+  if (encrypted) {
+    await EncryptedTask.destroy({ where: { id: ids } });
+  } else {
+    await PlainTask.destroy({ where: { id: ids } });
+  }
+
+  if (userId && deviceId) {
+    dispatchServerSideEvent<Changeset<any>>(userId, deviceId, 'task', {
       added: [],
       modified: [],
-      removed: [req.body.content],
+      removed: changes.map((change) => change.content),
     });
   }
+
   res.sendStatus(200);
 });
 
-apiRouter.get('/tasks/user/:userId', async (req, res) => {
+apiRouter.get('/tasks', async (req, res) => {
   const lastFinishedSyncStart = req.query['since'] as string;
-  const userId = req.params.userId;
+  const userId = req.query['userId'] as string;
+  const deviceId = req.query['deviceId'] as string;
+
+  if (!userId || !deviceId) {
+    res.sendStatus(400);
+  }
+
+  // TODO: check if deviceID is in syncDevices
 
   const utcLastFinishedSyncStart = lastFinishedSyncStart
     ? new Date(+lastFinishedSyncStart)
@@ -96,26 +161,18 @@ apiRouter.get('/tasks/user/:userId', async (req, res) => {
 
   const whereAdded = {
     userId,
-    createdAt: lastFinishedSyncStart
-      ? { [Op.gte]: utcLastFinishedSyncStart }
-      : undefined,
+    createdAt: { [Op.gte]: utcLastFinishedSyncStart },
   };
 
   const whereModified = {
     userId,
-    updatedAt: lastFinishedSyncStart
-      ? { [Op.gte]: utcLastFinishedSyncStart }
-      : undefined,
-    createdAt: lastFinishedSyncStart
-      ? { [Op.lt]: utcLastFinishedSyncStart }
-      : undefined,
+    updatedAt: { [Op.gte]: utcLastFinishedSyncStart },
+    createdAt: { [Op.lt]: utcLastFinishedSyncStart },
   };
 
   const whereRemoved = {
     userId,
-    deletedAt: lastFinishedSyncStart
-      ? { [Op.gte]: utcLastFinishedSyncStart }
-      : undefined,
+    deletedAt: { [Op.gte]: utcLastFinishedSyncStart },
   };
 
   try {
@@ -154,9 +211,7 @@ apiRouter.get('/tasks/user/:userId', async (req, res) => {
 
     res.json({ added, modified, removed });
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: 'Failed to fetch changeset', details: error });
+    res.sendStatus(500);
   }
 });
 
@@ -178,7 +233,7 @@ apiRouter.get('/users/:userId', async (req, res) => {
 apiRouter.post('/users/:userId', async (req, res) => {
   const userId = req.params.userId;
   const settings = req.body;
-  User.findOrBuild({ where: { id: userId } })
+  await User.findOrBuild({ where: { id: userId } })
     .then(([user]) => {
       for (const key in settings) {
         if (key === 'syncDevices') {
@@ -194,7 +249,7 @@ apiRouter.post('/users/:userId', async (req, res) => {
     })
     .finally(() => {
       // TODO: Add SSE signal(?)
-      res.status(200).json({ success: true });
+      res.sendStatus(200);
     });
 });
 
