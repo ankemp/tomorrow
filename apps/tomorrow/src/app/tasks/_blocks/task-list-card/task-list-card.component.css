@@ -2,6 +2,11 @@
   box-sizing: border-box;
   display: block;
   max-width: calc(100vw - 2rem);
+  user-select: none;
+
+  &.selected [tuicell] {
+    box-shadow: inset 0 0 0 2px var(--tui-background-accent-1);
+  }
 }
 
 [tuicell] {

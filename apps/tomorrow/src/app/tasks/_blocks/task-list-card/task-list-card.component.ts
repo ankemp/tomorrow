@@ -18,6 +18,7 @@ import { CategoryChipComponent } from '../../_primitives/category-chip.component
 import { FormatDatePipe } from '../../_primitives/format-date.pipe';
 import { FormatDurationPipe } from '../../_primitives/format-duration.pipe';
 import { PriorityPinComponent } from '../../_primitives/priority-pin.component';
+import { SelectableTaskDirective } from '../../_primitives/selectable-task.directive';
 import { TaskService } from '../../task.service';
 
 @Component({
@@ -41,6 +42,12 @@ import { TaskService } from '../../task.service';
     PriorityPinComponent,
   ],
   providers: [TaskService],
+  hostDirectives: [
+    {
+      directive: SelectableTaskDirective,
+      inputs: ['task'],
+    },
+  ],
   templateUrl: './task-list-card.component.html',
   styleUrl: './task-list-card.component.css',
 })
