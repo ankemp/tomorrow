@@ -24,6 +24,16 @@ describe('SelectableTaskDirective', () => {
         task: mockTask,
       },
     });
+
+    // Clear the store state before each test
+    const store = spectator.inject(SelectedTasksStore);
+    store.clearSelection();
+  });
+
+  afterEach(() => {
+    // Clear all timers and restore real timers
+    vi.clearAllTimers();
+    vi.useRealTimers();
   });
 
   it('should create the directive', () => {
