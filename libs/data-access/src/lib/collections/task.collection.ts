@@ -50,19 +50,41 @@ class TaskCollection extends Collection<Task> {
   }
 
   toggleTask(task: Task) {
+    const updatedTimers = [...task.timers];
+    const runningTimer = task.timers?.findIndex((t) => isNil(t.end));
+    if (runningTimer > -1) {
+      updatedTimers[runningTimer] = {
+        ...updatedTimers[runningTimer],
+        end: new Date(),
+      };
+    }
     this.updateOne(
       { id: task.id },
-      { $set: { completedAt: task.completedAt ? null : new Date() } },
+      {
+        $set: {
+          completedAt: task.completedAt ? null : new Date(),
+          timers: updatedTimers,
+        },
+      },
     );
   }
 
   completeTask(task: Task, andUnpin = false) {
+    const updatedTimers = [...task.timers];
+    const runningTimer = task.timers?.findIndex((t) => isNil(t.end));
+    if (runningTimer > -1) {
+      updatedTimers[runningTimer] = {
+        ...updatedTimers[runningTimer],
+        end: new Date(),
+      };
+    }
     this.updateOne(
       { id: task.id },
       {
         $set: {
           completedAt: new Date(),
           pinned: andUnpin ? false : task.pinned,
+          timers: updatedTimers,
         },
       },
     );
