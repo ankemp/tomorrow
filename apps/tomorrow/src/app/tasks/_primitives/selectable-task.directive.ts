@@ -66,9 +66,14 @@ export class SelectableTaskDirective implements OnDestroy {
   readonly selected = computed(() => {
     return this.store.selectedIds().includes(this.task().id);
   });
+  readonly timeoutDelay = computed(() => {
+    if (this.store.count() > 0) {
+      return 0;
+    }
+    return 500;
+  });
 
   private longPressTimeout?: NodeJS.Timeout;
-  readonly timeoutDelay = 500;
 
   private startX = 0;
   private startY = 0;
@@ -81,7 +86,7 @@ export class SelectableTaskDirective implements OnDestroy {
     this.startY = touch.clientY;
     this.longPressTimeout = setTimeout(() => {
       this.onLongPress();
-    }, this.timeoutDelay);
+    }, this.timeoutDelay());
   }
 
   @HostListener('touchmove', ['$event'])

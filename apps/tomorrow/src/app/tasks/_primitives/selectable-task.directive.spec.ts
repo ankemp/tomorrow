@@ -49,7 +49,7 @@ describe('SelectableTaskDirective', () => {
 
     // Simulate long press
     spectator.dispatchTouchEvent(spectator.element, 'touchstart');
-    vi.advanceTimersByTime(directive.timeoutDelay);
+    vi.advanceTimersByTime(directive.timeoutDelay());
     spectator.detectChanges();
     expect(directive.selected()).toBe(true);
     expect(selectTaskSpy).toHaveBeenCalledWith(mockTask);
@@ -69,7 +69,7 @@ describe('SelectableTaskDirective', () => {
 
     // Simulate long press
     spectator.dispatchTouchEvent(spectator.element, 'touchstart');
-    vi.advanceTimersByTime(directive.timeoutDelay);
+    vi.advanceTimersByTime(directive.timeoutDelay());
     spectator.detectChanges();
     expect(directive.selected()).toBe(false);
     expect(unselectTaskSpy).toHaveBeenCalledWith(mockTask);
