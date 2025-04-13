@@ -1,30 +1,41 @@
 import { Route } from '@angular/router';
 
 export default [
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   {
-    path: 'dashboard',
+    path: '',
     loadComponent: () =>
-      import('./dashboard/dashboard.component').then(
-        (m) => m.DashboardComponent,
-      ),
-  },
-  {
-    path: 'category/:slug',
-    loadComponent: () =>
-      import('./category/category.component').then((m) => m.CategoryComponent),
-  },
-  {
-    path: 'completed',
-    loadComponent: () =>
-      import('./completed/completed.component').then(
-        (m) => m.CompletedComponent,
-      ),
-  },
-  {
-    path: 'upcoming',
-    loadComponent: () =>
-      import('./upcoming/upcoming.component').then((m) => m.UpcomingComponent),
+      import('./task.route.component').then((m) => m.TaskRouteComponent),
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./dashboard/dashboard.component').then(
+            (m) => m.DashboardComponent,
+          ),
+      },
+      {
+        path: 'category/:slug',
+        loadComponent: () =>
+          import('./category/category.component').then(
+            (m) => m.CategoryComponent,
+          ),
+      },
+      {
+        path: 'completed',
+        loadComponent: () =>
+          import('./completed/completed.component').then(
+            (m) => m.CompletedComponent,
+          ),
+      },
+      {
+        path: 'upcoming',
+        loadComponent: () =>
+          import('./upcoming/upcoming.component').then(
+            (m) => m.UpcomingComponent,
+          ),
+      },
+    ],
   },
   {
     path: 'new',

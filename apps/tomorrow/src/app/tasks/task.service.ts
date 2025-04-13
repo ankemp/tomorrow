@@ -99,6 +99,36 @@ export class TaskService {
     }
   }
 
+  bulkCompleteTasks(tasks: Task[]) {
+    const count = tasks.length;
+    const taskText = `task${count > 1 ? 's' : ''}`;
+    this.dialogs
+      .open<boolean>(TUI_CONFIRM, {
+        label: 'Complete Tasks?',
+        data: {
+          content: `This will mark ${count} ${taskText} as complete. Are you sure?`,
+          yes: 'Complete',
+          no: 'Cancel',
+        },
+      })
+      .pipe(
+        switchMap((response) => (response ? of(true) : EMPTY)),
+        tap(() => {
+          // TODO: write a bulk complete function instead of iterating
+          tasks.forEach((task) => {
+            Tasks.completeTask(task);
+          });
+        }),
+        switchMap(() => {
+          return this.alerts.open(`${count} ${taskText} marked as complete`, {
+            appearance: 'success',
+            icon: '@tui.check-check',
+          });
+        }),
+      )
+      .subscribe();
+  }
+
   startTimer(task: Task) {
     Tasks.startTimer(task);
   }
@@ -175,6 +205,34 @@ export class TaskService {
         }),
         switchMap(() => {
           return this.alerts.open('Task deleted', {
+            appearance: 'destructive',
+            icon: '@tui.trash-2',
+          });
+        }),
+      )
+      .subscribe();
+  }
+
+  bulkDeleteTasks(tasks: Task[]) {
+    const count = tasks.length;
+    const taskText = `task${count > 1 ? 's' : ''}`;
+    this.dialogs
+      .open<boolean>(TUI_CONFIRM, {
+        label: 'Confirm Bulk Deletion',
+        data: {
+          appearance: 'destructive',
+          content: `Delete ${count} ${taskText} permanently?`,
+          yes: 'Delete',
+          no: 'Cancel',
+        },
+      })
+      .pipe(
+        switchMap((response) => (response ? of(true) : EMPTY)),
+        tap(() => {
+          Tasks.removeMany({ ids: tasks.map((task) => task.id) });
+        }),
+        switchMap(() => {
+          return this.alerts.open(`${count} ${taskText} deleted`, {
             appearance: 'destructive',
             icon: '@tui.trash-2',
           });

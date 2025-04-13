@@ -5,11 +5,11 @@ import {
   inject,
   input,
 } from '@angular/core';
-import { TuiAlertService, TuiButton, TuiDialogService } from '@taiga-ui/core';
-import { TUI_CONFIRM } from '@taiga-ui/kit';
-import { EMPTY, of, switchMap, tap } from 'rxjs';
+import { TuiButton } from '@taiga-ui/core';
 
-import { Task, Tasks } from '@tmrw/data-access';
+import { Task } from '@tmrw/data-access';
+
+import { TaskService } from '../task.service';
 
 @Component({
   selector: 'tw-bulk-complete-tasks-button',
@@ -21,7 +21,7 @@ import { Task, Tasks } from '@tmrw/data-access';
       tuiIconButton
       iconStart="@tui.check-check"
       type="button"
-      (click)="completeAll(tasks())"
+      (click)="taskService.bulkCompleteTasks(tasks())"
     >
       Complete All
     </button>
@@ -34,36 +34,7 @@ import { Task, Tasks } from '@tmrw/data-access';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BulkCompleteTasksButtonComponent {
-  private readonly dialogs = inject(TuiDialogService);
-  private readonly alerts = inject(TuiAlertService);
+  readonly taskService = inject(TaskService);
   readonly tasks = input.required<Task[]>();
   readonly size = input<TuiButton['size']>('m');
-
-  completeAll(tasks: Task[]) {
-    this.dialogs
-      .open<boolean>(TUI_CONFIRM, {
-        label: 'Complete All Tasks?',
-        appearance: 'action',
-        data: {
-          content: `This will mark ${tasks.length} tasks as complete. Are you sure?`,
-          yes: 'Complete All',
-          no: 'Cancel',
-        },
-      })
-      .pipe(
-        switchMap((response) => (response ? of(true) : EMPTY)),
-        tap(() => {
-          tasks.forEach((task) => {
-            Tasks.completeTask(task);
-          });
-        }),
-        switchMap(() => {
-          return this.alerts.open('Tasks marked as complete', {
-            appearance: 'success',
-            icon: '@tui.check-check',
-          });
-        }),
-      )
-      .subscribe();
-  }
 }

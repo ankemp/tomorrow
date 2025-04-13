@@ -50,7 +50,7 @@ class TaskCollection extends Collection<Task> {
   }
 
   toggleTask(task: Task) {
-    const updatedTimers = [...task.timers];
+    const updatedTimers = [...(task.timers ?? [])];
     const runningTimer = task.timers?.findIndex((t) => isNil(t.end));
     if (runningTimer > -1) {
       updatedTimers[runningTimer] = {
@@ -70,7 +70,7 @@ class TaskCollection extends Collection<Task> {
   }
 
   completeTask(task: Task, andUnpin = false) {
-    const updatedTimers = [...task.timers];
+    const updatedTimers = [...(task.timers ?? [])];
     const runningTimer = task.timers?.findIndex((t) => isNil(t.end));
     if (runningTimer > -1) {
       updatedTimers[runningTimer] = {
@@ -91,7 +91,7 @@ class TaskCollection extends Collection<Task> {
   }
 
   toggleSubtask(task: Task, subtaskIndex: number) {
-    const updatedSubTasks = [...task.subTasks];
+    const updatedSubTasks = [...(task.subTasks ?? [])];
     const currentSubtask = updatedSubTasks[subtaskIndex];
 
     if (currentSubtask.completedAt) {
@@ -102,7 +102,7 @@ class TaskCollection extends Collection<Task> {
   }
 
   setSubtaskToIncomplete(task: Task, subtaskIndex: number) {
-    const updatedSubTasks = [...task.subTasks];
+    const updatedSubTasks = [...(task.subTasks ?? [])];
     updatedSubTasks[subtaskIndex] = {
       ...updatedSubTasks[subtaskIndex],
       completedAt: null,
@@ -118,7 +118,7 @@ class TaskCollection extends Collection<Task> {
   }
 
   setSubtaskCompleted(task: Task, subtaskIndex: number) {
-    const updatedSubTasks = [...task.subTasks];
+    const updatedSubTasks = [...(task.subTasks ?? [])];
     updatedSubTasks[subtaskIndex] = {
       ...updatedSubTasks[subtaskIndex],
       completedAt: new Date(),
@@ -139,7 +139,7 @@ class TaskCollection extends Collection<Task> {
       {
         $set: {
           timers: [
-            ...(task.timers || []),
+            ...(task.timers ?? []),
             {
               start: new Date(),
               end: null,
@@ -151,7 +151,7 @@ class TaskCollection extends Collection<Task> {
   }
 
   stopTimer(task: Task, timerIndex: number) {
-    const updatedTimers = [...task.timers];
+    const updatedTimers = [...(task.timers ?? [])];
     updatedTimers[timerIndex] = {
       ...updatedTimers[timerIndex],
       end: new Date(),
@@ -180,7 +180,7 @@ class TaskCollection extends Collection<Task> {
   }
 
   updateTimer(task: Task, timerIndex: number, timer: TaskTimer) {
-    const updatedTimers = [...task.timers];
+    const updatedTimers = [...(task.timers ?? [])];
     updatedTimers[timerIndex] = timer;
     this.updateOne(
       { id: task.id },
