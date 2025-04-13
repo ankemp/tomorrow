@@ -1,8 +1,6 @@
 import {
   computed,
   Directive,
-  effect,
-  HostBinding,
   HostListener,
   inject,
   input,
@@ -72,11 +70,30 @@ export class SelectableTaskDirective implements OnDestroy {
   private longPressTimeout?: NodeJS.Timeout;
   readonly timeoutDelay = 500;
 
-  @HostListener('touchstart')
-  onTouchStart(): void {
+  private startX = 0;
+  private startY = 0;
+  private readonly scrollThreshold = 10;
+
+  @HostListener('touchstart', ['$event'])
+  onTouchStart(event: TouchEvent): void {
+    const touch = event.touches[0];
+    this.startX = touch.clientX;
+    this.startY = touch.clientY;
     this.longPressTimeout = setTimeout(() => {
       this.onLongPress();
     }, this.timeoutDelay);
+  }
+
+  @HostListener('touchmove', ['$event'])
+  onTouchMove(event: TouchEvent): void {
+    const touch = event.touches[0];
+    const deltaX = Math.abs(touch.clientX - this.startX);
+    const deltaY = Math.abs(touch.clientY - this.startY);
+
+    if (deltaX > this.scrollThreshold || deltaY > this.scrollThreshold) {
+      clearTimeout(this.longPressTimeout);
+      this.longPressTimeout = undefined;
+    }
   }
 
   @HostListener('touchend')
