@@ -63,5 +63,14 @@
       "type": "image/png",
       "purpose": "maskable any"
     }
-  ]
+  ],
+  "share_target": {
+    "action": "/tasks/new",
+    "method": "GET",
+    "params": {
+      "title": "title",
+      "text": "description",
+      "url": "link"
+    }
+  }
 }

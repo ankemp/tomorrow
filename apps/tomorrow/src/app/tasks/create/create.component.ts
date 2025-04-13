@@ -4,10 +4,11 @@ import {
   Component,
   effect,
   inject,
+  OnInit,
   ViewChild,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TuiAutoFocus } from '@taiga-ui/cdk';
 import {
   TuiAlertService,
@@ -58,7 +59,7 @@ import { SubtasksComponent } from '../_formcontrols/subtasks/subtasks.component'
   styleUrl: './create.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CreateComponent {
+export class CreateComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly alerts = inject(TuiAlertService);
@@ -82,13 +83,30 @@ export class CreateComponent {
   @ViewChild(TuiAccordionComponent, { static: true })
   readonly accordion!: TuiAccordionComponent;
 
-  constructor() {
+  constructor(private route: ActivatedRoute) {
     effect((onCleanup) => {
       const userId = this.settings.userId();
       this.form.get('userId')?.setValue(userId, { emitEvent: false });
       onCleanup(() => {
         this.attachmentsStore.dispose();
       });
+    });
+  }
+
+  ngOnInit() {
+    this.route.queryParams.subscribe((params) => {
+      const title = params['title'];
+      const desc = params['description'];
+      const link = params['link'];
+      const description = `${desc}${desc ? '\n' : ''}${link}`;
+
+      if (title) {
+        this.form.get('title')?.setValue(title);
+      }
+
+      if (desc || link) {
+        this.form.get('description')?.setValue(description);
+      }
     });
   }
 
