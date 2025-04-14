@@ -262,11 +262,15 @@ class TaskCollection extends Collection<Task> {
     );
   }
 
-  getTasksWithTimer() {
+  getTasksWithOngoingTimer() {
     const { field, order } = parseTaskSort(TASK_SORT_DEFAULT);
     return this.find(
       {
-        timers: { $exists: true, $ne: [] },
+        timers: {
+          $exists: true,
+          $ne: [],
+          $elemMatch: { start: { $exists: true }, end: null },
+        },
         $or: [...NOT_PINNED],
       },
       {

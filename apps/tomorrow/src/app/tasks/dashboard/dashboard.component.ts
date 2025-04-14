@@ -82,7 +82,7 @@ export class DashboardComponent {
       });
 
       effect((onCleanup) => {
-        const wt = Tasks.getTasksWithTimer();
+        const wt = Tasks.getTasksWithOngoingTimer();
         this.tasksWithTimer.set(wt.fetch());
         onCleanup(() => {
           wt.cleanup();
