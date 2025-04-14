@@ -1,16 +1,10 @@
 import { NgIf } from '@angular/common';
 import { Component, computed, inject, linkedSignal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
-import {
-  TuiBreakpointService,
-  TuiButton,
-  TuiDataList,
-  TuiDropdown,
-  TuiIcon,
-} from '@taiga-ui/core';
+import { TuiButton, TuiDataList, TuiDropdown, TuiIcon } from '@taiga-ui/core';
 import { TuiActionBar, TuiItemsWithMore } from '@taiga-ui/kit';
-import { map } from 'rxjs';
+
+import { Context } from '../core/context.store';
 
 import { SelectedTasksStore } from './_primitives/selectable-task.directive';
 import { TaskService } from './task.service';
@@ -80,7 +74,7 @@ import { TaskService } from './task.service';
       <div>
         <strong>Selected: {{ store.count() }}</strong>
         <button
-          *ngIf="!isMobile()"
+          *ngIf="!context.isMobile()"
           tuiLink
           type="button"
           class="tui-space_left-3"
@@ -114,7 +108,7 @@ import { TaskService } from './task.service';
       </tui-items-with-more> -->
 
       <button
-        *ngIf="!isMobile()"
+        *ngIf="!context.isMobile()"
         iconStart="@tui.check-check"
         tuiButton
         type="button"
@@ -126,7 +120,7 @@ import { TaskService } from './task.service';
         Complete All
       </button>
       <button
-        *ngIf="!isMobile()"
+        *ngIf="!context.isMobile()"
         iconStart="@tui.trash-2"
         tuiButton
         type="button"
@@ -138,7 +132,7 @@ import { TaskService } from './task.service';
       </button>
 
       <button
-        *ngIf="isMobile()"
+        *ngIf="context.isMobile()"
         iconStart="@tui.check-check"
         tuiIconButton
         type="button"
@@ -150,7 +144,7 @@ import { TaskService } from './task.service';
         Complete All
       </button>
       <button
-        *ngIf="isMobile()"
+        *ngIf="context.isMobile()"
         iconStart="@tui.ellipsis"
         tuiIconButton
         type="button"
@@ -160,7 +154,7 @@ import { TaskService } from './task.service';
       </button>
 
       <button
-        *ngIf="!isMobile()"
+        *ngIf="!context.isMobile()"
         appearance="icon"
         iconStart="@tui.x"
         tuiIconButton
@@ -173,18 +167,15 @@ import { TaskService } from './task.service';
   `,
 })
 export class TaskRouteComponent {
+  readonly context = inject(Context);
   readonly store = inject(SelectedTasksStore);
   readonly taskService = inject(TaskService);
   readonly open = computed(() => {
     return this.store.count() > 0;
   });
   readonly expanded = linkedSignal(() => {
-    return !this.isMobile() && this.store.count() > 0;
+    return !this.context.isMobile() && this.store.count() > 0;
   });
-
-  readonly isMobile = toSignal(
-    inject(TuiBreakpointService).pipe(map((size) => size === 'mobile')),
-  );
 
   toggleExpanded() {
     this.expanded.update((expanded) => !expanded);

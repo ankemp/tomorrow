@@ -1,4 +1,5 @@
 import { computed, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { SwUpdate } from '@angular/service-worker';
 import {
   patchState,
@@ -10,8 +11,18 @@ import {
   withState,
 } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { TuiAlertService } from '@taiga-ui/core';
-import { EMPTY, fromEvent, iif, map, merge, pipe, switchMap, tap } from 'rxjs';
+import { TuiAlertService, TuiBreakpointService } from '@taiga-ui/core';
+import {
+  EMPTY,
+  fromEvent,
+  iif,
+  map,
+  merge,
+  pipe,
+  startWith,
+  switchMap,
+  tap,
+} from 'rxjs';
 
 interface ContextState {
   isOnline: boolean;
@@ -31,9 +42,16 @@ export const Context = signalStore(
   withProps(() => ({
     swUpdateService: inject(SwUpdate),
     alertService: inject(TuiAlertService),
+    breakpointService: inject(TuiBreakpointService),
   })),
   withComputed((state) => ({
     isOffline: computed(() => !state.isOnline()),
+    isMobile: toSignal(
+      inject(TuiBreakpointService).pipe(
+        map((size) => size === 'mobile'),
+        startWith(true),
+      ),
+    ),
   })),
   withMethods((store) => ({
     watchIsOnline: rxMethod<void>(
@@ -103,7 +121,6 @@ export const Context = signalStore(
         store.watchIsOnline();
         store.watchUpdates();
       }
-      // effect(async () => {});
     },
   }),
 );
