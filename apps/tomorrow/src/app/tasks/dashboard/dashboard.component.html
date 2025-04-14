@@ -5,13 +5,25 @@
   <tw-category-card title="Health" icon="@tui.heart-pulse" />
 </section>
 
-<!-- TODO: Add bulk management with https://taiga-ui.dev/components/actions-bar -->
-
 @if (hasPinnedTasks()) {
   <section class="task-list-grid">
     <tw-task-list-header title="Pinned" headerSize="s" icon="@tui.pin">
     </tw-task-list-header>
     @for (task of pinnedTasks(); track task.id) {
+      <tw-task-list-card [task]="task" [fullDateFormat]="true" />
+    }
+  </section>
+}
+
+@if (hasTasksWithTimer()) {
+  <section class="task-list-grid">
+    <tw-task-list-header
+      title="Ongoing Timers"
+      headerSize="s"
+      icon="@tui.timer"
+    >
+    </tw-task-list-header>
+    @for (task of tasksWithTimer(); track task.id) {
       <tw-task-list-card [task]="task" [fullDateFormat]="true" />
     }
   </section>

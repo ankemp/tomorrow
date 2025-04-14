@@ -262,6 +262,19 @@ class TaskCollection extends Collection<Task> {
     );
   }
 
+  getTasksWithTimer() {
+    const { field, order } = parseTaskSort(TASK_SORT_DEFAULT);
+    return this.find(
+      {
+        timers: { $exists: true, $ne: [] },
+        $or: [...NOT_PINNED],
+      },
+      {
+        sort: { [field]: order },
+      },
+    );
+  }
+
   getOverdueTasks() {
     const { field, order } = parseTaskSort(TASK_SORT_DEFAULT);
     return this.find(

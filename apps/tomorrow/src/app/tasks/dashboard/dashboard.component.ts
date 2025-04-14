@@ -54,6 +54,7 @@ import { FormatDurationPipe } from '../_primitives/format-duration.pipe';
 export class DashboardComponent {
   readonly settings = inject(Settings);
   readonly pinnedTasks = signal<Task[]>([]);
+  readonly tasksWithTimer = signal<Task[]>([]);
   readonly overdueTasks = signal<Task[]>([]);
   readonly todaysTasks = signal<Task[]>([]);
   readonly todaysSort = signal<TaskSort>(TASK_SORT_DEFAULT);
@@ -62,6 +63,7 @@ export class DashboardComponent {
   readonly upcomingSort = signal<TaskSort>(TASK_SORT_DEFAULT);
   readonly isReady = Tasks.isReady();
   readonly hasPinnedTasks = computed(() => this.pinnedTasks().length > 0);
+  readonly hasTasksWithTimer = computed(() => this.tasksWithTimer().length > 0);
   readonly hasOverdueTasks = computed(() => this.overdueTasks().length > 0);
   readonly todaysTasksDuration = computed(() => {
     return this.todaysTasks()
@@ -76,6 +78,14 @@ export class DashboardComponent {
         this.pinnedTasks.set(pt.fetch());
         onCleanup(() => {
           pt.cleanup();
+        });
+      });
+
+      effect((onCleanup) => {
+        const wt = Tasks.getTasksWithTimer();
+        this.tasksWithTimer.set(wt.fetch());
+        onCleanup(() => {
+          wt.cleanup();
         });
       });
 
