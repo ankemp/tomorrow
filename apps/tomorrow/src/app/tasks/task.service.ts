@@ -72,13 +72,13 @@ export class TaskService {
           label: 'Complete Task?',
           data: {
             content: `Mark "${task.title}" as complete and unpin it?`,
-            yes: 'Complete & Unpin',
+            yes: 'Unpin',
             no: 'Keep Pinned',
           },
         })
         .pipe(
-          tap((response) => {
-            Tasks.completeTask(task, response);
+          tap((yesNoBoolean) => {
+            Tasks.completeTask(task, !yesNoBoolean);
           }),
           switchMap(() => {
             return this.alerts.open(alertMessage, {

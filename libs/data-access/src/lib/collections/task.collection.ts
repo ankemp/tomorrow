@@ -31,9 +31,7 @@ const NOT_PINNED = [
 ];
 
 const INCLUDE_COMPLETED = (include: boolean) =>
-  include
-    ? { $or: [{ completedAt: null }, { completedAt: { $exists: false } }] }
-    : { completedAt: null };
+  include ? {} : { completedAt: null };
 
 class TaskCollection extends Collection<Task> {
   constructor() {
@@ -69,7 +67,7 @@ class TaskCollection extends Collection<Task> {
     );
   }
 
-  completeTask(task: Task, andUnpin = false) {
+  completeTask(task: Task, keepPinned = false) {
     const updatedTimers = [...(task.timers ?? [])];
     const runningTimer = task.timers?.findIndex((t) => isNil(t.end));
     if (runningTimer > -1) {
@@ -83,7 +81,7 @@ class TaskCollection extends Collection<Task> {
       {
         $set: {
           completedAt: new Date(),
-          pinned: andUnpin ? false : task.pinned,
+          pinned: keepPinned,
           timers: updatedTimers,
         },
       },
