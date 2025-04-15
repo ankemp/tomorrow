@@ -52,6 +52,9 @@ export const Context = signalStore(
         startWith(true),
       ),
     ),
+    canVibrate: computed(
+      () => typeof navigator !== 'undefined' && 'vibrate' in navigator,
+    ),
   })),
   withMethods((store) => ({
     watchIsOnline: rxMethod<void>(

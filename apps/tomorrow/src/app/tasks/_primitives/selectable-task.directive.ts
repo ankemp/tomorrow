@@ -16,6 +16,8 @@ import {
 
 import { Task } from '@tmrw/data-access';
 
+import { Context } from '../../core/context.store';
+
 interface SelectedTaskState {
   selected: Task[];
 }
@@ -61,6 +63,7 @@ export const SelectedTasksStore = signalStore(
   },
 })
 export class SelectableTaskDirective implements OnDestroy {
+  private readonly context = inject(Context);
   private readonly store = inject(SelectedTasksStore);
   readonly task = input.required<Task>();
   readonly selected = computed(() => {
@@ -103,7 +106,14 @@ export class SelectableTaskDirective implements OnDestroy {
     this.longPressTimeout = undefined;
   }
 
+  private vibrate(): void {
+    if (this.context.canVibrate()) {
+      navigator.vibrate(50);
+    }
+  }
+
   private onLongPress(): void {
+    this.vibrate();
     if (this.selected()) {
       this.store.unselectTask(this.task());
     } else {
