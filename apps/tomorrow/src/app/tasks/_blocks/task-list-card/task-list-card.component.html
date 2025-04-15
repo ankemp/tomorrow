@@ -73,7 +73,7 @@
     tuiIconButton
     tuiSwipeAction
     type="button"
-    (click)="taskService.pinTask(t)"
+    (click)="taskService.togglePinTask(t)"
   >
     {{ t.pinned ? 'Unpin' : 'Pin' }}
   </button>

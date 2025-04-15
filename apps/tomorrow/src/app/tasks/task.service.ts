@@ -145,7 +145,7 @@ export class TaskService {
     Tasks.removeTimer(task, timerIndex);
   }
 
-  pinTask(task: Task) {
+  togglePinTask(task: Task) {
     const isPinned = !!task.pinned;
     const alertMessage = isPinned ? 'Task unpinned' : 'Task pinned';
     const alertAppearance = isPinned ? 'destructive' : 'success';
@@ -180,6 +180,62 @@ export class TaskService {
         .open(alertMessage, {
           appearance: alertAppearance,
           icon: alertIcon,
+        })
+        .subscribe();
+    }
+  }
+
+  bulkTogglePinTasks(tasks: Task[]) {
+    const allPinned = tasks.every((task) => task.pinned);
+    const allUnpinned = tasks.every((task) => !task.pinned);
+
+    if (!allPinned && !allUnpinned) {
+      this.dialogs
+        .open<boolean>(TUI_CONFIRM, {
+          label: 'Inconsistent Pin State',
+          data: {
+            content:
+              'Some tasks are pinned and some are not. Please select tasks that can be toggled in the same direction.',
+            yes: 'OK',
+          },
+        })
+        .subscribe();
+      return;
+    }
+
+    const count = tasks.length;
+    const taskText = `task${count > 1 ? 's' : ''}`;
+    const pinnedCount = Tasks.getPinnedTasks().count();
+
+    if (pinnedCount + count > 3 && allUnpinned) {
+      this.dialogs
+        .open<boolean>(TUI_CONFIRM, {
+          label: 'Pin Limit Reached',
+          data: {
+            content: `You have ${pinnedCount} pinned tasks. Adding ${count} more will exceed the limit. For better organization, consider using tags or priorities instead of adding more pins. Pin these tasks anyway?`,
+            yes: 'Pin Anyway',
+            no: 'Cancel',
+          },
+        })
+        .pipe(
+          switchMap((response) => (response ? of(true) : EMPTY)),
+          tap(() => {
+            Tasks.bulkTogglePinTasks(tasks);
+          }),
+          switchMap(() => {
+            return this.alerts.open(`${count} ${taskText} pinned`, {
+              appearance: 'success',
+              icon: '@tui.pin',
+            });
+          }),
+        )
+        .subscribe();
+    } else {
+      Tasks.bulkTogglePinTasks(tasks);
+      this.alerts
+        .open(`${count} ${taskText} pinned`, {
+          appearance: 'success',
+          icon: '@tui.pin',
         })
         .subscribe();
     }

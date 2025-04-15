@@ -205,6 +205,19 @@ class TaskCollection extends Collection<Task> {
     this.updateOne({ id: task.id }, { $set: { pinned: !task.pinned } });
   }
 
+  bulkTogglePinTasks(tasks: Task[]) {
+    const ids = tasks.map((task) => task.id);
+    const pinned = tasks.every((task) => task.pinned);
+    this.updateMany(
+      { id: { $in: ids } },
+      {
+        $set: {
+          pinned: !pinned,
+        },
+      },
+    );
+  }
+
   updateDate(task: Task, date: Date) {
     this.updateOne(
       { id: task.id },

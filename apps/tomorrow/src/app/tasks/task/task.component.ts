@@ -247,7 +247,7 @@ export class TaskComponent {
   }
 
   pinTask(task: Task) {
-    this.taskService.pinTask(task);
+    this.taskService.togglePinTask(task);
     this.menuOpen.set(false);
   }
 

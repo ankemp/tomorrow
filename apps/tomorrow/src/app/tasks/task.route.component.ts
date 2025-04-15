@@ -28,12 +28,24 @@ import { TaskService } from './task.service';
     <tui-action-bar *tuiActionBar="open()" [expanded]="!!expanded()">
       <tui-data-list role="menu">
         <tui-opt-group>
-          <!-- <button role="menuitem" tuiOption type="button">
+          <button
+            role="menuitem"
+            tuiOption
+            type="button"
+            [disabled]="pinState() === 'disabled'"
+            (click)="
+              taskService.bulkTogglePinTasks(store.selected());
+              store.clearSelection()
+            "
+          >
+            @let pin = pinState() === 'pin';
+            @let unpin = pinState() === 'unpin';
+            @let icon = pin ? '@tui.pin' : unpin ? '@tui.pin-off' : '@tui.pin';
             <span>
-              <tui-icon icon="@tui.pin" class="tui-space_right-3" />
-              Pin
+              <tui-icon [icon]="icon" class="tui-space_right-3" />
+              {{ pin ? 'Pin' : unpin ? 'Unpin' : 'Pin' }}
             </span>
-          </button> -->
+          </button>
           <button role="menuitem" tuiOption type="button">
             <span>
               <tui-icon
@@ -175,6 +187,23 @@ export class TaskRouteComponent {
   });
   readonly expanded = linkedSignal(() => {
     return !this.context.isMobile() && this.store.count() > 0;
+  });
+  readonly pinState = computed(() => {
+    const selectedTasks = this.store.selected();
+    if (selectedTasks.length === 0) {
+      return 'disabled';
+    }
+
+    const allPinned = selectedTasks.every((task) => task.pinned);
+    const allUnpinned = selectedTasks.every((task) => !task.pinned);
+
+    if (allPinned) {
+      return 'unpin';
+    } else if (allUnpinned) {
+      return 'pin';
+    } else {
+      return 'disabled';
+    }
   });
 
   toggleExpanded() {
