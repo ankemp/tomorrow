@@ -1,3 +1,4 @@
+import { SwUpdate } from '@angular/service-worker';
 import {
   createDirectiveFactory,
   SpectatorDirective,
@@ -13,7 +14,7 @@ describe('SelectableTaskDirective', () => {
   let spectator: SpectatorDirective<SelectableTaskDirective>;
   const createDirective = createDirectiveFactory({
     directive: SelectableTaskDirective,
-    providers: [SelectedTasksStore],
+    providers: [SelectedTasksStore, { provide: SwUpdate, useValue: {} }],
   });
 
   const mockTask: any = { id: '1', name: 'Test Task' };
