@@ -1,9 +1,12 @@
 :host {
-  background-color: var(--tui-background-base);
+  background: var(--tui-background-base);
+  color: var(--tui-text-primary);
   display: block;
   height: 44px;
 
-  &.sticky {
+  &[tuielasticsticky] {
+    backdrop-filter: blur(2rem);
+    background: color-mix(in hsl, var(--tui-background-base) 80%, transparent);
     position: sticky;
     top: calc(56px + var(--header-offset));
     z-index: 96;

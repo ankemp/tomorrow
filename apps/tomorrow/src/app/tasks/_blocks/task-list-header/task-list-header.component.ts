@@ -39,7 +39,6 @@ import { Settings, TASK_SORT_DEFAULT, TaskSort } from '@tmrw/data-access';
   styleUrl: './task-list-header.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    '[class.sticky]': 'sticky()',
     '[attr.tuiElasticSticky]': 'sticky() ? "" : null',
   },
 })
