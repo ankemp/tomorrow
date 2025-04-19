@@ -34,6 +34,7 @@
     "@taiga-ui/kit": "4.33.0",
     "@taiga-ui/layout": "4.33.0",
     "@taiga-ui/legacy": "4.33.0",
+    "@taiga-ui/polymorpheus": "4.9.0",
     "date-fns": "^4.1.0",
     "es-toolkit": "^1.32.0",
     "express": "^4.21.2",
