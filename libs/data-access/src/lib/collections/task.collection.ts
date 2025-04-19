@@ -460,6 +460,20 @@ class TaskCollection extends Collection<Task> {
 }
 
 export const Tasks = new TaskCollection();
+Tasks.on('validate', (task) => {
+  if (!task.title) {
+    throw new Error('Title is required');
+  }
+  if (!task.date) {
+    throw new Error('Date is required');
+  }
+  if (!task.category) {
+    throw new Error('Category is required');
+  }
+  if (task.timers?.some((t) => isNil(t.end))) {
+    throw new Error('There can only be one ongoing timer');
+  }
+});
 Tasks.setDebugMode(isDevMode());
 
 function createRandomTask() {
