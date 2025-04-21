@@ -44,13 +44,7 @@
           "node_modules/@taiga-ui/addon-mobile/styles/taiga-ui-mobile.less",
           "apps/tomorrow/src/styles.css"
         ],
-        "scripts": [],
-        "server": "apps/tomorrow/src/main.server.ts",
-        "ssr": {
-          "entry": "apps/tomorrow/src/server.ts"
-        },
-        "prerender": true,
-        "outputMode": "server"
+        "scripts": []
       },
       "configurations": {
         "production": {
@@ -79,13 +73,6 @@
           "optimization": false,
           "extractLicenses": false,
           "sourceMap": true
-        },
-        "development-no-ssr": {
-          "optimization": false,
-          "extractLicenses": false,
-          "sourceMap": true,
-          "ssr": true,
-          "prerender": false
         }
       },
       "defaultConfiguration": "development"
@@ -98,9 +85,6 @@
         },
         "development": {
           "buildTarget": "tomorrow:build:development"
-        },
-        "development-no-ssr": {
-          "buildTarget": "tomorrow:build:development-no-ssr"
         }
       },
       "defaultConfiguration": "development",
