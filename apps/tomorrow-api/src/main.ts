@@ -12,8 +12,10 @@ async function bootstrap() {
   const port = process.env.PORT || 3000;
   await app.listen(port);
   Logger.log(
-    `🚀 Application is running on: http://localhost:${port}/${globalPrefix} \n
-    📦 Static files are served from: ${process.cwd()}/static at localhost:3000 \n`,
+    `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`,
+  );
+  Logger.log(
+    `📦 Static files are served from: ${process.cwd()}/static at http://localhost:3000`,
   );
 }
 
