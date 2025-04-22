@@ -3,7 +3,7 @@ import {
   ApplicationConfig,
   isDevMode,
   provideZoneChangeDetection,
-} from '@angular/core';;
+} from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
@@ -12,6 +12,8 @@ import { provideEventPlugins } from '@taiga-ui/event-plugins';
 import { provideSyncManager } from '@tmrw/data-access';
 
 import { appRoutes } from './app.routes';
+
+;
 
 export const appConfig: ApplicationConfig = {
   providers: [

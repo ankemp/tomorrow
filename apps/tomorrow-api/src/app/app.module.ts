@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { PlainTask, EncryptedTask, User } from './models';
+
 import { TasksController } from './tasks/tasks.controller';
-import { UsersController } from './users/users.controller';
 import { TasksService } from './tasks/tasks.service';
+import { UsersController } from './users/users.controller';
 import { UsersService } from './users/users.service';
+import { EncryptedTask, PlainTask, User } from './models';
 
 @Module({
   imports: [
@@ -15,8 +16,8 @@ import { UsersService } from './users/users.service';
       logging: process.env['NODE_ENV'] === 'development' ? console.log : false,
       synchronize: true,
       sync: {
-        force: true
-      }
+        force: true,
+      },
     }),
     SequelizeModule.forFeature([PlainTask, EncryptedTask, User]),
   ],
