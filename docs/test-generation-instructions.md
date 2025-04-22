@@ -85,3 +85,43 @@
      });
    });
    ```
+
+8. **Testing Services**
+
+   - Use `describe` blocks to group service-related tests:
+
+     ```javascript
+     import { TestBed } from '@angular/core/testing';
+     import { MyService } from './my-service';
+
+     describe('MyService', () => {
+       let service: MyService;
+
+       beforeEach(() => {
+         TestBed.configureTestingModule({
+           providers: [MyService],
+         });
+         service = TestBed.inject(MyService);
+       });
+
+       it('should be created', () => {
+         expect(service).toBeTruthy();
+       });
+     });
+     ```
+
+   - Mock dependencies using `TestBed` or `vi.mock`:
+
+     ```javascript
+     TestBed.configureTestingModule({
+       providers: [{ provide: DependencyService, useValue: mockDependency }],
+     });
+     ```
+
+   - Test service methods by calling them directly and asserting the results:
+     ```javascript
+     it('should return expected value', () => {
+       const result = service.someMethod();
+       expect(result).toBe(expectedValue);
+     });
+     ```
