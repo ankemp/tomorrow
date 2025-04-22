@@ -13,8 +13,6 @@ import { provideSyncManager } from '@tmrw/data-access';
 
 import { appRoutes } from './app.routes';
 
-;
-
 export const appConfig: ApplicationConfig = {
   providers: [
     provideSyncManager(),

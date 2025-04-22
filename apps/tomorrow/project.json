@@ -114,10 +114,6 @@
       "options": {
         "command": "node scripts/update-version.js"
       }
-    },
-    "docker-build": {
-      "dependsOn": ["build"],
-      "command": "docker build -f apps/tomorrow/Dockerfile . -t tomorrow -t ankemp/tomorrow -t registry.magicbean.us/tomorrow"
     }
   }
 }

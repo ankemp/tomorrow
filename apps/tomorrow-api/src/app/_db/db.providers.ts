@@ -1,4 +1,5 @@
 import { Sequelize } from 'sequelize-typescript';
+import sqlite3 from 'sqlite3';
 
 import { EncryptedTask } from './encrypted_task.entity';
 import { PlainTask } from './plain_task.entity';

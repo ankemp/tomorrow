@@ -8,8 +8,9 @@ import { UsersModule } from './users/users.module';
 @Module({
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'client'),
+      rootPath: join(__dirname, '..', 'static'),
     }),
+    // TODO: Implement throttling(?)
     TasksModule,
     UsersModule,
   ],

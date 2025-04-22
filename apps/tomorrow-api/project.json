@@ -38,6 +38,10 @@
       "options": {
         "passWithNoTests": true
       }
+    },
+    "docker-build": {
+      "dependsOn": ["build", "tomorrow:build"],
+      "command": "docker build -f apps/tomorrow-api/Dockerfile . -t tomorrow"
     }
   }
 }
