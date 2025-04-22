@@ -7,7 +7,7 @@
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@angular-devkit/build-angular:application",
+      "executor": "@nx/angular:application",
       "dependsOn": ["update-version"],
       "outputs": ["{options.outputPath}"],
       "options": {
@@ -91,7 +91,7 @@
       "defaultConfiguration": "development"
     },
     "serve": {
-      "executor": "@angular-devkit/build-angular:dev-server",
+      "executor": "@nx/angular:dev-server",
       "configurations": {
         "production": {
           "buildTarget": "tomorrow:build:production"
