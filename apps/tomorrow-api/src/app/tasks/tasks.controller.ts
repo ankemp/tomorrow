@@ -9,25 +9,27 @@ import {
   Post,
   Put,
   Query,
-  Req,
-  Res,
+  Sse,
 } from '@nestjs/common';
-import { Request, Response } from 'express';
+import { Changeset } from '@signaldb/core/index';
 
-import { addSseClient, removeSseClient } from '../helpers/sse.helpers';
+import { Task } from '@tmrw/data-access';
+
+import { SSEService } from '../sse.service';
 
 import { TasksService } from './tasks.service';
 
 @Controller('tasks')
 export class TasksController {
-  constructor(private readonly tasksService: TasksService) {}
+  constructor(
+    private readonly tasksService: TasksService,
+    private readonly sseService: SSEService<Changeset<Task>>,
+  ) {}
 
-  @Get('events/user/:userId')
-  async getTaskEvents(
+  @Sse('events/user/:userId')
+  taskSse(
     @Param('userId') userId: string,
-    @Query('deviceId') deviceId: string,
-    @Res() res: Response,
-    @Req() req: Request,
+    @Query('deviceId') deviceId: string
   ) {
     if (!userId || !deviceId) {
       throw new HttpException(
@@ -36,16 +38,7 @@ export class TasksController {
       );
     }
 
-    res.setHeader('Content-Type', 'text/event-stream');
-    res.setHeader('Cache-Control', 'no-cache');
-    res.setHeader('Connection', 'keep-alive');
-    res.flushHeaders();
-
-    addSseClient(userId, deviceId, res);
-
-    req.on('close', () => {
-      removeSseClient(userId, deviceId);
-    });
+    return this.sseService.getEventObservable(userId, deviceId);
   }
 
   @Post()
