@@ -60,6 +60,10 @@
       "changeDetection": "OnPush",
       "displayBlock": true,
       "skipTests": true
+    },
+    "@nx/angular:library": {
+      "linter": "eslint",
+      "unitTestRunner": "vitest"
     }
   },
   "plugins": [

@@ -17,6 +17,7 @@
     "@angular/router": "19.2.1",
     "@angular/service-worker": "19.2.1",
     "@angular/ssr": "19.2.1",
+    "@huggingface/transformers": "^3.5.0",
     "@nestjs/common": "^10.0.2",
     "@nestjs/core": "^10.0.2",
     "@nestjs/platform-express": "^10.0.2",
