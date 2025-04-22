@@ -1,13 +1,15 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/sequelize';
-import { PlainTask, EncryptedTask } from '../models';
+import { Inject, Injectable } from '@nestjs/common';
 import { Op } from 'sequelize';
+
+import { ENCRYPTED_TASK, EncryptedTask } from '../_db/encrypted_task.entity';
+import { PLAIN_TASK, PlainTask } from '../_db/plain_task.entity';
 
 @Injectable()
 export class TasksService {
   constructor(
-    @InjectModel(PlainTask) private readonly plainTaskModel: typeof PlainTask,
-    @InjectModel(EncryptedTask) private readonly encryptedTaskModel: typeof EncryptedTask,
+    @Inject(PLAIN_TASK) private readonly plainTaskRepository: typeof PlainTask,
+    @Inject(ENCRYPTED_TASK)
+    private readonly encryptedTaskRepository: typeof EncryptedTask,
   ) {}
 
   async createTasks(body: any) {
@@ -18,7 +20,7 @@ export class TasksService {
     }
 
     if (encrypted) {
-      await this.encryptedTaskModel.bulkCreate(
+      await this.encryptedTaskRepository.bulkCreate(
         changes.map((change: any) => ({
           id: change.id,
           userId: userId,
@@ -26,7 +28,9 @@ export class TasksService {
         })),
       );
     } else {
-      await this.plainTaskModel.bulkCreate(changes.map((change: any) => change.content));
+      await this.plainTaskRepository.bulkCreate(
+        changes.map((change: any) => change.content),
+      );
     }
 
     return {
@@ -45,14 +49,14 @@ export class TasksService {
 
     if (encrypted) {
       for (const change of changes) {
-        await this.encryptedTaskModel.update(
+        await this.encryptedTaskRepository.update(
           { encryptedData: change.content },
           { where: { id: change.id } },
         );
       }
     } else {
       for (const change of changes) {
-        await this.plainTaskModel.update(change.content, {
+        await this.plainTaskRepository.update(change.content, {
           where: { id: change.id },
         });
       }
@@ -74,9 +78,9 @@ export class TasksService {
 
     const ids = changes.map((change: any) => change.id);
     if (encrypted) {
-      await this.encryptedTaskModel.destroy({ where: { id: ids } });
+      await this.encryptedTaskRepository.destroy({ where: { id: ids } });
     } else {
-      await this.plainTaskModel.destroy({ where: { id: ids } });
+      await this.plainTaskRepository.destroy({ where: { id: ids } });
     }
 
     return {
@@ -112,21 +116,21 @@ export class TasksService {
     };
 
     const added = encrypted
-      ? await this.encryptedTaskModel.findAll({ where: whereAdded })
-      : await this.plainTaskModel.findAll({ where: whereAdded });
+      ? await this.encryptedTaskRepository.findAll({ where: whereAdded })
+      : await this.plainTaskRepository.findAll({ where: whereAdded });
 
     const modified = encrypted
-      ? await this.encryptedTaskModel.findAll({ where: whereModified })
-      : await this.plainTaskModel.findAll({ where: whereModified });
+      ? await this.encryptedTaskRepository.findAll({ where: whereModified })
+      : await this.plainTaskRepository.findAll({ where: whereModified });
 
     const removed = encrypted
-      ? await this.encryptedTaskModel.findAll({ where: whereRemoved })
-      : await this.plainTaskModel.findAll({ where: whereRemoved });
+      ? await this.encryptedTaskRepository.findAll({ where: whereRemoved })
+      : await this.plainTaskRepository.findAll({ where: whereRemoved });
 
     return { added, modified, removed };
   }
 
   async deleteUserTasks(userId: string) {
-    await this.plainTaskModel.destroy({ where: { userId }, force: true });
+    await this.plainTaskRepository.destroy({ where: { userId }, force: true });
   }
 }

@@ -19,11 +19,7 @@ export function dispatchServerSideEvent<T>(
   });
 }
 
-export function addSseClient(
-  userId: string,
-  deviceId: string,
-  res: Response,
-) {
+export function addSseClient(userId: string, deviceId: string, res: Response) {
   const userClients = sseClients.get(userId) || new Map();
   userClients.set(deviceId, res);
   sseClients.set(userId, userClients);

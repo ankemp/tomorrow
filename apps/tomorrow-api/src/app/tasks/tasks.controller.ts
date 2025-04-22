@@ -1,8 +1,22 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, Query, Res, HttpException, HttpStatus, Req } from '@nestjs/common';
-import { TasksService } from './tasks.service';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpException,
+  HttpStatus,
+  Param,
+  Post,
+  Put,
+  Query,
+  Req,
+  Res,
+} from '@nestjs/common';
 import { Request, Response } from 'express';
 
 import { addSseClient, removeSseClient } from '../helpers/sse.helpers';
+
+import { TasksService } from './tasks.service';
 
 @Controller('tasks')
 export class TasksController {
@@ -16,7 +30,10 @@ export class TasksController {
     @Req() req: Request,
   ) {
     if (!userId || !deviceId) {
-      throw new HttpException('Invalid userId or deviceId', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Invalid userId or deviceId',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     res.setHeader('Content-Type', 'text/event-stream');
