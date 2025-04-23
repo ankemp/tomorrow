@@ -6,6 +6,8 @@ import {
   HttpException,
   HttpStatus,
   Param,
+  ParseBoolPipe,
+  ParseIntPipe,
   Post,
   Put,
   Query,
@@ -17,7 +19,7 @@ import { Task } from '@tmrw/data-access';
 
 import { SSEService } from '../sse.service';
 
-import { TasksService } from './tasks.service';
+import { TaskEndpointBody, TasksService } from './tasks.service';
 
 @Controller('tasks')
 export class TasksController {
@@ -29,7 +31,7 @@ export class TasksController {
   @Sse('events/user/:userId')
   taskSse(
     @Param('userId') userId: string,
-    @Query('deviceId') deviceId: string
+    @Query('deviceId') deviceId: string,
   ) {
     if (!userId || !deviceId) {
       throw new HttpException(
@@ -42,36 +44,49 @@ export class TasksController {
   }
 
   @Post()
-  async createTasks(@Body() body: any) {
+  async createTasks(@Body() body: TaskEndpointBody) {
     try {
-      return await this.tasksService.createTasks(body);
+      await this.tasksService.createTasks(body);
+      return { status: HttpStatus.CREATED };
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
   @Put()
-  async updateTasks(@Body() body: any) {
+  async updateTasks(@Body() body: TaskEndpointBody) {
     try {
-      return await this.tasksService.updateTasks(body);
+      await this.tasksService.updateTasks(body);
+      return { status: HttpStatus.ACCEPTED };
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
   @Delete()
-  async deleteTasks(@Body() body: any) {
+  async deleteTasks(@Body() body: TaskEndpointBody) {
     try {
-      return await this.tasksService.deleteTasks(body);
+      await this.tasksService.deleteTasks(body);
+      return { status: HttpStatus.OK };
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
   @Get()
-  async getTasks(@Query() query: any) {
+  async getTasks(
+    @Query('encrypted', new ParseBoolPipe()) encrypted: boolean,
+    @Query('userId') userId: string,
+    @Query('deviceId') deviceId: string,
+    @Query('since', new ParseIntPipe({ optional: true })) since?: number,
+  ) {
     try {
-      return await this.tasksService.getTasks(query);
+      return await this.tasksService.getTasks({
+        since,
+        encrypted,
+        userId,
+        deviceId,
+      });
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
@@ -81,7 +96,7 @@ export class TasksController {
   async deleteUserTasks(@Param('userId') userId: string) {
     try {
       await this.tasksService.deleteUserTasks(userId);
-      return { status: 'success' };
+      return { status: HttpStatus.OK };
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }

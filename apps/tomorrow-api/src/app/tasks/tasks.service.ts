@@ -1,8 +1,26 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Op } from 'sequelize';
 
+import { Task } from '@tmrw/data-access';
+
 import { ENCRYPTED_TASK, EncryptedTask } from '../_db/encrypted_task.entity';
 import { PLAIN_TASK, PlainTask } from '../_db/plain_task.entity';
+
+const TASK_PROP_EXCLUDES = ['createdAt', 'updatedAt', 'deletedAt'];
+
+export type TaskEndpointBody =
+  | {
+      changes: { id: string; content: Task }[];
+      encrypted: false;
+      userId: string;
+      deviceId: string;
+    }
+  | {
+      changes: Array<{ id: string; content: string }>;
+      encrypted: true;
+      userId: string;
+      deviceId: string;
+    };
 
 @Injectable()
 export class TasksService {
@@ -12,7 +30,7 @@ export class TasksService {
     private readonly encryptedTaskRepository: typeof EncryptedTask,
   ) {}
 
-  async createTasks(body: any) {
+  async createTasks(body: TaskEndpointBody) {
     const { changes, encrypted, userId, deviceId } = body;
 
     if (!userId || !deviceId) {
@@ -40,7 +58,7 @@ export class TasksService {
     };
   }
 
-  async updateTasks(body: any) {
+  async updateTasks(body: TaskEndpointBody) {
     const { changes, encrypted, userId, deviceId } = body;
 
     if (!userId || !deviceId) {
@@ -56,7 +74,7 @@ export class TasksService {
       }
     } else {
       for (const change of changes) {
-        await this.plainTaskRepository.update(change.content, {
+        await this.plainTaskRepository.update(change.content as Task, {
           where: { id: change.id },
         });
       }
@@ -69,7 +87,7 @@ export class TasksService {
     };
   }
 
-  async deleteTasks(body: any) {
+  async deleteTasks(body: TaskEndpointBody) {
     const { changes, encrypted, userId, deviceId } = body;
 
     if (!userId || !deviceId) {
@@ -90,14 +108,20 @@ export class TasksService {
     };
   }
 
-  async getTasks(query: any) {
+  async getTasks(query: {
+    since?: number;
+    userId: string;
+    deviceId: string;
+    encrypted: boolean;
+  }) {
+    console.log('getTasks', query);
     const { since, userId, deviceId, encrypted } = query;
 
     if (!userId || !deviceId) {
       throw new Error('Invalid userId or deviceId');
     }
 
-    const utcLastFinishedSyncStart = since ? new Date(+since) : new Date(0);
+    const utcLastFinishedSyncStart = since ? new Date(since) : new Date(0);
 
     const whereAdded = {
       userId,
@@ -116,16 +140,36 @@ export class TasksService {
     };
 
     const added = encrypted
-      ? await this.encryptedTaskRepository.findAll({ where: whereAdded })
-      : await this.plainTaskRepository.findAll({ where: whereAdded });
+      ? await this.encryptedTaskRepository.findAll({
+          attributes: { exclude: TASK_PROP_EXCLUDES },
+          where: whereAdded,
+        })
+      : await this.plainTaskRepository.findAll({
+          attributes: { exclude: TASK_PROP_EXCLUDES },
+          where: whereAdded,
+        });
 
     const modified = encrypted
-      ? await this.encryptedTaskRepository.findAll({ where: whereModified })
-      : await this.plainTaskRepository.findAll({ where: whereModified });
+      ? await this.encryptedTaskRepository.findAll({
+          attributes: { exclude: TASK_PROP_EXCLUDES },
+          where: whereModified,
+        })
+      : await this.plainTaskRepository.findAll({
+          attributes: { exclude: TASK_PROP_EXCLUDES },
+          where: whereModified,
+        });
 
     const removed = encrypted
-      ? await this.encryptedTaskRepository.findAll({ where: whereRemoved })
-      : await this.plainTaskRepository.findAll({ where: whereRemoved });
+      ? await this.encryptedTaskRepository.findAll({
+          attributes: { exclude: TASK_PROP_EXCLUDES },
+          where: whereRemoved,
+          paranoid: false,
+        })
+      : await this.plainTaskRepository.findAll({
+          attributes: { exclude: TASK_PROP_EXCLUDES },
+          where: whereRemoved,
+          paranoid: false,
+        });
 
     return { added, modified, removed };
   }
