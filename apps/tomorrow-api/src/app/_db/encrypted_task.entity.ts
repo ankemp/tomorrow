@@ -1,11 +1,28 @@
 import { InferAttributes, InferCreationAttributes } from 'sequelize';
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import {
+  Column,
+  CreatedAt,
+  DataType,
+  DeletedAt,
+  Model,
+  Table,
+  UpdatedAt,
+} from 'sequelize-typescript';
 
 @Table({ tableName: 'EncryptedTasks' })
 export class EncryptedTask extends Model<
   InferAttributes<EncryptedTask>,
   InferCreationAttributes<EncryptedTask>
 > {
+  @CreatedAt
+  creationDate: Date;
+
+  @UpdatedAt
+  updatedOn: Date;
+
+  @DeletedAt
+  deletionDate: Date;
+
   @Column({
     type: DataType.STRING,
     allowNull: false,

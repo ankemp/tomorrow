@@ -3,7 +3,15 @@ import {
   InferAttributes,
   InferCreationAttributes,
 } from 'sequelize';
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import {
+  Column,
+  CreatedAt,
+  DataType,
+  DeletedAt,
+  Model,
+  Table,
+  UpdatedAt,
+} from 'sequelize-typescript';
 
 import type { SubTask, Task, TaskTimer } from '@tmrw/data-access';
 
@@ -12,6 +20,15 @@ export class PlainTask
   extends Model<InferAttributes<PlainTask>, InferCreationAttributes<PlainTask>>
   implements Task
 {
+  @CreatedAt
+  creationDate: Date;
+
+  @UpdatedAt
+  updatedOn: Date;
+
+  @DeletedAt
+  deletionDate: Date;
+
   @Column({
     type: DataType.STRING,
     allowNull: false,
