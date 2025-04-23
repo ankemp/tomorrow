@@ -21,13 +21,13 @@ export class PlainTask
   implements Task
 {
   @CreatedAt
-  creationDate: Date;
+  createdAt: Date;
 
   @UpdatedAt
-  updatedOn: Date;
+  updatedAt: Date;
 
   @DeletedAt
-  deletionDate: Date;
+  deletedAt: Date;
 
   @Column({
     type: DataType.STRING,

@@ -15,13 +15,13 @@ export class User extends Model<
   InferCreationAttributes<User>
 > {
   @CreatedAt
-  creationDate: Date;
+  createdAt: Date;
 
   @UpdatedAt
-  updatedOn: Date;
+  updatedAt: Date;
 
   @DeletedAt
-  deletionDate: Date;
+  deletedAt: Date;
 
   @Column({
     type: DataType.STRING,
