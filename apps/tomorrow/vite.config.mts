@@ -25,7 +25,7 @@ export default defineConfig(() => ({
     },
     server: {
       deps: {
-        inline: ['@ngneat/spectator'],
+        inline: ['@ngneat/spectator', 'mingo'],
       },
     },
   },
