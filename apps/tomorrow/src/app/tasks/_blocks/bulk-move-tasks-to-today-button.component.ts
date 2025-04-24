@@ -10,7 +10,8 @@ import { TUI_CONFIRM } from '@taiga-ui/kit';
 import { DateValues, set } from 'date-fns';
 import { EMPTY, of, switchMap, tap } from 'rxjs';
 
-import { Settings, Task, Tasks } from '@tmrw/data-access';
+import { Settings, Tasks } from '@tmrw/data-access';
+import { Task } from '@tmrw/data-access-models';
 
 @Component({
   selector: 'tw-bulk-move-tasks-to-today-button',

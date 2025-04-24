@@ -9,7 +9,7 @@ import {
 } from '@ngrx/signals';
 
 import { Tasks } from '../collections/task.collection';
-import { SearchState } from '../models/search.state';
+import { SearchState } from '@tmrw/data-access-models';
 
 const initialState: SearchState = {
   isOpen: false,

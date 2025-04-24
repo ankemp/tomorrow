@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Op } from 'sequelize';
 
-import { Task } from '@tmrw/data-access';
+import type { Task } from '@tmrw/data-access-models';
 
 import { ENCRYPTED_TASK, EncryptedTask } from '../_db/encrypted_task.entity';
 import { PLAIN_TASK, PlainTask } from '../_db/plain_task.entity';

@@ -6,15 +6,14 @@ import { addDays, endOfToday, startOfToday, startOfTomorrow } from 'date-fns';
 import { isNil } from 'es-toolkit';
 import { parse, unparse } from 'papaparse';
 
-import { SettingsState } from '../models/settings.state';
-import { Task, TASK_HEADERS, TaskTimer } from '../models/task.model';
-
-export type TaskSort =
-  | 'date_desc'
-  | 'date_asc'
-  | 'priority_desc'
-  | 'priority_asc';
-export const TASK_SORT_DEFAULT: TaskSort = 'date_asc';
+import {
+  SettingsState,
+  Task,
+  TASK_HEADERS,
+  TASK_SORT_DEFAULT,
+  TaskSort,
+  TaskTimer,
+} from '@tmrw/data-access-models';
 
 export function parseTaskSort(sort: TaskSort): {
   field: string;

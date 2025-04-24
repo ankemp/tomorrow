@@ -20,7 +20,8 @@ import {
   isTomorrow,
 } from 'date-fns';
 
-import { Task, TASK_SORT_DEFAULT, Tasks, TaskSort } from '@tmrw/data-access';
+import { Tasks } from '@tmrw/data-access';
+import { Task, TASK_SORT_DEFAULT, TaskSort } from '@tmrw/data-access-models';
 
 import { BulkCompleteTasksButtonComponent } from '../_blocks/bulk-complete-tasks-button.component';
 import { EmptyStateComponent } from '../_blocks/empty-state/empty-state.component';

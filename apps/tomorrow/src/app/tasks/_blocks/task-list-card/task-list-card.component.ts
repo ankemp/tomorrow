@@ -12,7 +12,8 @@ import {
 import { TuiChip, TuiFade } from '@taiga-ui/kit';
 import { TuiCell } from '@taiga-ui/layout';
 
-import { Settings, Task } from '@tmrw/data-access';
+import { Settings } from '@tmrw/data-access';
+import { Task } from '@tmrw/data-access-models';
 
 import { CategoryChipComponent } from '../../_primitives/category-chip.component';
 import { FormatDatePipe } from '../../_primitives/format-date.pipe';

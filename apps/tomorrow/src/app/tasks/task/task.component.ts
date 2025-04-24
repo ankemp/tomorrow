@@ -34,13 +34,8 @@ import { PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
 import { differenceInMinutes, roundToNearestMinutes } from 'date-fns';
 import { isNil } from 'es-toolkit';
 
-import {
-  Attachments,
-  Settings,
-  Task,
-  Tasks,
-  TaskTimer,
-} from '@tmrw/data-access';
+import { Attachments, Settings, Tasks } from '@tmrw/data-access';
+import { Task, TaskTimer } from '@tmrw/data-access-models';
 
 import { ActionBarComponent } from '../../core/action-bar/action-bar-portal.component';
 import { EmptyStateComponent } from '../_blocks/empty-state/empty-state.component';

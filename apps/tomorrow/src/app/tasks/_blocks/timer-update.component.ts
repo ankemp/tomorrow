@@ -11,7 +11,7 @@ import { TuiPopover } from '@taiga-ui/cdk';
 import { TuiButton, TuiLabel } from '@taiga-ui/core';
 import { injectContext } from '@taiga-ui/polymorpheus';
 
-import { Task, TaskTimer } from '@tmrw/data-access';
+import { Task, TaskTimer } from '@tmrw/data-access-models';
 
 import { DatePickerComponent } from '../_formcontrols/date-picker/date-picker.component';
 

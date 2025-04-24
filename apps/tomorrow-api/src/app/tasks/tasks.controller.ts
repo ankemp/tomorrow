@@ -15,7 +15,7 @@ import {
 } from '@nestjs/common';
 import { Changeset } from '@signaldb/core/index';
 
-import { Task } from '@tmrw/data-access';
+import type { Task } from '@tmrw/data-access-models';
 
 import { SSEService } from '../sse.service';
 

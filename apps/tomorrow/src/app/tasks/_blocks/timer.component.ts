@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { intervalToDuration } from 'date-fns';
 
-import { TaskTimer } from '@tmrw/data-access';
+import { TaskTimer } from '@tmrw/data-access-models';
 
 const ELAPSED_TIME_FORMAT = '--:--:--';
 

@@ -13,13 +13,8 @@ import { RouterModule } from '@angular/router';
 import { TuiButton, TuiIcon } from '@taiga-ui/core';
 import { TuiChip } from '@taiga-ui/kit';
 
-import {
-  Settings,
-  Task,
-  TASK_SORT_DEFAULT,
-  Tasks,
-  TaskSort,
-} from '@tmrw/data-access';
+import { Settings, Tasks } from '@tmrw/data-access';
+import { Task, TASK_SORT_DEFAULT, TaskSort } from '@tmrw/data-access-models';
 
 import { ActionBarComponent } from '../../core/action-bar/action-bar-portal.component';
 import { BulkCompleteTasksButtonComponent } from '../_blocks/bulk-complete-tasks-button.component';

@@ -6,13 +6,8 @@ import { TUI_CONFIRM } from '@taiga-ui/kit';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { EMPTY, of, switchMap, tap } from 'rxjs';
 
-import {
-  Attachments,
-  Settings,
-  Task,
-  Tasks,
-  TaskTimer,
-} from '@tmrw/data-access';
+import { Attachments, Settings, Tasks } from '@tmrw/data-access';
+import { Task, TaskTimer } from '@tmrw/data-access-models';
 
 import { TimerUpdateComponent } from './_blocks/timer-update.component';
 

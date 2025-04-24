@@ -13,7 +13,7 @@ import {
   UpdatedAt,
 } from 'sequelize-typescript';
 
-import type { SubTask, Task, TaskTimer } from '@tmrw/data-access';
+import type { SubTask, Task, TaskTimer } from '@tmrw/data-access-models';
 
 @Table({ tableName: 'PlainTasks' })
 export class PlainTask

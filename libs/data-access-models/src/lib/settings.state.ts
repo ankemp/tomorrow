@@ -1,4 +1,4 @@
-import { TaskSort } from '../collections/task.collection';
+import { TaskSort } from './task.model';
 
 export type SettingsState = {
   _encryptionKey: string | null;

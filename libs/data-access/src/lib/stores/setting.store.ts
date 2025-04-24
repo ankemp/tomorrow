@@ -17,8 +17,8 @@ import { catchError, concatMap, EMPTY, map, pipe, tap } from 'rxjs';
 
 import { generateSymmetricKey } from '@tmrw/encryption';
 
-import { Tasks, TaskSort } from '../collections/task.collection';
-import { QRCodeData, SettingsState } from '../models/settings.state';
+import { Tasks } from '../collections/task.collection';
+import { QRCodeData, SettingsState, TaskSort } from '@tmrw/data-access-models';
 import { parseUserAgent } from '../utils/user-agent-parser';
 
 const NO_SYNC_KEYS: (keyof SettingsState)[] = [

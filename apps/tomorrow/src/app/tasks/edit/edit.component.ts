@@ -31,7 +31,8 @@ import { TuiCardLarge, TuiForm, TuiHeader } from '@taiga-ui/layout';
 import { TuiTextareaModule } from '@taiga-ui/legacy';
 import { isNotNil } from 'es-toolkit';
 
-import { Attachments, Settings, SubTask, Task, Tasks } from '@tmrw/data-access';
+import { Attachments, Settings, Tasks } from '@tmrw/data-access';
+import { SubTask, Task } from '@tmrw/data-access-models';
 
 import { CategorySelectorComponent } from '../_formcontrols/category-selector/category-selector.component';
 import { DatePickerComponent } from '../_formcontrols/date-picker/date-picker.component';

@@ -11,7 +11,8 @@ import {
 import { TuiTitle } from '@taiga-ui/core';
 import { isAfter, isFuture, isToday, isYesterday } from 'date-fns';
 
-import { Task, Tasks } from '@tmrw/data-access';
+import { Tasks } from '@tmrw/data-access';
+import { Task } from '@tmrw/data-access-models';
 
 import { EmptyStateComponent } from '../_blocks/empty-state/empty-state.component';
 import { TaskListCardComponent } from '../_blocks/task-list-card/task-list-card.component';

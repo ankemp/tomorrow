@@ -20,7 +20,7 @@ import { TuiAutoFocus, tuiAutoFocusOptionsProvider } from '@taiga-ui/cdk';
 import { TuiButton, TuiGroup, TuiLabel, TuiTextfield } from '@taiga-ui/core';
 import { map } from 'rxjs';
 
-import { SubTask } from '@tmrw/data-access';
+import { SubTask } from '@tmrw/data-access-models';
 
 @Component({
   selector: 'tw-subtasks',

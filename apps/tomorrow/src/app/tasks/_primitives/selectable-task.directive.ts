@@ -14,7 +14,7 @@ import {
   withState,
 } from '@ngrx/signals';
 
-import { Task } from '@tmrw/data-access';
+import { Task } from '@tmrw/data-access-models';
 
 import { Context } from '../../core/context.store';
 

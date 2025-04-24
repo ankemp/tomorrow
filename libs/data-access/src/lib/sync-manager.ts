@@ -7,7 +7,7 @@ import { firstValueFrom, map } from 'rxjs';
 
 import { decryptContent, encryptContent } from '@tmrw/encryption';
 
-import { SettingsState } from './models/settings.state';
+import { SettingsState } from '@tmrw/data-access-models';
 
 // TODO: Possible to replace this with settings store? Pass in though DI in appInit?
 function getSettings(): SettingsState {

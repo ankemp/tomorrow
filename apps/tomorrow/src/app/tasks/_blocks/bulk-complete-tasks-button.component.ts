@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { TuiButton } from '@taiga-ui/core';
 
-import { Task } from '@tmrw/data-access';
+import { Task } from '@tmrw/data-access-models';
 
 import { TaskService } from '../task.service';
 

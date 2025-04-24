@@ -21,7 +21,8 @@ import {
 import { TuiHeader } from '@taiga-ui/layout';
 import { isNotNil } from 'es-toolkit';
 
-import { Settings, TASK_SORT_DEFAULT, TaskSort } from '@tmrw/data-access';
+import { Settings } from '@tmrw/data-access';
+import { TASK_SORT_DEFAULT, TaskSort } from '@tmrw/data-access-models';
 
 @Component({
   selector: 'tw-task-list-header',

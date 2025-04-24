@@ -13,7 +13,6 @@ import {
   TuiAvatarLabeled,
   TuiBadge,
   TuiBadgedContent,
-  TuiButtonLoading,
   TuiSkeleton,
 } from '@taiga-ui/kit';
 import { TuiCardLarge, TuiCell } from '@taiga-ui/layout';
@@ -39,7 +38,6 @@ import { TaskPreferencesComponent } from '../_blocks/task-preferences.component'
     TuiAvatarLabeled,
     TuiBadge,
     TuiBadgedContent,
-    TuiButtonLoading,
     TuiSkeleton,
     TuiCardLarge,
     TuiCell,

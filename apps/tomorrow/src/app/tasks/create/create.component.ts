@@ -22,7 +22,8 @@ import { TuiAccordion, TuiAccordionComponent } from '@taiga-ui/experimental';
 import { TuiCardLarge, TuiForm, TuiHeader } from '@taiga-ui/layout';
 import { TuiTextareaModule } from '@taiga-ui/legacy';
 
-import { Attachments, Settings, SubTask, Tasks } from '@tmrw/data-access';
+import { Attachments, Settings, Tasks } from '@tmrw/data-access';
+import { SubTask } from '@tmrw/data-access-models';
 
 import { CategorySelectorComponent } from '../_formcontrols/category-selector/category-selector.component';
 import { DatePickerComponent } from '../_formcontrols/date-picker/date-picker.component';

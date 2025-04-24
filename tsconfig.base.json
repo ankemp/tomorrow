@@ -17,6 +17,7 @@
     "paths": {
       "@tmrw/ai": ["libs/ai/src/index.ts"],
       "@tmrw/data-access": ["libs/data-access/src/index.ts"],
+      "@tmrw/data-access-models": ["libs/data-access-models/src/index.ts"],
       "@tmrw/encryption": ["libs/encryption/src/index.ts"]
     }
   },

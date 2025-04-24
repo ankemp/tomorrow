@@ -48,7 +48,8 @@ import {
   tap,
 } from 'rxjs';
 
-import { QRCodeData, Settings, syncManager, Tasks } from '@tmrw/data-access';
+import { Settings, syncManager, Tasks } from '@tmrw/data-access';
+import { QRCodeData } from '@tmrw/data-access-models';
 
 LOAD_WASM().subscribe();
 

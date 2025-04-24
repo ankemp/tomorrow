@@ -1,5 +1,12 @@
 import { BaseModel } from './base.model';
 
+export type TaskSort =
+  | 'date_desc'
+  | 'date_asc'
+  | 'priority_desc'
+  | 'priority_asc';
+export const TASK_SORT_DEFAULT: TaskSort = 'date_asc';
+
 export interface SubTask {
   title: string;
   completedAt: Date | null;

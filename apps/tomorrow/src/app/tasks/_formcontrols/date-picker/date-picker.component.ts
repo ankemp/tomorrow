@@ -36,7 +36,8 @@ import {
   set,
 } from 'date-fns';
 
-import { Settings, SettingsState } from '@tmrw/data-access';
+import { Settings } from '@tmrw/data-access';
+import { SettingsState } from '@tmrw/data-access-models';
 
 class DateTimeTransformer extends TuiValueTransformer<
   [TuiDay | null, TuiTime | null],
