@@ -41,7 +41,7 @@
     },
     "docker-build": {
       "dependsOn": ["build", "tomorrow:build"],
-      "command": "docker build -f apps/tomorrow-api/Dockerfile . -t tomorrow"
+      "command": "docker build -f apps/tomorrow-api/Dockerfile . -t tomorrow -t ankemp/tomorrow -t registry.magicbean.us/tomorrow"
     }
   }
 }
