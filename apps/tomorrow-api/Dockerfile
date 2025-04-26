@@ -12,18 +12,15 @@ ENV NODE_ENV=production
 
 WORKDIR /app
 
-RUN npm i -g pnpm@10.9
-
 RUN addgroup --system tomorrow-api && \
           adduser --system -G tomorrow-api tomorrow-api
 
 COPY dist/apps/tomorrow-api tomorrow-api/
-COPY pnpm-workspace.yaml tomorrow-api/
 COPY dist/apps/tomorrow/browser static
 RUN chown -R tomorrow-api:tomorrow-api .
 
-# You can remove this install step if you build with `--bundle` option.
-# The bundled output will include external dependencies.
-RUN pnpm --prefix=tomorrow-api install --frozen-lockfile --prod
+RUN npm --prefix=tomorrow-api ci
+
+USER tomorrow-api
 
 CMD [ "node", "tomorrow-api" ]
