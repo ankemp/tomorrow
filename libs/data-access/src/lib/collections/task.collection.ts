@@ -229,18 +229,12 @@ class TaskCollection extends Collection<Task> {
   }
 
   searchTasks(query: string) {
-    const { field, order } = parseTaskSort(TASK_SORT_DEFAULT);
-    return this.find(
-      {
-        $or: [
-          { title: { $regex: query, $options: 'i' } },
-          { description: { $regex: query, $options: 'i' } },
-        ],
-      },
-      {
-        sort: { [field]: order },
-      },
-    );
+    return this.find({
+      $or: [
+        { title: { $regex: query, $options: 'i' } },
+        { description: { $regex: query, $options: 'i' } },
+      ],
+    });
   }
 
   getTaskById(id: string) {

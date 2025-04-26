@@ -18,6 +18,7 @@ import {
 } from '@taiga-ui/core';
 import { TuiChip, TuiFade } from '@taiga-ui/kit';
 import { TuiAppBar, TuiBlockStatus, TuiCell } from '@taiga-ui/layout';
+import { isAfter } from 'date-fns';
 
 import { Search } from '@tmrw/data-access';
 
@@ -56,7 +57,18 @@ export class SearchComponent {
     if (!this.search.query()) {
       return [];
     }
-    return this.search.cursor().fetch();
+    return this.search
+      .cursor()
+      .fetch()
+      .toSorted((a, b) => {
+        if (a.completedAt && !b.completedAt) {
+          return 1;
+        }
+        if (!a.completedAt && b.completedAt) {
+          return -1;
+        }
+        return isAfter(new Date(a.date), new Date(b.date)) ? 1 : -1;
+      });
   });
   count = computed(() => {
     if (!this.search.query()) {
