@@ -8,8 +8,9 @@ import {
   withState,
 } from '@ngrx/signals';
 
-import { Tasks } from '../collections/task.collection';
 import { SearchState } from '@tmrw/data-access-models';
+
+import { Tasks } from '../collections/task.collection';
 
 const initialState: SearchState = {
   isOpen: false,
