@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { SwUpdate } from '@angular/service-worker';
@@ -22,18 +23,24 @@ import {
   startWith,
   switchMap,
   tap,
+  timer,
 } from 'rxjs';
 
 interface ContextState {
   isOnline: boolean;
   isUpdating: boolean;
   updateReady: boolean;
+  apiHealth: {
+    status: string;
+    details: Record<string, { status: string; [key: string]: string }>;
+  } | null;
 }
 
 const initialState: ContextState = {
   isOnline: navigator.onLine,
   isUpdating: false,
   updateReady: false,
+  apiHealth: null,
 };
 
 export const Context = signalStore(
@@ -41,6 +48,7 @@ export const Context = signalStore(
   withState<ContextState>(initialState),
   withProps(() => ({
     swUpdateService: inject(SwUpdate),
+    httpClient: inject(HttpClient),
     alertService: inject(TuiAlertService),
     breakpointService: inject(TuiBreakpointService),
   })),
@@ -117,13 +125,40 @@ export const Context = signalStore(
         }),
       ),
     ),
+    pollApiHealth: rxMethod<void>(
+      pipe(
+        switchMap(() => {
+          return timer(0, 10000).pipe(
+            switchMap(() => {
+              return store.httpClient
+                .get<{
+                  status: string;
+                  details: Record<
+                    string,
+                    { status: string; [key: string]: string }
+                  >;
+                }>('/api/health/readiness')
+                .pipe(
+                  tap((response) => {
+                    patchState(store, {
+                      apiHealth: {
+                        status: response.status,
+                        details: response.details,
+                      },
+                    });
+                  }),
+                );
+            }),
+          );
+        }),
+      ),
+    ),
   })),
   withHooks({
     onInit(store) {
-      if (typeof window !== 'undefined') {
-        store.watchIsOnline();
-        store.watchUpdates();
-      }
+      store.watchIsOnline();
+      store.watchUpdates();
+      store.pollApiHealth();
     },
   }),
 );
