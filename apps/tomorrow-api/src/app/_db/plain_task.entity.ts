@@ -112,9 +112,3 @@ export class PlainTask
   })
   completedAt: CreationOptional<Date>;
 }
-
-export const PLAIN_TASK = 'PLAIN_TASK_REPOSITORY';
-export const plainTaskProvider = {
-  provide: PLAIN_TASK,
-  useValue: PlainTask,
-};

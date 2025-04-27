@@ -42,9 +42,3 @@ export class EncryptedTask extends Model<
   })
   encryptedData: string;
 }
-
-export const ENCRYPTED_TASK = 'ENCRYPTED_TASK_REPOSITORY';
-export const encryptedTaskProvider = {
-  provide: ENCRYPTED_TASK,
-  useValue: EncryptedTask,
-};

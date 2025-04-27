@@ -66,9 +66,3 @@ export class User extends Model<
   })
   locale: string;
 }
-
-export const USER = 'USER_REPOSITORY';
-export const userProvider = {
-  provide: USER,
-  useValue: User,
-};

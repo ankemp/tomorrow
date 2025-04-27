@@ -1,10 +1,11 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
 
 import type { Task } from '@tmrw/data-access-models';
 
-import { ENCRYPTED_TASK, EncryptedTask } from '../_db/encrypted_task.entity';
-import { PLAIN_TASK, PlainTask } from '../_db/plain_task.entity';
+import { EncryptedTask } from '../_db/encrypted_task.entity';
+import { PlainTask } from '../_db/plain_task.entity';
 
 const TASK_PROP_EXCLUDES = ['createdAt', 'updatedAt', 'deletedAt'];
 
@@ -25,9 +26,10 @@ export type TaskEndpointBody =
 @Injectable()
 export class TasksService {
   constructor(
-    @Inject(PLAIN_TASK) private readonly plainTaskRepository: typeof PlainTask,
-    @Inject(ENCRYPTED_TASK)
-    private readonly encryptedTaskRepository: typeof EncryptedTask,
+    @InjectModel(PlainTask)
+    private plainTaskRepository: typeof PlainTask,
+    @InjectModel(EncryptedTask)
+    private encryptedTaskRepository: typeof EncryptedTask,
   ) {}
 
   async createTasks(body: TaskEndpointBody) {
