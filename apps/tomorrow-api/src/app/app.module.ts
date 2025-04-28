@@ -3,6 +3,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 
 import { HealthModule } from './health/health.module';
+import { NotificationsModule } from './notifications/notifications.module';
 import { TasksModule } from './tasks/tasks.module';
 import { UsersModule } from './users/users.module';
 
@@ -15,6 +16,7 @@ import { UsersModule } from './users/users.module';
     HealthModule,
     TasksModule,
     UsersModule,
+    NotificationsModule,
   ],
 })
 export class AppModule {}
