@@ -1,7 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TuiLabel } from '@taiga-ui/core';
+import { TuiLabel, TuiNotification } from '@taiga-ui/core';
 import { TuiSwitch } from '@taiga-ui/kit';
 
 import { Notifications, Settings } from '@tmrw/data-access';
@@ -15,15 +20,21 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
     CommonModule,
     FormsModule,
     TuiLabel,
+    TuiNotification,
     TuiSwitch,
     PreferencesCardComponent,
   ],
   template: `
     <tw-preferences-card title="Notifications" icon="@tui.bell">
       <div class="switch-container">
+        @if (!enabled()) {
+          <tui-notification appearance="warning" size="s">
+            {{ whyDisabled() }}
+          </tui-notification>
+        }
         <label tuiLabel>
           Push Notifications
-          <input tuiSwitch type="checkbox" />
+          <input tuiSwitch type="checkbox" [disabled]="!enabled()" />
         </label>
       </div>
     </tw-preferences-card>
@@ -36,5 +47,23 @@ export class NotificationPreferencesComponent {
   readonly settings = inject(Settings);
   readonly notifications = inject(Notifications);
 
-  // TODO: Notifications can only be enabled if: Sync is turned on, and if the admin has generated the key(s)
+  readonly enabled = computed(() => {
+    return (
+      this.notifications.swPushEnabled() &&
+      this.settings.remoteSync() &&
+      this.context.notificationsEnabled()
+    );
+  });
+  readonly whyDisabled = computed(() => {
+    if (!this.notifications.swPushEnabled()) {
+      return 'Unsupported browser';
+    }
+    if (!this.settings.remoteSync()) {
+      return 'Remote sync is disabled';
+    }
+    if (!this.context.notificationsEnabled()) {
+      return 'Disabled server-side';
+    }
+    return 'Unknown reason';
+  });
 }
