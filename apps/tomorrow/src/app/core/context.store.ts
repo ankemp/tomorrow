@@ -63,6 +63,9 @@ export const Context = signalStore(
     canVibrate: computed(
       () => typeof navigator !== 'undefined' && 'vibrate' in navigator,
     ),
+    notificationsEnabled: computed(() => {
+      return state.apiHealth()?.details['notifications']?.status === 'UP';
+    }),
   })),
   withMethods((store) => ({
     watchIsOnline: rxMethod<void>(
