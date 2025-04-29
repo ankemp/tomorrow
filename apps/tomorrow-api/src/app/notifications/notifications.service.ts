@@ -28,26 +28,25 @@ export class NotificationsService {
     p256dh: string,
     auth: string,
   ): Promise<NotificationSubscription> {
-    const subscription = await this.subscriptionRepository.findOne({
-      where: { userId, deviceId },
-    });
-    if (subscription) {
-      subscription.endpoint = endpoint;
-      subscription.p256dh = p256dh;
-      subscription.auth = auth;
-      return subscription.save();
+    const [subscription, created] =
+      await this.subscriptionRepository.findOrCreate({
+        where: { userId, deviceId },
+        defaults: { endpoint, p256dh, auth },
+      });
+    if (!created) {
+      await this.subscriptionRepository.update(
+        { endpoint, p256dh, auth },
+        { where: { userId, deviceId } },
+      );
+      return this.subscriptionRepository.findOne({
+        where: { userId, deviceId },
+      });
     }
-    return this.subscriptionRepository.create({
-      userId,
-      deviceId,
-      endpoint,
-      p256dh,
-      auth,
-    });
+    return subscription;
   }
 
-  async removeSubscription(userId: string, deviceId: string): Promise<void> {
-    await this.subscriptionRepository.destroy({
+  removeSubscription(userId: string, deviceId: string) {
+    return this.subscriptionRepository.destroy({
       where: { userId, deviceId },
     });
   }
