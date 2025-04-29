@@ -1,6 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import * as webPush from 'web-push';
+import {
+  PushSubscription,
+  sendNotification,
+  setVapidDetails,
+  WebPushError,
+} from 'web-push';
 
 import { NotificationSubscription } from '../_db/notification-subscription.entity';
 
@@ -14,28 +19,34 @@ export class NotificationsService {
     @InjectModel(NotificationSubscription)
     private readonly subscriptionRepository: typeof NotificationSubscription,
   ) {
-    webPush.setVapidDetails(
+    setVapidDetails(
       VAPID_SUBJECT ?? 'mailto: no-reply@example.com',
       VAPID_PUBLIC_KEY,
       VAPID_PRIVATE_KEY,
     );
   }
 
+  async getPublicKey(): Promise<string> {
+    if (!VAPID_PUBLIC_KEY) {
+      throw new Error('VAPID public key is not set.');
+    }
+    return VAPID_PUBLIC_KEY;
+  }
+
   async addSubscription(
     userId: string,
     deviceId: string,
-    endpoint: string,
-    p256dh: string,
-    auth: string,
+    pushSubscription: PushSubscriptionJSON,
   ): Promise<NotificationSubscription> {
+    const { endpoint, keys } = pushSubscription;
     const [subscription, created] =
       await this.subscriptionRepository.findOrCreate({
         where: { userId, deviceId },
-        defaults: { endpoint, p256dh, auth },
+        defaults: { endpoint, ...keys },
       });
     if (!created) {
       await this.subscriptionRepository.update(
-        { endpoint, p256dh, auth },
+        { endpoint, ...keys },
         { where: { userId, deviceId } },
       );
       return this.subscriptionRepository.findOne({
@@ -69,7 +80,7 @@ export class NotificationsService {
       return;
     }
     const notifications = subscriptions.map((subscription) => {
-      const pushSubscription = {
+      const pushSubscription: PushSubscription = {
         endpoint: subscription.endpoint,
         keys: {
           p256dh: subscription.p256dh,
@@ -80,19 +91,51 @@ export class NotificationsService {
     });
     await Promise.allSettled(
       notifications.map((subscription) =>
-        webPush.sendNotification(subscription, payload).catch(async (error) => {
-          console.error('Failed to send notification:', error);
-
-          if (error.statusCode === 410 || error.statusCode === 404) {
-            console.warn('Removing subscription as it is no longer valid.');
-            await this.subscriptionRepository.destroy({
-              where: { endpoint: subscription.endpoint },
-            });
-          }
-
-          return null;
-        }),
+        sendNotification(subscription, payload).catch((error: WebPushError) =>
+          this.handleNotificationError(subscription, error),
+        ),
       ),
     );
+  }
+
+  async sendNotificationToDevice(
+    userId: string,
+    deviceId: string,
+    payload: string,
+  ): Promise<void> {
+    const subscription = await this.subscriptionRepository.findOne({
+      where: { userId, deviceId },
+    });
+    if (!subscription) {
+      console.warn(
+        `No subscription found for user ${userId} and device ${deviceId}. Skipping notification.`,
+      );
+      return;
+    }
+    const pushSubscription: PushSubscription = {
+      endpoint: subscription.endpoint,
+      keys: {
+        p256dh: subscription.p256dh,
+        auth: subscription.auth,
+      },
+    };
+    await sendNotification(pushSubscription, payload).catch(
+      (error: WebPushError) =>
+        this.handleNotificationError(pushSubscription, error),
+    );
+  }
+
+  private async handleNotificationError(
+    subscription: PushSubscription,
+    error: WebPushError,
+  ): Promise<void> {
+    console.error('Failed to send notification:', error);
+
+    if (error.statusCode === 410 || error.statusCode === 404) {
+      console.warn('Removing subscription as it is no longer valid.');
+      await this.subscriptionRepository.destroy({
+        where: { endpoint: subscription.endpoint },
+      });
+    }
   }
 }

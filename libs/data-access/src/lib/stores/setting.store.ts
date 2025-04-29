@@ -15,10 +15,10 @@ import { TuiDayOfWeek, TuiTimeMode } from '@taiga-ui/cdk';
 import { omit } from 'es-toolkit';
 import { catchError, concatMap, EMPTY, map, pipe, tap } from 'rxjs';
 
+import { QRCodeData, SettingsState, TaskSort } from '@tmrw/data-access-models';
 import { generateSymmetricKey } from '@tmrw/encryption';
 
 import { Tasks } from '../collections/task.collection';
-import { QRCodeData, SettingsState, TaskSort } from '@tmrw/data-access-models';
 import { parseUserAgent } from '../utils/user-agent-parser';
 
 const NO_SYNC_KEYS: (keyof SettingsState)[] = [

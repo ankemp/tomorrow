@@ -10,7 +10,10 @@ import { UsersModule } from './users/users.module';
 @Module({
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'static'),
+      rootPath:
+        process.env.NODE_ENV !== 'production'
+          ? join(__dirname, '..', 'tomorrow', 'browser')
+          : join(__dirname, '..', 'static'),
     }),
     // TODO: Implement throttling(?)
     HealthModule,
