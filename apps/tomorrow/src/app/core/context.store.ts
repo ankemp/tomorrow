@@ -64,7 +64,7 @@ export const Context = signalStore(
       () => typeof navigator !== 'undefined' && 'vibrate' in navigator,
     ),
     notificationsEnabled: computed(() => {
-      return state.apiHealth()?.details['notifications']?.status === 'UP';
+      return state.apiHealth()?.details['notifications']?.status === 'up';
     }),
   })),
   withMethods((store) => ({
@@ -131,7 +131,7 @@ export const Context = signalStore(
     pollApiHealth: rxMethod<void>(
       pipe(
         switchMap(() => {
-          return timer(0, 10000).pipe(
+          return timer(0, 30 * 1000).pipe(
             switchMap(() => {
               return store.httpClient
                 .get<{

@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { TerminusModule } from '@nestjs/terminus';
 
+import { DBService } from './db.service';
 import { DBStorageHealthIndicator } from './db-storage.health';
 import { EncryptedTask } from './encrypted_task.entity';
 import { NotificationSubscription } from './notification-subscription.entity';
@@ -24,7 +25,7 @@ const isDevMode =
       synchronize: true,
     }),
   ],
-  providers: [DBStorageHealthIndicator],
+  providers: [DBStorageHealthIndicator, DBService],
   exports: [SequelizeModule, DBStorageHealthIndicator],
 })
 export class DatabaseModule {}
