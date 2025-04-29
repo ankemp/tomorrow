@@ -27,7 +27,7 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
   template: `
     <tw-preferences-card title="Notifications" icon="@tui.bell">
       <div class="switch-container">
-        @if (!enabled()) {
+        @if (disabled()) {
           <tui-notification appearance="warning" size="s">
             {{ whyDisabled() }}
           </tui-notification>
@@ -47,11 +47,11 @@ export class NotificationPreferencesComponent {
   readonly settings = inject(Settings);
   readonly notifications = inject(Notifications);
 
-  readonly enabled = computed(() => {
+  readonly disabled = computed(() => {
     return (
-      this.notifications.swPushEnabled() &&
-      this.settings.remoteSync() &&
-      this.context.notificationsEnabled()
+      !this.notifications.swPushEnabled() ||
+      !this.settings.remoteSync() ||
+      !this.context.notificationsEnabled()
     );
   });
   readonly whyDisabled = computed(() => {
