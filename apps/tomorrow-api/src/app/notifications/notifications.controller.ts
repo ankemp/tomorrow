@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 
 import { NotificationsService } from './notifications.service';
 import { VapidKeyGuard } from './vapid-key.guard';
@@ -14,18 +14,14 @@ export class NotificationsController {
     body: {
       userId: string;
       deviceId: string;
-      endpoint: string;
-      p256dh: string;
-      auth: string;
+      subscription: PushSubscriptionJSON;
     },
   ) {
-    const { userId, deviceId, endpoint, p256dh, auth } = body;
+    const { userId, deviceId, subscription } = body;
     return this.notificationsService.addSubscription(
       userId,
       deviceId,
-      endpoint,
-      p256dh,
-      auth,
+      subscription,
     );
   }
 
@@ -39,5 +35,27 @@ export class NotificationsController {
   ) {
     const { userId, deviceId } = body;
     return this.notificationsService.removeSubscription(userId, deviceId);
+  }
+
+  @Post('test')
+  async sendNotificationToUsersDevices(
+    @Body()
+    body: {
+      userId: string;
+      deviceId: string;
+    },
+  ) {
+    const { userId, deviceId } = body;
+    return this.notificationsService.sendNotificationToDevice(
+      userId,
+      deviceId,
+      'Test notification',
+    );
+  }
+
+  @Get('public-key')
+  async getPublicKey() {
+    const publicKey = await this.notificationsService.getPublicKey();
+    return { publicKey };
   }
 }
