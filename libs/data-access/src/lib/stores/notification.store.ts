@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
-import { inject } from '@angular/core';
+import { computed, inject } from '@angular/core';
 import { SwPush } from '@angular/service-worker';
 import {
   getState,
   patchState,
   signalStore,
+  withComputed,
   withHooks,
   withMethods,
   withProps,
@@ -35,6 +36,11 @@ export const Notifications = signalStore(
     swPush: inject(SwPush),
     settings: inject(Settings),
   })),
+  withComputed((store) => ({
+    swPushEnabled: computed(() => {
+      return store.swPush.isEnabled;
+    }),
+  })),
   withMethods((store) => ({
     getServerPublicKey: rxMethod<void>(
       pipe(
@@ -46,6 +52,21 @@ export const Notifications = signalStore(
                 patchState(store, { serverPublicKey: publicKey });
               }),
             );
+        }),
+      ),
+    ),
+    checkSubscription: rxMethod<void>(
+      pipe(
+        switchMap(() => {
+          return store.swPush.subscription.pipe(
+            tap((subscription) => {
+              if (subscription) {
+                patchState(store, { isSubscribed: true, subscription });
+              } else {
+                patchState(store, { isSubscribed: false, subscription: null });
+              }
+            }),
+          );
         }),
       ),
     ),
@@ -86,6 +107,7 @@ export const Notifications = signalStore(
   withHooks({
     onInit(store) {
       store.getServerPublicKey();
+      store.checkSubscription();
     },
   }),
 );
