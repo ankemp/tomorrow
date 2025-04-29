@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { computed, inject } from '@angular/core';
+import { inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { SwPush } from '@angular/service-worker';
 import {
   getState,
@@ -12,7 +13,7 @@ import {
   withState,
 } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { from, map, pipe, switchMap, tap } from 'rxjs';
+import { from, map, pipe, startWith, switchMap, tap } from 'rxjs';
 
 import { Settings } from './setting.store';
 
@@ -37,9 +38,19 @@ export const Notifications = signalStore(
     settings: inject(Settings),
   })),
   withComputed((store) => ({
-    swPushEnabled: computed(() => {
-      return store.swPush.isEnabled;
-    }),
+    swPushEnabled: toSignal(
+      store.swPush.subscription.pipe(
+        map(() => store.swPush.isEnabled),
+        startWith(false),
+      ),
+    ),
+    incoming: toSignal(
+      store.swPush.messages.pipe(
+        map((message) => {
+          return message;
+        }),
+      ),
+    ),
   })),
   withMethods((store) => ({
     getServerPublicKey: rxMethod<void>(
