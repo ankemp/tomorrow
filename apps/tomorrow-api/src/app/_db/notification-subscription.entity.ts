@@ -1,9 +1,9 @@
-import { InferAttributes, InferCreationAttributes, Model } from 'sequelize';
+import { InferAttributes, InferCreationAttributes } from 'sequelize';
 import {
   Column,
   CreatedAt,
   DataType,
-  DeletedAt,
+  Model,
   Table,
   UpdatedAt,
 } from 'sequelize-typescript';
@@ -18,9 +18,6 @@ export class NotificationSubscription extends Model<
 
   @UpdatedAt
   updatedAt: Date;
-
-  @DeletedAt
-  deletedAt: Date;
 
   @Column({
     type: DataType.STRING,
