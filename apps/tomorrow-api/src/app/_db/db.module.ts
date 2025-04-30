@@ -7,6 +7,8 @@ import { EncryptedTask } from './encrypted_task.entity';
 import { PlainTask } from './plain_task.entity';
 import { User } from './user.entity';
 
+import 'sqlite3';
+
 const isDevMode =
   !process.env['NODE_ENV'] || process.env['NODE_ENV'] === 'development';
 
