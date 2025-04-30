@@ -34,7 +34,7 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
         }
         <label tuiLabel>
           Push Notifications
-          <input tuiSwitch type="checkbox" [disabled]="!enabled()" />
+          <input tuiSwitch type="checkbox" [disabled]="disabled()" />
         </label>
       </div>
     </tw-preferences-card>
