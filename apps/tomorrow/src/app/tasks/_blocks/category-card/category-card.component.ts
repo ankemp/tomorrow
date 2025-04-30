@@ -1,15 +1,9 @@
-import {
-  CommonModule,
-  I18nPluralPipe,
-  isPlatformBrowser,
-} from '@angular/common';
+import { CommonModule, I18nPluralPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   effect,
-  Inject,
   input,
-  PLATFORM_ID,
   signal,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
@@ -50,17 +44,15 @@ export class CategoryCardComponent {
 
   readonly taskCount = signal<number>(-1);
 
-  constructor(@Inject(PLATFORM_ID) platformId: any) {
-    if (isPlatformBrowser(platformId)) {
-      effect((onCleanup) => {
-        const c = Tasks.getByCategory({
-          category: this.title(),
-        });
-        this.taskCount.set(c.count());
-        onCleanup(() => {
-          c.cleanup();
-        });
+  constructor() {
+    effect((onCleanup) => {
+      const c = Tasks.getByCategory({
+        category: this.title(),
       });
-    }
+      this.taskCount.set(c.count());
+      onCleanup(() => {
+        c.cleanup();
+      });
+    });
   }
 }

@@ -1,12 +1,10 @@
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   computed,
   effect,
-  Inject,
   inject,
-  PLATFORM_ID,
   signal,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
@@ -66,50 +64,48 @@ export class DashboardComponent {
       .reduce((acc, task) => acc + (task.duration ?? 0), 0);
   });
 
-  constructor(@Inject(PLATFORM_ID) platformId: any) {
-    if (isPlatformBrowser(platformId)) {
-      effect((onCleanup) => {
-        const pt = Tasks.getPinnedTasks();
-        this.pinnedTasks.set(pt.fetch());
-        onCleanup(() => {
-          pt.cleanup();
-        });
+  constructor() {
+    effect((onCleanup) => {
+      const pt = Tasks.getPinnedTasks();
+      this.pinnedTasks.set(pt.fetch());
+      onCleanup(() => {
+        pt.cleanup();
       });
+    });
 
-      effect((onCleanup) => {
-        const wt = Tasks.getTasksWithOngoingTimer();
-        this.tasksWithTimer.set(wt.fetch());
-        onCleanup(() => {
-          wt.cleanup();
-        });
+    effect((onCleanup) => {
+      const wt = Tasks.getTasksWithOngoingTimer();
+      this.tasksWithTimer.set(wt.fetch());
+      onCleanup(() => {
+        wt.cleanup();
       });
+    });
 
-      effect((onCleanup) => {
-        const ot = Tasks.getOverdueTasks();
-        this.overdueTasks.set(ot.fetch());
-        onCleanup(() => {
-          ot.cleanup();
-        });
+    effect((onCleanup) => {
+      const ot = Tasks.getOverdueTasks();
+      this.overdueTasks.set(ot.fetch());
+      onCleanup(() => {
+        ot.cleanup();
       });
+    });
 
-      effect((onCleanup) => {
-        const sort = this.todaysSort();
-        const includeCompleted = this.includeTodaysCompletedTasks();
-        const tt = Tasks.getTodaysTasks({ sort, includeCompleted });
-        this.todaysTasks.set(tt.fetch());
-        onCleanup(() => {
-          tt.cleanup();
-        });
+    effect((onCleanup) => {
+      const sort = this.todaysSort();
+      const includeCompleted = this.includeTodaysCompletedTasks();
+      const tt = Tasks.getTodaysTasks({ sort, includeCompleted });
+      this.todaysTasks.set(tt.fetch());
+      onCleanup(() => {
+        tt.cleanup();
       });
+    });
 
-      effect((onCleanup) => {
-        const sort = this.upcomingSort();
-        const ut = Tasks.getUpcomingTasks({ sort });
-        this.upcomingTasks.set(ut.fetch());
-        onCleanup(() => {
-          ut.cleanup();
-        });
+    effect((onCleanup) => {
+      const sort = this.upcomingSort();
+      const ut = Tasks.getUpcomingTasks({ sort });
+      this.upcomingTasks.set(ut.fetch());
+      onCleanup(() => {
+        ut.cleanup();
       });
-    }
+    });
   }
 }

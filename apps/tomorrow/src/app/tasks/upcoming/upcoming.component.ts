@@ -1,12 +1,10 @@
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   computed,
   effect,
-  Inject,
   inject,
-  PLATFORM_ID,
   signal,
 } from '@angular/core';
 import { TuiTitle } from '@taiga-ui/core';
@@ -69,22 +67,20 @@ export class UpcomingComponent {
       });
   });
 
-  constructor(@Inject(PLATFORM_ID) platformId: any) {
-    if (isPlatformBrowser(platformId)) {
-      effect((onCleanup) => {
-        const c = Tasks.getUpcomingTasks({ limit: -1 });
-        this.upcomingTasks.set(c.fetch());
-        onCleanup(() => {
-          c.cleanup();
-        });
+  constructor() {
+    effect((onCleanup) => {
+      const c = Tasks.getUpcomingTasks({ limit: -1 });
+      this.upcomingTasks.set(c.fetch());
+      onCleanup(() => {
+        c.cleanup();
       });
-      effect((onCleanup) => {
-        const c = Tasks.getTodaysTasks({ includeCompleted: false });
-        this.todaysTasks.set(c.fetch());
-        onCleanup(() => {
-          c.cleanup();
-        });
+    });
+    effect((onCleanup) => {
+      const c = Tasks.getTodaysTasks({ includeCompleted: false });
+      this.todaysTasks.set(c.fetch());
+      onCleanup(() => {
+        c.cleanup();
       });
-    }
+    });
   }
 }

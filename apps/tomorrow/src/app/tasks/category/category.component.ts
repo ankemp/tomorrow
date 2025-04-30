@@ -1,11 +1,9 @@
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   computed,
   effect,
-  Inject,
-  PLATFORM_ID,
   signal,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -86,23 +84,18 @@ export class CategoryComponent {
     });
   });
 
-  constructor(
-    @Inject(PLATFORM_ID) platformId: any,
-    activatedRoute: ActivatedRoute,
-  ) {
+  constructor(activatedRoute: ActivatedRoute) {
     this.title.set(activatedRoute.snapshot.params['slug']);
-    if (isPlatformBrowser(platformId)) {
-      effect((onCleanup) => {
-        // TODO: Move filtering to the Tasks service instead of using computed
-        // TODO: Add sorting
-        const c = Tasks.getByCategory({
-          category: this.title(),
-        });
-        this.categoryTasks.set(c.fetch());
-        onCleanup(() => {
-          c.cleanup();
-        });
+    effect((onCleanup) => {
+      // TODO: Move filtering to the Tasks service instead of using computed
+      // TODO: Add sorting
+      const c = Tasks.getByCategory({
+        category: this.title(),
       });
-    }
+      this.categoryTasks.set(c.fetch());
+      onCleanup(() => {
+        c.cleanup();
+      });
+    });
   }
 }

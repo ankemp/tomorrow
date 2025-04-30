@@ -1,13 +1,11 @@
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   computed,
   effect,
-  Inject,
   inject,
   linkedSignal,
-  PLATFORM_ID,
   signal,
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -215,24 +213,19 @@ export class TaskComponent {
     return fullNotes.slice(0, threshold) + '...';
   });
 
-  constructor(
-    @Inject(PLATFORM_ID) platformId: any,
-    activatedRoute: ActivatedRoute,
-  ) {
-    if (isPlatformBrowser(platformId)) {
-      effect((onCleanup) => {
-        const t = Tasks.getTaskById(activatedRoute.snapshot.params['id']);
-        if (t) {
-          this.task.set(t);
-          this.attachmentsStore.init(t);
-        } else {
-          this.router.navigate(['/tasks/404']);
-        }
-        onCleanup(() => {
-          this.attachmentsStore.dispose();
-        });
+  constructor(activatedRoute: ActivatedRoute) {
+    effect((onCleanup) => {
+      const t = Tasks.getTaskById(activatedRoute.snapshot.params['id']);
+      if (t) {
+        this.task.set(t);
+        this.attachmentsStore.init(t);
+      } else {
+        this.router.navigate(['/tasks/404']);
+      }
+      onCleanup(() => {
+        this.attachmentsStore.dispose();
       });
-    }
+    });
   }
 
   navigateToEditWithAccordion(index: number) {

@@ -1,12 +1,10 @@
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   effect,
-  Inject,
   inject,
-  PLATFORM_ID,
   signal,
   ViewChild,
 } from '@angular/core';
@@ -96,19 +94,17 @@ export class EditComponent implements AfterViewInit {
   @ViewChild(TuiAccordionComponent, { static: true })
   readonly accordion!: TuiAccordionComponent;
 
-  constructor(@Inject(PLATFORM_ID) platformId: any) {
-    if (isPlatformBrowser(platformId)) {
-      effect(() => {
-        const t = Tasks.getTaskById(this.activatedRoute.snapshot.params['id']);
-        if (t) {
-          this.task.set(t);
-          this.attachmentsStore.init(t);
-          this.setFormData(t);
-        } else {
-          this.router.navigate(['/tasks/404']);
-        }
-      });
-    }
+  constructor() {
+    effect(() => {
+      const t = Tasks.getTaskById(this.activatedRoute.snapshot.params['id']);
+      if (t) {
+        this.task.set(t);
+        this.attachmentsStore.init(t);
+        this.setFormData(t);
+      } else {
+        this.router.navigate(['/tasks/404']);
+      }
+    });
   }
 
   ngAfterViewInit(): void {

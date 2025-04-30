@@ -1,11 +1,9 @@
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   effect,
-  Inject,
   inject,
-  PLATFORM_ID,
   signal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -53,20 +51,18 @@ export class AppBarComponent {
     ),
   );
 
-  constructor(@Inject(PLATFORM_ID) platformId: any) {
-    if (isPlatformBrowser(platformId)) {
-      effect((onCleanup) => {
-        const c = Tasks.getTodaysIncompleteTasks();
-        this.taskCount.set(c.count());
-        onCleanup(() => {
-          c.cleanup();
-        });
+  constructor() {
+    effect((onCleanup) => {
+      const c = Tasks.getTodaysIncompleteTasks();
+      this.taskCount.set(c.count());
+      onCleanup(() => {
+        c.cleanup();
       });
-      effect(() => {
-        if (this.context.isOffline() && this.settings.remoteSync()) {
-          document.documentElement.style.setProperty('--header-offset', '2rem');
-        }
-      });
-    }
+    });
+    effect(() => {
+      if (this.context.isOffline() && this.settings.remoteSync()) {
+        document.documentElement.style.setProperty('--header-offset', '2rem');
+      }
+    });
   }
 }
