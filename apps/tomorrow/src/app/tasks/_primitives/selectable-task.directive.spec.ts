@@ -5,6 +5,8 @@ import {
 } from '@ngneat/spectator/vitest';
 import { vi } from 'vitest';
 
+import { Context } from '../../core/context.store';
+
 import {
   SelectableTaskDirective,
   SelectedTasksStore,
@@ -14,12 +16,28 @@ describe('SelectableTaskDirective', () => {
   let spectator: SpectatorDirective<SelectableTaskDirective>;
   const createDirective = createDirectiveFactory({
     directive: SelectableTaskDirective,
-    providers: [SelectedTasksStore, { provide: SwUpdate, useValue: {} }],
+    providers: [
+      SelectedTasksStore,
+      {
+        provide: Context,
+        useValue: {
+          canVibrate: vi.fn(() => true),
+        },
+      },
+      { provide: SwUpdate, useValue: {} },
+    ],
   });
 
   const mockTask: any = { id: '1', name: 'Test Task' };
 
   beforeEach(() => {
+    vi.useFakeTimers();
+    Object.defineProperty(global, 'navigator', {
+      value: {
+        vibrate: vi.fn(),
+      },
+      writable: true,
+    });
     spectator = createDirective(`<div twSelectableTask [task]="task"></div>`, {
       hostProps: {
         task: mockTask,
@@ -42,7 +60,6 @@ describe('SelectableTaskDirective', () => {
   });
 
   it('should select task on long touch if not selected', () => {
-    vi.useFakeTimers();
     const directive = spectator.directive;
     const store = spectator.inject(SelectedTasksStore);
 
@@ -60,7 +77,6 @@ describe('SelectableTaskDirective', () => {
   });
 
   it('should unselect task on long touch if selected', () => {
-    vi.useFakeTimers();
     const directive = spectator.directive;
     const store = spectator.inject(SelectedTasksStore);
 
@@ -74,6 +90,40 @@ describe('SelectableTaskDirective', () => {
     spectator.detectChanges();
     expect(directive.selected()).toBe(false);
     expect(unselectTaskSpy).toHaveBeenCalledWith(mockTask);
+
+    // Simulate touch end
+    spectator.dispatchTouchEvent(spectator.element, 'touchend');
+  });
+
+  it('should call vibrate when canVibrate is true', () => {
+    const directive = spectator.directive;
+    const navigatorVibrateSpy = vi.spyOn(global.navigator, 'vibrate');
+
+    // Simulate long press
+    spectator.dispatchTouchEvent(spectator.element, 'touchstart');
+    vi.advanceTimersByTime(directive.timeoutDelay);
+    spectator.detectChanges();
+
+    expect(navigatorVibrateSpy).toHaveBeenCalled();
+
+    // Simulate touch end
+    spectator.dispatchTouchEvent(spectator.element, 'touchend');
+  });
+
+  it('should not call vibrate when canVibrate is false', () => {
+    const directive = spectator.directive;
+    const navigatorVibrateSpy = vi.spyOn(global.navigator, 'vibrate');
+
+    // Override canVibrate to return false
+    const context = spectator.inject(Context);
+    vi.spyOn(context, 'canVibrate').mockReturnValue(false);
+
+    // Simulate long press
+    spectator.dispatchTouchEvent(spectator.element, 'touchstart');
+    vi.advanceTimersByTime(directive.timeoutDelay);
+    spectator.detectChanges();
+
+    expect(navigatorVibrateSpy).not.toHaveBeenCalled();
 
     // Simulate touch end
     spectator.dispatchTouchEvent(spectator.element, 'touchend');
