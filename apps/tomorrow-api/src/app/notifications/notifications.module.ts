@@ -3,20 +3,28 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { TerminusModule } from '@nestjs/terminus';
 
 import { DatabaseModule } from '../_db/db.module';
-import { NotificationSubscription } from '../_db/notification-subscription.entity';
+import { Notification } from '../_db/notification.entity';
+import { PushNotificationSubscription } from '../_db/notification-subscription.entity';
 
+import { NotificationSchedulerService } from './notification-scheduler.service';
 import { NotificationsController } from './notifications.controller';
 import { NotificationHealthIndicator } from './notifications.health';
 import { NotificationsService } from './notifications.service';
+import { PushSubscriptionService } from './push-subscription.service';
 
 @Module({
   imports: [
     TerminusModule,
     DatabaseModule,
-    SequelizeModule.forFeature([NotificationSubscription]),
+    SequelizeModule.forFeature([PushNotificationSubscription, Notification]),
   ],
   controllers: [NotificationsController],
-  providers: [NotificationsService, NotificationHealthIndicator],
-  exports: [NotificationsService, NotificationHealthIndicator],
+  providers: [
+    NotificationSchedulerService,
+    NotificationHealthIndicator,
+    NotificationsService,
+    PushSubscriptionService,
+  ],
+  exports: [NotificationHealthIndicator, PushSubscriptionService],
 })
 export class NotificationsModule {}

@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ScheduleModule } from '@nestjs/schedule';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 
@@ -9,6 +10,7 @@ import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     ServeStaticModule.forRoot({
       rootPath:
         process.env.NODE_ENV !== 'production'
@@ -17,9 +19,9 @@ import { UsersModule } from './users/users.module';
     }),
     // TODO: Implement throttling(?)
     HealthModule,
+    NotificationsModule,
     TasksModule,
     UsersModule,
-    NotificationsModule,
   ],
 })
 export class AppModule {}
