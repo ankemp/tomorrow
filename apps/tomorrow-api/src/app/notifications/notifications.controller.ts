@@ -1,12 +1,16 @@
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 
 import { NotificationsService } from './notifications.service';
+import { PushSubscriptionService } from './push-subscription.service';
 import { VapidKeyGuard } from './vapid-key.guard';
 
 @UseGuards(VapidKeyGuard)
 @Controller('notifications')
 export class NotificationsController {
-  constructor(private readonly notificationsService: NotificationsService) {}
+  constructor(
+    private readonly notificationsService: NotificationsService,
+    private readonly pushSubscriptionService: PushSubscriptionService,
+  ) {}
 
   @Post('subscribe')
   async addSubscription(
@@ -18,7 +22,7 @@ export class NotificationsController {
     },
   ) {
     const { userId, deviceId, subscription } = body;
-    return this.notificationsService.addSubscription(
+    return this.pushSubscriptionService.addSubscription(
       userId,
       deviceId,
       subscription,
@@ -34,7 +38,7 @@ export class NotificationsController {
     },
   ) {
     const { userId, deviceId } = body;
-    return this.notificationsService.removeSubscription(userId, deviceId);
+    return this.pushSubscriptionService.removeSubscription(userId, deviceId);
   }
 
   @Post('test')
@@ -46,7 +50,7 @@ export class NotificationsController {
     },
   ) {
     const { userId, deviceId } = body;
-    return this.notificationsService.sendNotificationToDevice(
+    return this.pushSubscriptionService.sendNotificationToDevice(
       userId,
       deviceId,
       'Test notification',
@@ -55,7 +59,7 @@ export class NotificationsController {
 
   @Get('public-key')
   async getPublicKey() {
-    const publicKey = await this.notificationsService.getPublicKey();
+    const publicKey = await this.pushSubscriptionService.getPublicKey();
     return { publicKey };
   }
 }

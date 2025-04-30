@@ -116,7 +116,6 @@ export class TasksService {
     deviceId: string;
     encrypted: boolean;
   }) {
-    console.log('getTasks', query);
     const { since, userId, deviceId, encrypted } = query;
 
     if (!userId || !deviceId) {
