@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, provideAppInitializer } from '@angular/core';
 
+import { TASK_SSE_EVENT } from '@tmrw/data-access-models';
+
 import { Tasks } from '../collections/task.collection';
 import { syncManager } from '../sync-manager';
 
@@ -9,6 +11,7 @@ export const provideSyncManager = () =>
     syncManager.addCollection(Tasks, {
       name: 'tasks',
       apiPath: '/api/tasks',
+      eventType: TASK_SSE_EVENT,
       httpClient: inject(HttpClient),
       jsonReviver: (key: string, value: any) => {
         if (key === 'date' || key === 'completedAt') {

@@ -5,9 +5,8 @@ import createIndexedDBAdapter from '@signaldb/indexeddb';
 import { SyncManager } from '@signaldb/sync';
 import { firstValueFrom, map } from 'rxjs';
 
-import { decryptContent, encryptContent } from '@tmrw/encryption';
-
 import { SettingsState } from '@tmrw/data-access-models';
+import { decryptContent, encryptContent } from '@tmrw/encryption';
 
 // TODO: Possible to replace this with settings store? Pass in though DI in appInit?
 function getSettings(): SettingsState {
@@ -137,13 +136,13 @@ export const syncManager = new SyncManager({
       );
     }
   },
-  registerRemoteChange: ({ apiPath, jsonReviver }, onChange) => {
+  registerRemoteChange: ({ apiPath, jsonReviver, eventType }, onChange) => {
     const settings = getSettings();
     const eventSource = new EventSource(
       `${apiPath}/events/user/${settings.userId}?deviceId=${settings.deviceId}`,
     );
 
-    eventSource.addEventListener('task', (event) => {
+    eventSource.addEventListener(eventType, (event) => {
       try {
         const data: Changeset<any> = JSON.parse(event.data, jsonReviver);
         if (settings.encryption) {

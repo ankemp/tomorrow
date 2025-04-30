@@ -1,5 +1,7 @@
 import { BaseModel } from './base.model';
 
+export const TASK_SSE_EVENT = 'tasks';
+
 export type TaskSort =
   | 'date_desc'
   | 'date_asc'

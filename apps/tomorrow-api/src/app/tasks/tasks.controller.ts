@@ -15,7 +15,7 @@ import {
 } from '@nestjs/common';
 import { Changeset } from '@signaldb/core/index';
 
-import type { Task } from '@tmrw/data-access-models';
+import { type Task, TASK_SSE_EVENT } from '@tmrw/data-access-models';
 
 import { SSEService } from '../sse.service';
 
@@ -40,7 +40,7 @@ export class TasksController {
       );
     }
 
-    return this.sseService.getEventObservable(userId, deviceId);
+    return this.sseService.getEventObservable(userId, deviceId, TASK_SSE_EVENT);
   }
 
   @Post()
