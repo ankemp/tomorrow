@@ -34,7 +34,13 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
         }
         <label tuiLabel>
           Push Notifications
-          <input tuiSwitch type="checkbox" [disabled]="disabled()" />
+          <input
+            tuiSwitch
+            type="checkbox"
+            [disabled]="disabled()"
+            [ngModel]="notifications.isSubscribed()"
+            (ngModelChange)="notifications.toggleSubscription()"
+          />
         </label>
       </div>
     </tw-preferences-card>
