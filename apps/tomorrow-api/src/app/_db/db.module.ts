@@ -30,6 +30,10 @@ const isDevMode =
         Notification,
       ],
       synchronize: true,
+      sync: {
+        alter: true,
+        // TODO: Setup migrations, and disable alter mode
+      },
     }),
   ],
   providers: [DBStorageHealthIndicator, DBService],

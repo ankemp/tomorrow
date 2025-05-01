@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { InjectModel } from '@nestjs/sequelize';
 
@@ -7,7 +7,7 @@ import { Notification } from '../_db/notification.entity';
 import { PushSubscriptionService } from './push-subscription.service';
 
 @Injectable()
-export class NotificationSchedulerService {
+export class NotificationSchedulerService implements OnApplicationBootstrap {
   private readonly logger = new Logger(NotificationSchedulerService.name);
 
   constructor(
@@ -15,9 +15,17 @@ export class NotificationSchedulerService {
     private readonly notificationRepository: typeof Notification,
     private readonly schedulerRegistry: SchedulerRegistry,
     private readonly pushSubscription: PushSubscriptionService,
-  ) {
+  ) {}
+
+  onApplicationBootstrap() {
     this.rehydrateNotifications();
   }
+
+  /**
+   * // TODO:
+   * Add method to send a batched notification, something like:
+   * You have X Tasks due at Y timestamp
+   */
 
   dispatchNotification(notification: Notification) {
     this.pushSubscription.sendNotificationToUsersDevices(
