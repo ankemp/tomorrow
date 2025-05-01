@@ -12,18 +12,42 @@ export class NotificationsService {
 
   async createNotification(
     userId: string,
+    taskId: string,
     message: string,
     scheduledAt: Date,
   ): Promise<Notification> {
     const notification = await this.notificationRepository.create({
       userId,
+      taskId,
       message,
       scheduledAt,
     });
     return notification;
   }
 
-  async getNotifications(userId: string): Promise<Notification[]> {
+  async updateNotification(
+    userId: string,
+    notificationId: string,
+    message: string,
+  ): Promise<Notification | null> {
+    await this.notificationRepository.update(
+      { message },
+      {
+        where: {
+          id: notificationId,
+          userId,
+        },
+      },
+    );
+    return this.notificationRepository.findOne({
+      where: {
+        id: notificationId,
+        userId,
+      },
+    });
+  }
+
+  async getNotificationsForUser(userId: string): Promise<Notification[]> {
     const notifications = await this.notificationRepository.findAll({
       where: {
         userId,
@@ -43,5 +67,13 @@ export class NotificationsService {
       },
     });
     return notification;
+  }
+
+  getAllUnsentNotifications(): Promise<Notification[]> {
+    return this.notificationRepository.findAll({
+      where: {
+        isSent: false,
+      },
+    });
   }
 }

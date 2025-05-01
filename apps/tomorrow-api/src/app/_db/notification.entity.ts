@@ -40,6 +40,12 @@ export class Notification extends Model<
     type: DataType.STRING,
     allowNull: false,
   })
+  taskId: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
   message: string;
 
   @Column({
