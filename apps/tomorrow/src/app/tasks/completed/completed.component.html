@@ -2,7 +2,7 @@
 
 @if (hasFutureTasks()) {
   <section class="task-list-grid">
-    <tw-task-list-header title="Future" headerSize="s" icon="@tui.clock-3" />
+    <tw-task-list-header title="Future" headerSize="xs" icon="@tui.clock-3" />
     @for (task of futureTasks(); track task.id) {
       <tw-task-list-card [task]="task" [strikeThrough]="false" />
     }
@@ -10,7 +10,7 @@
 }
 
 <section class="task-list-grid">
-  <tw-task-list-header title="Today" headerSize="s" icon="@tui.clock-12" />
+  <tw-task-list-header title="Today" headerSize="xs" icon="@tui.clock-12" />
   @for (task of todaysTasks(); track task.id) {
     <tw-task-list-card [task]="task" [strikeThrough]="false" />
   } @empty {
@@ -22,7 +22,7 @@
 </section>
 
 <section class="task-list-grid">
-  <tw-task-list-header title="Yesterday" headerSize="s" icon="@tui.clock-9" />
+  <tw-task-list-header title="Yesterday" headerSize="xs" icon="@tui.clock-9" />
   @for (task of yesterdaysTasks(); track task.id) {
     <tw-task-list-card [task]="task" [strikeThrough]="false" />
   } @empty {
@@ -37,7 +37,7 @@
   <section class="task-list-grid">
     <tw-task-list-header
       [title]="group.date"
-      headerSize="s"
+      headerSize="xs"
       icon="@tui.calendar-days"
     />
     @for (task of group.tasks; track task.id) {

@@ -3,7 +3,7 @@
 <div class="task-list-group">
   <tw-task-list-header title="Overdue" headerSize="xs" icon="@tui.clock-9">
     @if (overdueTasks().length > 0) {
-      <tw-bulk-complete-tasks-button [tasks]="overdueTasks()" />
+      <tw-bulk-complete-tasks-button [tasks]="overdueTasks()" size="s" />
     }
   </tw-task-list-header>
   <div class="task-list-grid">
@@ -18,11 +18,11 @@
 <div class="task-list-group">
   <tw-task-list-header title="Today" headerSize="xs" icon="@tui.clock-12">
     @if (todaysTasks().length > 0) {
-      <tui-chip size="s">
+      <tui-chip size="xs">
         <tui-icon icon="@tui.clock" />
         {{ todaysTasksDuration() | formatDuration }}
       </tui-chip>
-      <tw-bulk-complete-tasks-button [tasks]="todaysTasks()" />
+      <tw-bulk-complete-tasks-button [tasks]="todaysTasks()" size="s" />
     }
   </tw-task-list-header>
   <div class="task-list-grid">
@@ -37,11 +37,11 @@
 <div class="task-list-group">
   <tw-task-list-header title="Tomorrow" headerSize="xs" icon="@tui.clock-3">
     @if (tomorrowTasks().length > 0) {
-      <tui-chip size="s">
+      <tui-chip size="xs">
         <tui-icon icon="@tui.clock" />
         {{ tomorrowTasksDuration() | formatDuration }}
       </tui-chip>
-      <tw-bulk-complete-tasks-button [tasks]="tomorrowTasks()" />
+      <tw-bulk-complete-tasks-button [tasks]="tomorrowTasks()" size="s" />
     }
   </tw-task-list-header>
   <div class="task-list-grid">
@@ -56,7 +56,7 @@
 <div class="task-list-group">
   <tw-task-list-header title="Future" headerSize="xs" icon="@tui.calendar-days">
     @if (futureTasks().length > 0) {
-      <tw-bulk-complete-tasks-button [tasks]="futureTasks()" />
+      <tw-bulk-complete-tasks-button [tasks]="futureTasks()" size="s" />
     }
   </tw-task-list-header>
   <div class="task-list-grid">
