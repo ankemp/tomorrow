@@ -1,9 +1,9 @@
 import { Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common';
 import { SchedulerRegistry } from '@nestjs/schedule';
-import { InjectModel } from '@nestjs/sequelize';
 
 import { Notification } from '../_db/notification.entity';
 
+import { NotificationsService } from './notifications.service';
 import { PushSubscriptionService } from './push-subscription.service';
 
 @Injectable()
@@ -11,9 +11,8 @@ export class NotificationSchedulerService implements OnApplicationBootstrap {
   private readonly logger = new Logger(NotificationSchedulerService.name);
 
   constructor(
-    @InjectModel(Notification)
-    private readonly notificationRepository: typeof Notification,
     private readonly schedulerRegistry: SchedulerRegistry,
+    private readonly notificationsService: NotificationsService,
     private readonly pushSubscription: PushSubscriptionService,
   ) {}
 
@@ -48,11 +47,8 @@ export class NotificationSchedulerService implements OnApplicationBootstrap {
   }
 
   async rehydrateNotifications() {
-    const notifications = await this.notificationRepository.findAll({
-      where: {
-        isSent: false,
-      },
-    });
+    const notifications =
+      await this.notificationsService.getAllUnsentNotifications();
     if (!notifications || notifications.length === 0) {
       this.logger.debug('No notifications to rehydrate.');
       return;
