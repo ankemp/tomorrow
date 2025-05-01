@@ -1,7 +1,9 @@
-import { Injectable, MessageEvent } from '@nestjs/common';
+import { Injectable, MessageEvent, Scope } from '@nestjs/common';
 import { filter, map, Observable, Subject } from 'rxjs';
 
-@Injectable()
+@Injectable({
+  scope: Scope.TRANSIENT,
+})
 export class SSEService<T> {
   private events$ = new Subject<{
     changeset: T;
