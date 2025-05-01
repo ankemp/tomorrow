@@ -17,3 +17,7 @@ tui-notification {
   z-index: 97;
   border-radius: unset !important;
 }
+
+.subtitle.overdue {
+  text-transform: lowercase;
+}

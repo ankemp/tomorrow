@@ -7,14 +7,22 @@
   <div>
     <img class="logo" src="assets/logo.svg" alt="tmr.w" />
     <div tuiTitle>
-      <div [tuiSkeleton]="taskCount() === -1" tuiSubtitle>
+      <div
+        [tuiSkeleton]="taskCount() === -1"
+        tuiSubtitle
+        class="subtitle"
+        [class.overdue]="overdueCount() > 0"
+      >
+        @if (overdueCount() > 0) {
+          {{ overdueCount() }} overdue and
+        }
         {{
           taskCount()
             | i18nPlural
               : {
-                  '=0': 'You have no tasks today',
-                  '=1': 'You have one task today',
-                  other: 'You have # tasks today',
+                  '=0': 'No tasks due today',
+                  '=1': 'One task due today',
+                  other: '# tasks due today',
                 }
         }}
       </div>
@@ -31,14 +39,6 @@
   >
     Search
   </button>
-  <!-- <a
-    iconStart="@tui.history"
-    tuiIconButton
-    tuiSlot="right"
-    [routerLink]="['/tasks/completed']"
-  >
-    Completed Tasks
-  </a> -->
   <a
     iconStart="@tui.settings"
     tuiIconButton

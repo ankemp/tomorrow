@@ -44,6 +44,7 @@ export class AppBarComponent {
   readonly settings = inject(Settings);
   readonly context = inject(Context);
   readonly taskCount = signal<number>(-1);
+  readonly overdueCount = signal<number>(-1);
   readonly showBackButton = toSignal(
     this.router.events.pipe(
       filter((e) => e instanceof NavigationEnd),
@@ -53,10 +54,17 @@ export class AppBarComponent {
 
   constructor() {
     effect((onCleanup) => {
-      const c = Tasks.getTodaysIncompleteTasks();
-      this.taskCount.set(c.count());
+      const t = Tasks.getTodaysIncompleteTasks();
+      this.taskCount.set(t.count());
       onCleanup(() => {
-        c.cleanup();
+        t.cleanup();
+      });
+    });
+    effect((onCleanup) => {
+      const t = Tasks.getOverdueTasks();
+      this.overdueCount.set(t.count());
+      onCleanup(() => {
+        t.cleanup();
       });
     });
     effect(() => {
