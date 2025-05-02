@@ -3,6 +3,7 @@ import { OnEvent } from '@nestjs/event-emitter';
 import { SchedulerRegistry } from '@nestjs/schedule';
 
 import type { NotificationEntity } from '../_db/notification.entity';
+import type { PlainTaskEntity } from '../_db/plain_task.entity';
 
 import { NotificationsService } from './notifications.service';
 import { PushSubscriptionService } from './push-subscription.service';
@@ -21,37 +22,6 @@ export class NotificationSchedulerService implements OnApplicationBootstrap {
     this.rehydrateNotifications();
   }
 
-  /**
-   // TODO:
-   * Add method to send a batched notification, something like:
-   * You have X Tasks due at Y timestamp
-   * private readonly notificationMap = new Map<number, string[]>(); // unix timestamp to notificationId array
-   * timeouts should be set to the same timestamp as used to create the map entry.
-   * Then when the timeout is triggered, we can look to see how many notifications, and either send a batched notification, or individual notifications.
-   * For updates, we should probably check if the notification is already scheduled, and if so, update the message.
-   * If the time of the notification changes, we'd need to figure out which entry to remove from the map, and add a new one, or append to an already existing one - this could be tricky.
-   */
-
-  dispatchNotification(notification: NotificationEntity) {
-    this.pushSubscription.sendNotificationToUsersDevices(
-      notification.userId,
-      notification.message,
-    );
-  }
-
-  scheduleNotification(notification: NotificationEntity) {
-    if (this.schedulerRegistry.doesExist('timeout', notification.id)) {
-      this.logger.error(
-        `Notification with ID ${notification.id} is already scheduled.`,
-      );
-      return;
-    }
-    const timeout = setTimeout(() => {
-      this.dispatchNotification(notification);
-    });
-    this.schedulerRegistry.addTimeout(notification.id, timeout);
-  }
-
   private async rehydrateNotifications() {
     const notifications =
       await this.notificationsService.getAllUnsentNotifications();
@@ -68,8 +38,59 @@ export class NotificationSchedulerService implements OnApplicationBootstrap {
     });
   }
 
+  /**
+   // TODO:
+   * Add/modify method to send a batched notification, something like:
+   * You have X Tasks due at Y timestamp
+   * private readonly notificationMap = new Map<number, string[]>(); // unix timestamp to notificationId array
+   * timeouts should be set to the same timestamp as used to create the map entry.
+   * Then when the timeout is triggered, we can look to see how many notifications, and either send a batched notification, or individual notifications.
+   * For updates, we should probably check if the notification is already scheduled, and if so, update the message.
+   * If the time of the notification changes, we'd need to figure out which entry to remove from the map, and add a new one, or append to an already existing one - this could be tricky.
+   */
+
+  dispatchNotification(notification: NotificationEntity) {
+    this.pushSubscription.sendNotificationToUsersDevices(
+      notification.userId,
+      notification.message,
+    );
+  }
+
+  @OnEvent('notification.created')
+  scheduleNotification(notification: NotificationEntity) {
+    const timeout = setTimeout(() => {
+      this.dispatchNotification(notification);
+    });
+    this.schedulerRegistry.addTimeout(notification.id, timeout);
+  }
+
+  @OnEvent('notification.updated')
+  updateNotification(notification: NotificationEntity) {
+    const timeout = this.schedulerRegistry.getTimeout(notification.id);
+    if (timeout) {
+      this.schedulerRegistry.deleteTimeout(notification.id);
+      this.scheduleNotification(notification);
+    } else {
+      this.logger.warn(
+        `No timeout found for notification ${notification.id}, unable to update.`,
+      );
+    }
+  }
+
+  @OnEvent('notification.deleted')
+  deleteNotification(notification: NotificationEntity) {
+    const timeout = this.schedulerRegistry.getTimeout(notification.id);
+    if (timeout) {
+      this.schedulerRegistry.deleteTimeout(notification.id);
+    } else {
+      this.logger.warn(
+        `No timeout found for notification ${notification.id}, unable to delete.`,
+      );
+    }
+  }
+
   @OnEvent('task.created')
-  private handleTaskCreatedEvent(payload: any) {
+  private handleTaskCreatedEvent(task: PlainTaskEntity) {
     // TODO: Encrypted tasks
     // this.notificationsService.createNotification(
     //   payload.userId,
@@ -80,12 +101,12 @@ export class NotificationSchedulerService implements OnApplicationBootstrap {
   }
 
   @OnEvent('task.updated')
-  private handleTaskUpdatedEvent(payload: any) {
+  private handleTaskUpdatedEvent(task: PlainTaskEntity) {
     // Update notification in the database, query by taskId
   }
 
   @OnEvent('task.deleted')
-  private handleTaskDeletedEvent(payload: any) {
+  private handleTaskDeletedEvent(task: PlainTaskEntity) {
     // Delete notification in the database, query by taskId
   }
 }
