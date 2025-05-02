@@ -4,8 +4,8 @@ import { Op } from 'sequelize';
 
 import type { Task } from '@tmrw/data-access-models';
 
-import { EncryptedTask } from '../_db/encrypted_task.entity';
-import { PlainTask } from '../_db/plain_task.entity';
+import { EncryptedTaskEntity } from '../_db/encrypted_task.entity';
+import { PlainTaskEntity } from '../_db/plain_task.entity';
 
 const TASK_PROP_EXCLUDES = ['createdAt', 'updatedAt', 'deletedAt'];
 
@@ -26,10 +26,11 @@ export type TaskEndpointBody =
 @Injectable()
 export class TasksService {
   constructor(
-    @InjectModel(PlainTask)
-    private plainTaskRepository: typeof PlainTask,
-    @InjectModel(EncryptedTask)
-    private encryptedTaskRepository: typeof EncryptedTask,
+    @InjectModel(PlainTaskEntity)
+    private plainTaskRepository: typeof PlainTaskEntity,
+    @InjectModel(EncryptedTaskEntity)
+    private encryptedTaskRepository: typeof EncryptedTaskEntity,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async createTasks(body: TaskEndpointBody) {

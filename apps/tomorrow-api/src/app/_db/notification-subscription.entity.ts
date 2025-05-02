@@ -9,9 +9,9 @@ import {
 } from 'sequelize-typescript';
 
 @Table({ tableName: 'NotificationSubscriptions' })
-export class PushNotificationSubscription extends Model<
-  InferAttributes<PushNotificationSubscription>,
-  InferCreationAttributes<PushNotificationSubscription>
+export class PushNotificationSubscriptionEntity extends Model<
+  InferAttributes<PushNotificationSubscriptionEntity>,
+  InferCreationAttributes<PushNotificationSubscriptionEntity>
 > {
   @CreatedAt
   createdAt: Date;

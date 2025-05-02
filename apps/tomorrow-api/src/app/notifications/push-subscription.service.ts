@@ -7,7 +7,7 @@ import {
   WebPushError,
 } from 'web-push';
 
-import { PushNotificationSubscription } from '../_db/notification-subscription.entity';
+import { PushNotificationSubscriptionEntity } from '../_db/notification-subscription.entity';
 
 const VAPID_PRIVATE_KEY = process.env.VAPID_PRIVATE_KEY;
 const VAPID_PUBLIC_KEY = process.env.VAPID_PUBLIC_KEY;
@@ -18,8 +18,8 @@ export class PushSubscriptionService {
   private readonly logger = new Logger(PushSubscriptionService.name);
 
   constructor(
-    @InjectModel(PushNotificationSubscription)
-    private readonly subscriptionRepository: typeof PushNotificationSubscription,
+    @InjectModel(PushNotificationSubscriptionEntity)
+    private readonly subscriptionRepository: typeof PushNotificationSubscriptionEntity,
   ) {
     setVapidDetails(
       VAPID_SUBJECT ?? 'mailto: no-reply@example.com',
@@ -39,7 +39,7 @@ export class PushSubscriptionService {
     userId: string,
     deviceId: string,
     pushSubscription: PushSubscriptionJSON,
-  ): Promise<PushNotificationSubscription> {
+  ): Promise<PushNotificationSubscriptionEntity> {
     const { endpoint, keys } = pushSubscription;
     const [subscription, created] =
       await this.subscriptionRepository.findOrCreate({

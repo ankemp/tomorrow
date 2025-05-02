@@ -16,8 +16,11 @@ import {
 import type { SubTask, Task, TaskTimer } from '@tmrw/data-access-models';
 
 @Table({ tableName: 'PlainTasks' })
-export class PlainTask
-  extends Model<InferAttributes<PlainTask>, InferCreationAttributes<PlainTask>>
+export class PlainTaskEntity
+  extends Model<
+    InferAttributes<PlainTaskEntity>,
+    InferCreationAttributes<PlainTaskEntity>
+  >
   implements Task
 {
   @CreatedAt

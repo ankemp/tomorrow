@@ -4,11 +4,11 @@ import { TerminusModule } from '@nestjs/terminus';
 
 import { DBService } from './db.service';
 import { DBStorageHealthIndicator } from './db-storage.health';
-import { EncryptedTask } from './encrypted_task.entity';
-import { Notification } from './notification.entity';
-import { PushNotificationSubscription } from './notification-subscription.entity';
-import { PlainTask } from './plain_task.entity';
-import { User } from './user.entity';
+import { EncryptedTaskEntity } from './encrypted_task.entity';
+import { NotificationEntity } from './notification.entity';
+import { PushNotificationSubscriptionEntity } from './notification-subscription.entity';
+import { PlainTaskEntity } from './plain_task.entity';
+import { UserEntity } from './user.entity';
 
 import 'sqlite3';
 
@@ -23,11 +23,11 @@ const isDevMode =
       storage: process.env['DB_PATH'] || ':memory:',
       logging: isDevMode ? console.log : false,
       models: [
-        PlainTask,
-        EncryptedTask,
-        User,
-        PushNotificationSubscription,
-        Notification,
+        PlainTaskEntity,
+        EncryptedTaskEntity,
+        UserEntity,
+        PushNotificationSubscriptionEntity,
+        NotificationEntity,
       ],
       synchronize: true,
       sync: {
