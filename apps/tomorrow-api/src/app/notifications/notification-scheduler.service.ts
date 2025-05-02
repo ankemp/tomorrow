@@ -2,7 +2,7 @@ import { Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { SchedulerRegistry } from '@nestjs/schedule';
 
-import { Notification } from '../_db/notification.entity';
+import type { NotificationEntity } from '../_db/notification.entity';
 
 import { NotificationsService } from './notifications.service';
 import { PushSubscriptionService } from './push-subscription.service';
@@ -32,14 +32,14 @@ export class NotificationSchedulerService implements OnApplicationBootstrap {
    * If the time of the notification changes, we'd need to figure out which entry to remove from the map, and add a new one, or append to an already existing one - this could be tricky.
    */
 
-  dispatchNotification(notification: Notification) {
+  dispatchNotification(notification: NotificationEntity) {
     this.pushSubscription.sendNotificationToUsersDevices(
       notification.userId,
       notification.message,
     );
   }
 
-  scheduleNotification(notification: Notification) {
+  scheduleNotification(notification: NotificationEntity) {
     if (this.schedulerRegistry.doesExist('timeout', notification.id)) {
       this.logger.error(
         `Notification with ID ${notification.id} is already scheduled.`,

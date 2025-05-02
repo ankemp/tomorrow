@@ -9,11 +9,16 @@ import {
   UpdatedAt,
 } from 'sequelize-typescript';
 
+import { EncryptedTask } from '@tmrw/data-access-models';
+
 @Table({ tableName: 'EncryptedTasks' })
-export class EncryptedTask extends Model<
-  InferAttributes<EncryptedTask>,
-  InferCreationAttributes<EncryptedTask>
-> {
+export class EncryptedTaskEntity
+  extends Model<
+    InferAttributes<EncryptedTaskEntity>,
+    InferCreationAttributes<EncryptedTaskEntity>
+  >
+  implements EncryptedTask
+{
   @CreatedAt
   createdAt: Date;
 
@@ -29,6 +34,12 @@ export class EncryptedTask extends Model<
     primaryKey: true,
   })
   id: string;
+
+  @Column({
+    type: DataType.DATE,
+    allowNull: false,
+  })
+  date: Date;
 
   @Column({
     type: DataType.STRING,
