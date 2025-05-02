@@ -59,3 +59,23 @@ export interface EncryptedTask {
   userId: string;
   date: Date;
 }
+
+export interface TaskChange<T> {
+  id: string;
+  date: Date;
+  content: T;
+}
+
+export type TasksChangePayload =
+  | {
+      changes: Array<TaskChange<Task>>;
+      encrypted: false;
+      userId: string;
+      deviceId: string;
+    }
+  | {
+      changes: Array<TaskChange<string>>;
+      encrypted: true;
+      userId: string;
+      deviceId: string;
+    };

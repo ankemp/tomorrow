@@ -15,11 +15,15 @@ import {
 } from '@nestjs/common';
 import type { Changeset } from '@signaldb/core/index';
 
-import { type Task, TASK_SSE_EVENT } from '@tmrw/data-access-models';
+import {
+  type Task,
+  TASK_SSE_EVENT,
+  TasksChangePayload,
+} from '@tmrw/data-access-models';
 
 import { SSEService } from '../sse.service';
 
-import { TaskEndpointBody, TasksService } from './tasks.service';
+import { TasksService } from './tasks.service';
 
 @Controller('tasks')
 export class TasksController {
@@ -44,7 +48,7 @@ export class TasksController {
   }
 
   @Post()
-  async createTasks(@Body() body: TaskEndpointBody) {
+  async createTasks(@Body() body: TasksChangePayload) {
     try {
       await this.tasksService.createTasks(body);
       return { status: HttpStatus.CREATED };
@@ -54,7 +58,7 @@ export class TasksController {
   }
 
   @Put()
-  async updateTasks(@Body() body: TaskEndpointBody) {
+  async updateTasks(@Body() body: TasksChangePayload) {
     try {
       await this.tasksService.updateTasks(body);
       return { status: HttpStatus.ACCEPTED };
@@ -64,7 +68,7 @@ export class TasksController {
   }
 
   @Delete()
-  async deleteTasks(@Body() body: TaskEndpointBody) {
+  async deleteTasks(@Body() body: TasksChangePayload) {
     try {
       await this.tasksService.deleteTasks(body);
       return { status: HttpStatus.OK };
