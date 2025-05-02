@@ -57,13 +57,11 @@ export class NotificationsService {
   }
 
   async getNotificationById(
-    userId: string,
     notificationId: string,
   ): Promise<Notification | null> {
     const notification = await this.notificationRepository.findOne({
       where: {
         id: notificationId,
-        userId,
       },
     });
     return notification;

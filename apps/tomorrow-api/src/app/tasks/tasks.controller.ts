@@ -13,7 +13,7 @@ import {
   Query,
   Sse,
 } from '@nestjs/common';
-import { Changeset } from '@signaldb/core/index';
+import type { Changeset } from '@signaldb/core/index';
 
 import { type Task, TASK_SSE_EVENT } from '@tmrw/data-access-models';
 
