@@ -54,23 +54,29 @@ export class NotificationsService implements OnApplicationBootstrap {
   }
 
   async updateNotification(
-    userId: string,
     notificationId: string,
     message: string,
+    scheduledAt: Date,
   ): Promise<NotificationEntity | null> {
     await this.notificationRepository.update(
-      { message },
+      { message, scheduledAt },
       {
         where: {
           id: notificationId,
-          userId,
         },
       },
     );
     return this.notificationRepository.findOne({
       where: {
         id: notificationId,
-        userId,
+      },
+    });
+  }
+
+  async deleteNotification(notificationId: string) {
+    await this.notificationRepository.destroy({
+      where: {
+        id: notificationId,
       },
     });
   }
