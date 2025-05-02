@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
 
 import { DatabaseModule } from '../_db/db.module';
-import { EncryptedTask } from '../_db/encrypted_task.entity';
-import { PlainTask } from '../_db/plain_task.entity';
+import { EncryptedTaskEntity } from '../_db/encrypted_task.entity';
+import { PlainTaskEntity } from '../_db/plain_task.entity';
 import { SSEService } from '../sse.service';
 
 import { TasksController } from './tasks.controller';
@@ -12,7 +12,7 @@ import { TasksService } from './tasks.service';
 @Module({
   imports: [
     DatabaseModule,
-    SequelizeModule.forFeature([PlainTask, EncryptedTask]),
+    SequelizeModule.forFeature([PlainTaskEntity, EncryptedTaskEntity]),
   ],
   controllers: [TasksController],
   providers: [SSEService, TasksService],

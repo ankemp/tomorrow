@@ -52,3 +52,10 @@ export interface Task extends BaseModel {
   notes: string | null;
   userId: string | null;
 }
+
+export interface EncryptedTask {
+  id: string;
+  encryptedData: string;
+  userId: string;
+  date: Date;
+}
