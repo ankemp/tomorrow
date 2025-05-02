@@ -89,24 +89,28 @@ export class NotificationSchedulerService implements OnApplicationBootstrap {
     }
   }
 
+  // TODO: Encrypted tasks
   @OnEvent('task.created')
   private handleTaskCreatedEvent(task: PlainTaskEntity) {
-    // TODO: Encrypted tasks
-    // this.notificationsService.createNotification(
-    //   payload.userId,
-    //   payload.taskId,
-    //   `Task is due at ${payload.date}`, // TODO: Better messaging
-    //   payload.date,
-    // );
+    this.notificationsService.createNotification(
+      task.userId,
+      task.id,
+      `Reminder to complete ${task.title}`, // TODO: Better messaging
+      task.date,
+    );
   }
 
   @OnEvent('task.updated')
   private handleTaskUpdatedEvent(task: PlainTaskEntity) {
-    // Update notification in the database, query by taskId
+    this.notificationsService.updateNotification(
+      task.id,
+      `Reminder to complete ${task.title}`, // TODO: Better messaging
+      task.date,
+    );
   }
 
   @OnEvent('task.deleted')
   private handleTaskDeletedEvent(task: PlainTaskEntity) {
-    // Delete notification in the database, query by taskId
+    this.notificationsService.deleteNotification(task.id);
   }
 }
