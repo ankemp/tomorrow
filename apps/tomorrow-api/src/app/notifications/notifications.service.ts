@@ -1,14 +1,42 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectModel } from '@nestjs/sequelize';
 
 import { NotificationEntity } from '../_db/notification.entity';
 
 @Injectable()
-export class NotificationsService {
+export class NotificationsService implements OnApplicationBootstrap {
   constructor(
     @InjectModel(NotificationEntity)
     private readonly notificationRepository: typeof NotificationEntity,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
+
+  onApplicationBootstrap() {
+    this.notificationRepository.addHook(
+      'afterCreate',
+      'emitNotificationCreated',
+      (notification) => {
+        this.eventEmitter.emit('notification.created', notification);
+      },
+    );
+
+    this.notificationRepository.addHook(
+      'afterUpdate',
+      'emitNotificationUpdated',
+      (notification) => {
+        this.eventEmitter.emit('notification.updated', notification);
+      },
+    );
+
+    this.notificationRepository.addHook(
+      'afterDestroy',
+      'emitNotificationDeleted',
+      (notification) => {
+        this.eventEmitter.emit('notification.deleted', notification);
+      },
+    );
+  }
 
   async createNotification(
     userId: string,
@@ -67,11 +95,12 @@ export class NotificationsService {
     return notification;
   }
 
-  getAllUnsentNotifications(): Promise<NotificationEntity[]> {
-    return this.notificationRepository.findAll({
+  async getAllUnsentNotifications(): Promise<NotificationEntity[]> {
+    const notifications = await this.notificationRepository.findAll({
       where: {
         isSent: false,
       },
     });
+    return notifications;
   }
 }
