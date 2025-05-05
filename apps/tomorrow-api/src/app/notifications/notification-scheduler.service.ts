@@ -3,7 +3,7 @@ import { OnEvent } from '@nestjs/event-emitter';
 import { SchedulerRegistry } from '@nestjs/schedule';
 
 import type { NotificationEntity } from '../_db/notification.entity';
-import type { PlainTaskEntity } from '../_db/plain_task.entity';
+import type { PlainTaskEntity } from '../_db/plain-task.entity';
 
 import { NotificationsService } from './notifications.service';
 import { PushSubscriptionService } from './push-subscription.service';
