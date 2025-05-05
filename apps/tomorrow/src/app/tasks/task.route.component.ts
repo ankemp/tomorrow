@@ -25,7 +25,7 @@ import { TaskService } from './task.service';
   template: `
     <router-outlet></router-outlet>
 
-    <tui-action-bar *tuiActionBar="open()" [expanded]="!!expanded()">
+    <tui-action-bar *tuiActionBar="visible()" [expanded]="!!expanded()">
       <tui-data-list role="menu">
         <tui-opt-group>
           <button
@@ -182,11 +182,11 @@ export class TaskRouteComponent {
   readonly context = inject(Context);
   readonly store = inject(SelectedTasksStore);
   readonly taskService = inject(TaskService);
-  readonly open = computed(() => {
+  readonly visible = computed(() => {
     return this.store.count() > 0;
   });
   readonly expanded = linkedSignal(() => {
-    return !this.context.isMobile() && this.store.count() > 0;
+    return !this.context.isMobile() && this.visible();
   });
   readonly pinState = computed(() => {
     const selectedTasks = this.store.selected();
