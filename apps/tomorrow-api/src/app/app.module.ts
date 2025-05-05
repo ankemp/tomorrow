@@ -15,9 +15,9 @@ import { UsersModule } from './users/users.module';
     ScheduleModule.forRoot(),
     ServeStaticModule.forRoot({
       rootPath:
-        process.env.NODE_ENV !== 'production'
-          ? join(__dirname, '..', 'tomorrow', 'browser')
-          : join(__dirname, '..', 'static'),
+        process.env.NODE_ENV === 'production'
+          ? join(__dirname, '..', 'static')
+          : join(__dirname, '..', 'tomorrow', 'browser'),
     }),
     // TODO: Implement throttling(?)
     HealthModule,
