@@ -11,6 +11,7 @@ import { NotificationsController } from './notifications.controller';
 import { NotificationHealthIndicator } from './notifications.health';
 import { NotificationsService } from './notifications.service';
 import { PushSubscriptionService } from './push-subscription.service';
+import { SchedulerHealthIndicator } from './scheduler.health';
 
 @Module({
   imports: [
@@ -27,7 +28,12 @@ import { PushSubscriptionService } from './push-subscription.service';
     NotificationHealthIndicator,
     NotificationsService,
     PushSubscriptionService,
+    SchedulerHealthIndicator,
   ],
-  exports: [NotificationHealthIndicator, PushSubscriptionService],
+  exports: [
+    NotificationHealthIndicator,
+    PushSubscriptionService,
+    SchedulerHealthIndicator,
+  ],
 })
 export class NotificationsModule {}
