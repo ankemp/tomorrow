@@ -8,6 +8,7 @@ import {
 
 import { DBStorageHealthIndicator } from '../_db/db-storage.health';
 import { NotificationHealthIndicator } from '../notifications/notifications.health';
+import { SchedulerHealthIndicator } from '../notifications/scheduler.health';
 
 @Controller('health')
 export class HealthController {
@@ -17,6 +18,7 @@ export class HealthController {
     private db: SequelizeHealthIndicator,
     private dbStorage: DBStorageHealthIndicator,
     private notifications: NotificationHealthIndicator,
+    private schedulerHealth: SchedulerHealthIndicator,
   ) {}
 
   @Get('readiness')
@@ -27,6 +29,7 @@ export class HealthController {
       () => this.db.pingCheck('database'),
       () => this.dbStorage.isHealthy('db-storage'),
       () => this.notifications.isHealthy('notifications'),
+      () => this.schedulerHealth.isHealthy('scheduler'),
     ]);
   }
 }
