@@ -74,6 +74,15 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
               Updating...
               <progress tuiProgressBar size="l" [max]="100"></progress>
             </label>
+          } @else if (context.updateReady()) {
+            <label tuiLabel>
+              <tui-icon
+                style="--t-bg: unset"
+                tuiAppearance="info"
+                icon="@tui.check"
+              />
+              Reload to update
+            </label>
           } @else {
             <label tuiLabel>
               <tui-icon
