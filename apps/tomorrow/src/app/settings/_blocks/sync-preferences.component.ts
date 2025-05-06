@@ -26,18 +26,30 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
   ],
   template: `
     <tw-preferences-card title="Sync" icon="@tui.arrow-left-right">
-      <div class="switch-container">
-        <label tuiLabel>
-          Remote Sync
-          <input
-            tuiSwitch
-            type="checkbox"
-            [ngModel]="settings.remoteSync()"
-            (ngModelChange)="settings.updateRemoteSync($event)"
+      <label tuiLabel>
+        Remote Sync
+        <input
+          tuiSwitch
+          type="checkbox"
+          [ngModel]="settings.remoteSync()"
+          (ngModelChange)="settings.updateRemoteSync($event)"
+        />
+      </label>
+      <label tuiLabel>
+        <span>
+          Encryption
+          <tui-icon
+            style="--t-bg: unset"
+            [appearance]="settings.hasEncryptionKey() ? 'positive' : 'negative'"
+            [icon]="encryptionIcon()"
+            tuiTooltip="Encryption key is {{
+              settings.hasEncryptionKey() ? 'ready' : 'not ready'
+            }}"
           />
-        </label>
-        <!-- TODO: Add ability to delete key, warn about losing all data -->
-        <!-- <label tuiLabel>
+        </span>
+      </label>
+      <!-- TODO: Add ability to delete key, warn about losing all data -->
+      <!-- <label tuiLabel>
           <span>
             Encryption
             <tui-icon
@@ -59,7 +71,6 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
             [disabled]="!this.settings.remoteSync()"
           />
         </label> -->
-      </div>
     </tw-preferences-card>
   `,
   styleUrl: './styles.css',
