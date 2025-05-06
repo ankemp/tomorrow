@@ -33,14 +33,14 @@ export class PlainTaskEntity
   deletedAt: Date;
 
   @Column({
-    type: DataType.STRING,
+    type: DataType.UUID,
     allowNull: false,
     primaryKey: true,
   })
   id: string;
 
   @Column({
-    type: DataType.STRING,
+    type: DataType.UUID,
     allowNull: false,
   })
   userId: string;

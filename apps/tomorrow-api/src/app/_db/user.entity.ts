@@ -24,7 +24,7 @@ export class UserEntity extends Model<
   deletedAt: Date;
 
   @Column({
-    type: DataType.STRING,
+    type: DataType.UUID,
     allowNull: false,
     primaryKey: true,
   })
