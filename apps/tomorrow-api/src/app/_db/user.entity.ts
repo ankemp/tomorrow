@@ -9,11 +9,16 @@ import {
   UpdatedAt,
 } from 'sequelize-typescript';
 
+import { SyncedSettingsState } from '@tmrw/data-access-models';
+
 @Table({ tableName: 'Users' })
-export class UserEntity extends Model<
-  InferAttributes<UserEntity>,
-  InferCreationAttributes<UserEntity>
-> {
+export class UserEntity
+  extends Model<
+    InferAttributes<UserEntity>,
+    InferCreationAttributes<UserEntity>
+  >
+  implements SyncedSettingsState
+{
   @CreatedAt
   createdAt: Date;
 
@@ -41,9 +46,20 @@ export class UserEntity extends Model<
   defaultReminderTime: string;
 
   @Column({
+    type: DataType.INTEGER,
+  })
+  defaultReminderTimeAfterCreation: number;
+
+  @Column({
     type: DataType.STRING,
   })
   defaultReminderCategory: string;
+
+  @Column({
+    type: DataType.STRING,
+    validate: { isIn: [['always', 'never', 'ask']] },
+  })
+  defaultReminderState: 'always' | 'never' | 'ask';
 
   @Column({
     type: DataType.STRING,
@@ -54,6 +70,12 @@ export class UserEntity extends Model<
     type: DataType.STRING,
   })
   timeFormat: string;
+
+  @Column({
+    type: DataType.STRING,
+    validate: { isIn: [['always', 'never', 'optional']] },
+  })
+  timeSpecificity: 'always' | 'never' | 'optional';
 
   @Column({
     type: DataType.STRING,
