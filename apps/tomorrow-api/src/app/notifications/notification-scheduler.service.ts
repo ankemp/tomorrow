@@ -1,6 +1,8 @@
 import { Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { SchedulerRegistry } from '@nestjs/schedule';
+import { differenceInMilliseconds, isPast } from 'date-fns';
+import { isNil } from 'es-toolkit';
 
 import type { NotificationEntity } from '../_db/notification.entity';
 import type { PlainTaskEntity } from '../_db/plain-task.entity';
@@ -30,10 +32,10 @@ export class NotificationSchedulerService implements OnApplicationBootstrap {
       return;
     }
     notifications.forEach((notification) => {
-      if (notification.scheduledAt > new Date()) {
-        this.scheduleNotification(notification);
-      } else {
+      if (isPast(notification.scheduledAt)) {
         this.dispatchNotification(notification);
+      } else {
+        this.scheduleNotification(notification);
       }
     });
   }
@@ -58,9 +60,16 @@ export class NotificationSchedulerService implements OnApplicationBootstrap {
 
   @OnEvent('notification.created')
   scheduleNotification(notification: NotificationEntity) {
-    const timeout = setTimeout(() => {
-      this.dispatchNotification(notification);
-    });
+    if (isPast(notification.scheduledAt)) {
+      return;
+    }
+    const now = new Date();
+    const timeout = setTimeout(
+      () => {
+        this.dispatchNotification(notification);
+      },
+      differenceInMilliseconds(notification.scheduledAt, now),
+    );
     this.schedulerRegistry.addTimeout(notification.id, timeout);
   }
 
@@ -80,13 +89,13 @@ export class NotificationSchedulerService implements OnApplicationBootstrap {
   @OnEvent('notification.deleted')
   deleteNotification(notification: NotificationEntity) {
     const timeout = this.schedulerRegistry.getTimeout(notification.id);
-    if (timeout) {
-      this.schedulerRegistry.deleteTimeout(notification.id);
-    } else {
+    if (isNil(timeout)) {
       this.logger.warn(
         `No timeout found for notification ${notification.id}, unable to delete.`,
       );
+      return;
     }
+    this.schedulerRegistry.deleteTimeout(notification.id);
   }
 
   // TODO: Encrypted tasks
