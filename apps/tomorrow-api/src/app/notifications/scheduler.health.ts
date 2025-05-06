@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { HealthIndicatorService } from '@nestjs/terminus';
 
+const isProd = process.env.NODE_ENV === 'production';
+
 @Injectable()
 export class SchedulerHealthIndicator {
   constructor(
@@ -13,6 +15,9 @@ export class SchedulerHealthIndicator {
     const indicator = this.healthIndicatorService.check(key);
     const timeouts = this.schedulerRegistry.getTimeouts();
 
-    return indicator.up({ timeouts });
+    return indicator.up({
+      count: timeouts.length,
+      ...(isProd ? {} : { timeouts }),
+    });
   }
 }
