@@ -20,14 +20,14 @@ export class PushNotificationSubscriptionEntity extends Model<
   updatedAt: Date;
 
   @Column({
-    type: DataType.STRING,
+    type: DataType.UUID,
     allowNull: false,
     primaryKey: true,
   })
   deviceId: string;
 
   @Column({
-    type: DataType.STRING,
+    type: DataType.UUID,
     allowNull: false,
   })
   userId: string;

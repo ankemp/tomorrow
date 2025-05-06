@@ -29,7 +29,7 @@ export class EncryptedTaskEntity
   deletedAt: Date;
 
   @Column({
-    type: DataType.STRING,
+    type: DataType.UUID,
     allowNull: false,
     primaryKey: true,
   })

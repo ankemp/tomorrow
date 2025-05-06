@@ -1,4 +1,4 @@
-import { InferAttributes, InferCreationAttributes } from 'sequelize';
+import { InferAttributes, InferCreationAttributes, UUIDV4 } from 'sequelize';
 import {
   Column,
   CreatedAt,
@@ -24,20 +24,21 @@ export class NotificationEntity extends Model<
   deletedAt: Date;
 
   @Column({
-    type: DataType.STRING,
+    type: DataType.UUID,
+    defaultValue: UUIDV4,
     allowNull: false,
     primaryKey: true,
   })
   id: string;
 
   @Column({
-    type: DataType.STRING,
+    type: DataType.UUID,
     allowNull: false,
   })
   userId: string;
 
   @Column({
-    type: DataType.STRING,
+    type: DataType.UUID,
     allowNull: false,
   })
   taskId: string;
