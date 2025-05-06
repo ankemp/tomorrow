@@ -1,4 +1,4 @@
-import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
+import { Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
@@ -12,6 +12,8 @@ const TASK_PROP_EXCLUDES = ['createdAt', 'updatedAt', 'deletedAt'];
 
 @Injectable()
 export class TasksService implements OnApplicationBootstrap {
+  private readonly logger = new Logger(TasksService.name);
+
   constructor(
     @InjectModel(PlainTaskEntity)
     private plainTaskRepository: typeof PlainTaskEntity,
@@ -26,6 +28,15 @@ export class TasksService implements OnApplicationBootstrap {
       'emitTaskCreated',
       (task) => {
         this.eventEmitter.emit('task.created', task);
+      },
+    );
+    this.plainTaskRepository.addHook(
+      'afterBulkCreate',
+      'emitTasksCreated',
+      (tasks) => {
+        tasks.forEach((task) => {
+          this.eventEmitter.emit('task.created', task);
+        });
       },
     );
 
