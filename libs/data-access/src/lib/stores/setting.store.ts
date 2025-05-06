@@ -15,19 +15,16 @@ import { TuiDayOfWeek, TuiTimeMode } from '@taiga-ui/cdk';
 import { omit } from 'es-toolkit';
 import { catchError, concatMap, EMPTY, map, pipe, tap } from 'rxjs';
 
-import { QRCodeData, SettingsState, TaskSort } from '@tmrw/data-access-models';
+import {
+  NO_SYNC_KEYS,
+  QRCodeData,
+  SettingsState,
+  TaskSort,
+} from '@tmrw/data-access-models';
 import { generateSymmetricKey } from '@tmrw/encryption';
 
 import { Tasks } from '../collections/task.collection';
 import { parseUserAgent } from '../utils/user-agent-parser';
-
-const NO_SYNC_KEYS: (keyof SettingsState)[] = [
-  '_encryptionKey',
-  'deviceId',
-  'encryption',
-  'remoteSync',
-  'userId',
-];
 
 const initialState: SettingsState = {
   _encryptionKey: null,
@@ -36,6 +33,7 @@ const initialState: SettingsState = {
   defaultReminderCategory: null,
   defaultReminderTime: '08:00',
   defaultReminderTimeAfterCreation: 60,
+  defaultReminderState: 'ask',
   deviceId: null,
   encryption: false,
   locale: 'en-US', // TODO: Get from browser(?)
@@ -195,6 +193,11 @@ export const Settings = signalStore(
     updateDefaultReminderCategory(defaultReminderCategory: string): void {
       patchState(store, { defaultReminderCategory });
     },
+    updateDefaultReminderState(
+      defaultReminderState: SettingsState['defaultReminderState'],
+    ): void {
+      patchState(store, { defaultReminderState });
+    },
     updateTimeFormat(timeFormat: string): void {
       patchState(store, { timeFormat });
     },
@@ -202,12 +205,12 @@ export const Settings = signalStore(
       patchState(store, { startOfWeek });
     },
     updateAutoCompleteTasks(
-      autoCompleteTasks: 'always' | 'never' | 'ask',
+      autoCompleteTasks: SettingsState['autoCompleteTasks'],
     ): void {
       patchState(store, { autoCompleteTasks });
     },
     updateTimeSpecificity(
-      timeSpecificity: 'always' | 'never' | 'optional',
+      timeSpecificity: SettingsState['timeSpecificity'],
     ): void {
       patchState(store, { timeSpecificity });
     },
