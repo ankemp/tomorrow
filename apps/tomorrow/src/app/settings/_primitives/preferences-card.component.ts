@@ -12,12 +12,25 @@ import { TuiCardLarge, TuiCell } from '@taiga-ui/layout';
         <tui-icon [icon]="icon()" />
         <h2 tuiTitle>{{ title() }} Preferences</h2>
       </div>
-      <ng-content></ng-content>
+      <div class="preferences-container">
+        <ng-content></ng-content>
+      </div>
     </div>
   `,
   styles: `
     :host {
       display: block;
+    }
+
+    .preferences-container {
+      display: grid;
+      gap: 1rem;
+
+      &::ng-deep [tuiLabel] {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+      }
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
