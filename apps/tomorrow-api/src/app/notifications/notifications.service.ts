@@ -73,6 +73,17 @@ export class NotificationsService implements OnApplicationBootstrap {
     });
   }
 
+  async markNotificationAsSent(id: string) {
+    await this.notificationRepository.update(
+      { isSent: true },
+      {
+        where: {
+          id,
+        },
+      },
+    );
+  }
+
   async deleteNotification(notificationId: string) {
     await this.notificationRepository.destroy({
       where: {

@@ -56,6 +56,7 @@ export class NotificationSchedulerService implements OnApplicationBootstrap {
       notification.userId,
       notification.message,
     );
+    this.notificationsService.markNotificationAsSent(notification.id);
   }
 
   @OnEvent('notification.created')
@@ -75,15 +76,21 @@ export class NotificationSchedulerService implements OnApplicationBootstrap {
 
   @OnEvent('notification.updated')
   updateNotification(notification: NotificationEntity) {
+    if (notification.isSent) {
+      this.logger.warn(
+        `Notification ${notification.id} is already sent, unable to update.`,
+      );
+      return;
+    }
     const timeout = this.schedulerRegistry.getTimeout(notification.id);
-    if (timeout) {
-      this.schedulerRegistry.deleteTimeout(notification.id);
-      this.scheduleNotification(notification);
-    } else {
+    if (isNil(timeout)) {
       this.logger.warn(
         `No timeout found for notification ${notification.id}, unable to update.`,
       );
+      return;
     }
+    this.schedulerRegistry.deleteTimeout(notification.id);
+    this.scheduleNotification(notification);
   }
 
   @OnEvent('notification.deleted')
