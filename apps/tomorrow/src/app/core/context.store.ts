@@ -43,6 +43,7 @@ const initialState: ContextState = {
   apiHealth: null,
 };
 
+// TODO: Move to library/shared location
 export const Context = signalStore(
   { providedIn: 'root' },
   withState<ContextState>(initialState),
