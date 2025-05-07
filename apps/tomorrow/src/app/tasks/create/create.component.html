@@ -29,47 +29,7 @@
       Add description
     </tui-textarea>
 
-    @if (context.remindersEnabled()) {
-      @if (settings.defaultReminderState() === 'ask') {
-        <label
-          tuiLabel
-          style="
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-          "
-        >
-          Reminder
-
-          <tui-segmented>
-            <label>
-              <input
-                type="radio"
-                name="reminder"
-                [value]="false"
-                formControlName="reminder"
-              />
-              <tui-icon icon="@tui.bell-off" />
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="reminder"
-                [value]="true"
-                formControlName="reminder"
-              />
-              <tui-icon icon="@tui.bell" />
-            </label>
-          </tui-segmented>
-        </label>
-      } @else {
-        <label>
-          <tui-icon icon="@tui.bell" />
-          You will be reminded about this task
-        </label>
-      }
-    }
+    <tw-reminder-toggle formControlName="reminder" />
   </div>
 
   <tui-accordion #accordion [closeOthers]="false">

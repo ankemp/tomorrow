@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   effect,
   inject,
   OnInit,
@@ -15,13 +14,11 @@ import {
   TuiAlertService,
   TuiAppearance,
   TuiButton,
-  TuiIcon,
   TuiLabel,
   TuiTextfield,
   TuiTitle,
 } from '@taiga-ui/core';
 import { TuiAccordion, TuiAccordionComponent } from '@taiga-ui/experimental';
-import { TuiSegmented } from '@taiga-ui/kit';
 import { TuiCardLarge, TuiForm, TuiHeader } from '@taiga-ui/layout';
 import { TuiTextareaModule } from '@taiga-ui/legacy';
 
@@ -44,12 +41,10 @@ import { SubtasksComponent } from '../_formcontrols/subtasks/subtasks.component'
     TuiAutoFocus,
     TuiAppearance,
     TuiButton,
-    TuiIcon,
     TuiLabel,
     TuiTextfield,
     TuiTitle,
     TuiAccordion,
-    TuiSegmented,
     TuiCardLarge,
     TuiForm,
     TuiHeader,
