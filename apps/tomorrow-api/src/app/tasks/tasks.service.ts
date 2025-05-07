@@ -5,8 +5,8 @@ import { Op } from 'sequelize';
 
 import type { Task, TasksChangePayload } from '@tmrw/data-access-models';
 
-import { EncryptedTaskEntity } from '../_db/encrypted-task.entity';
-import { PlainTaskEntity } from '../_db/plain-task.entity';
+import { EncryptedTaskEntity } from '../_db/entities/encrypted-task.entity';
+import { PlainTaskEntity } from '../_db/entities/plain-task.entity';
 
 const TASK_PROP_EXCLUDES = ['createdAt', 'updatedAt', 'deletedAt'];
 

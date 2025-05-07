@@ -3,8 +3,8 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { TerminusModule } from '@nestjs/terminus';
 
 import { DatabaseModule } from '../_db/db.module';
-import { NotificationEntity } from '../_db/notification.entity';
-import { PushNotificationSubscriptionEntity } from '../_db/notification-subscription.entity';
+import { NotificationEntity } from '../_db/entities/notification.entity';
+import { PushNotificationSubscriptionEntity } from '../_db/entities/notification-subscription.entity';
 
 import { NotificationSchedulerService } from './notification-scheduler.service';
 import { NotificationsController } from './notifications.controller';
