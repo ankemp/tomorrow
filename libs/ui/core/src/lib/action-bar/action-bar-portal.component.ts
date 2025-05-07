@@ -12,7 +12,7 @@ import {
 import { ActionBarPortalService } from './action-bar.service';
 
 @Component({
-  selector: 'tw-action-bar-portal',
+  selector: 'lib-action-bar-portal',
   template: `<ng-content></ng-content>`,
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
