@@ -4,7 +4,7 @@ import { tuiAsPortal, TuiPortals } from '@taiga-ui/cdk';
 import { ActionBarPortalService } from './action-bar.service';
 
 @Component({
-  selector: 'tw-action-bar',
+  selector: 'lib-action-bar',
   template: `<ng-container #viewContainer />`,
   styles: `
     :host {
