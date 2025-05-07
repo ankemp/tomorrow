@@ -10,6 +10,7 @@
             name="reminder"
             [value]="false"
             formControlName="reminder"
+            [disabled]="disabled()"
           />
           <tui-icon icon="@tui.bell-off" />
         </label>
@@ -19,6 +20,7 @@
             name="reminder"
             [value]="true"
             formControlName="reminder"
+            [disabled]="disabled()"
           />
           <tui-icon icon="@tui.bell" />
         </label>
