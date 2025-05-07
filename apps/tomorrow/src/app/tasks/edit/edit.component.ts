@@ -37,6 +37,7 @@ import { DatePickerComponent } from '../_formcontrols/date-picker/date-picker.co
 import { DurationComponent } from '../_formcontrols/duration/duration.component';
 import { FileUploadComponent } from '../_formcontrols/file-upload/file-upload.component';
 import { PrioritySelectorComponent } from '../_formcontrols/priority-selector/priority-selector.component';
+import { ReminderToggleComponent } from '../_formcontrols/reminder-toggle/reminder-toggle.component';
 import { SubtasksComponent } from '../_formcontrols/subtasks/subtasks.component';
 
 @Component({
@@ -61,6 +62,7 @@ import { SubtasksComponent } from '../_formcontrols/subtasks/subtasks.component'
     DurationComponent,
     FileUploadComponent,
     PrioritySelectorComponent,
+    ReminderToggleComponent,
     SubtasksComponent,
   ],
   providers: [Attachments],
@@ -79,6 +81,9 @@ export class EditComponent implements AfterViewInit {
     userId: this.fb.control<string | null>(null),
     title: this.fb.control<string>('', [Validators.required]),
     date: this.fb.control<Date>(null as any, [Validators.required]),
+    reminder: this.fb.control<boolean>(
+      this.settings.defaultReminderState() !== 'never',
+    ),
     category: this.fb.control<string>(null as any, [Validators.required]),
     priority: this.fb.control<number | null>(null),
     description: this.fb.control<string | null>(null),
