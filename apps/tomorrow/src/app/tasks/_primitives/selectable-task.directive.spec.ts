@@ -5,7 +5,7 @@ import {
 } from '@ngneat/spectator/vitest';
 import { vi } from 'vitest';
 
-import { Context } from '../../core/context.store';
+import { Context } from '@tmrw/ui/core';
 
 import {
   SelectableTaskDirective,
