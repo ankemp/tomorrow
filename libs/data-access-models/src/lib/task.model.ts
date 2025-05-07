@@ -23,6 +23,7 @@ export const TASK_HEADERS = Object.keys({
   id: '',
   title: '',
   date: new Date(),
+  reminder: false,
   category: '',
   priority: null,
   description: null,
@@ -39,6 +40,7 @@ export const TASK_HEADERS = Object.keys({
 export interface Task extends BaseModel {
   title: string;
   date: Date;
+  reminder: boolean;
   category: string;
   priority: number | null;
   description: string | null;

@@ -58,6 +58,12 @@ export class PlainTaskEntity
   date: Date;
 
   @Column({
+    type: DataType.BOOLEAN,
+    allowNull: true,
+  })
+  reminder: CreationOptional<boolean>;
+
+  @Column({
     type: DataType.STRING,
     allowNull: false,
   })

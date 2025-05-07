@@ -2,7 +2,6 @@
 
 const { Sequelize } = require('sequelize');
 
-/** @type {import('sequelize-cli').Migration} */
 exports.up = async ({ context: queryInterface }) => {
   await queryInterface.createTable('NotificationSubscriptions', {
     deviceId: {
