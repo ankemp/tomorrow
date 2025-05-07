@@ -37,7 +37,7 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
   ],
   template: `
     <tw-preferences-card title="Notifications" icon="@tui.bell">
-      @if (disabled()) {
+      @if (!context.remindersEnabled()) {
         <tui-notification appearance="warning" size="s">
           {{ whyDisabled() }}
         </tui-notification>
@@ -47,7 +47,7 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
         <input
           tuiSwitch
           type="checkbox"
-          [disabled]="disabled()"
+          [disabled]="!context.remindersEnabled()"
           [ngModel]="notifications.isSubscribed()"
           (ngModelChange)="notifications.toggleSubscription()"
         />
@@ -58,7 +58,7 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
           [ngModel]="settings.defaultReminderState()"
           (ngModelChange)="settings.updateDefaultReminderState($event)"
           [valueContent]="defaultReminderStateValueTemplate"
-          [disabled]="disabled()"
+          [disabled]="!context.remindersEnabled()"
         >
           Select Option
           <tui-data-list-wrapper
@@ -81,13 +81,6 @@ export class NotificationPreferencesComponent {
   readonly settings = inject(Settings);
   readonly notifications = inject(Notifications);
 
-  readonly disabled = computed(() => {
-    return (
-      !this.notifications.swPushEnabled() ||
-      !this.settings.remoteSync() ||
-      !this.context.notificationsEnabled()
-    );
-  });
   readonly whyDisabled = computed(() => {
     if (!this.notifications.swPushEnabled()) {
       return 'Unsupported browser';
@@ -95,7 +88,7 @@ export class NotificationPreferencesComponent {
     if (!this.settings.remoteSync()) {
       return 'Remote sync is disabled';
     }
-    if (!this.context.notificationsEnabled()) {
+    if (!this.context.notificationsHealthy()) {
       return 'Disabled server-side';
     }
     return 'Unknown reason';
