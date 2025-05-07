@@ -23,7 +23,7 @@ import { Search, Settings, Tasks } from '@tmrw/data-access';
 import { Context } from '../context.store';
 
 @Component({
-  selector: 'tw-app-bar',
+  selector: 'lib-app-bar',
   imports: [
     CommonModule,
     RouterModule,

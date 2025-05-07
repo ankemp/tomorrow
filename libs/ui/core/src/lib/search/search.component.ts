@@ -25,7 +25,7 @@ import { Search } from '@tmrw/data-access';
 import { FormatDatePipe } from '../_pipes/format-date.pipe';
 
 @Component({
-  selector: 'tw-search',
+  selector: 'lib-search',
   imports: [
     CommonModule,
     ReactiveFormsModule,
