@@ -22,7 +22,7 @@ import { isAfter } from 'date-fns';
 
 import { Search } from '@tmrw/data-access';
 
-import { FormatDatePipe } from '../../tasks/_primitives/format-date.pipe';
+import { FormatDatePipe } from '../_pipes/format-date.pipe';
 
 @Component({
   selector: 'tw-search',

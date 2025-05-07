@@ -18,8 +18,8 @@ import {
 } from '@taiga-ui/legacy';
 
 import { Settings } from '@tmrw/data-access';
+import { FormatDurationPipe } from '@tmrw/ui/core';
 
-import { FormatDurationPipe } from '../../tasks/_primitives/format-duration.pipe';
 import { PreferencesCardComponent } from '../_primitives/preferences-card.component';
 
 class TimeTransformer extends TuiValueTransformer<
