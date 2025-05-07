@@ -21,7 +21,7 @@ export class NotificationSchedulerService implements OnApplicationBootstrap {
   ) {}
 
   onApplicationBootstrap() {
-    // this.rehydrateNotifications();
+    this.rehydrateNotifications();
   }
 
   private async rehydrateNotifications() {
@@ -31,6 +31,7 @@ export class NotificationSchedulerService implements OnApplicationBootstrap {
       this.logger.debug('No notifications to rehydrate.');
       return;
     }
+    this.logger.debug(`Rehydrating ${notifications.length} notifications.`);
     notifications.forEach((notification) => {
       if (isPast(notification.scheduledAt)) {
         this.dispatchNotification(notification);
