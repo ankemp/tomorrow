@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   effect,
   inject,
   OnInit,
@@ -14,17 +15,20 @@ import {
   TuiAlertService,
   TuiAppearance,
   TuiButton,
+  TuiIcon,
   TuiLabel,
   TuiTextfield,
   TuiTitle,
 } from '@taiga-ui/core';
 import { TuiAccordion, TuiAccordionComponent } from '@taiga-ui/experimental';
+import { TuiSegmented } from '@taiga-ui/kit';
 import { TuiCardLarge, TuiForm, TuiHeader } from '@taiga-ui/layout';
 import { TuiTextareaModule } from '@taiga-ui/legacy';
 
-import { Attachments, Settings, Tasks } from '@tmrw/data-access';
+import { Attachments, Notifications, Settings, Tasks } from '@tmrw/data-access';
 import { SubTask } from '@tmrw/data-access-models';
 
+import { Context } from '../../core/context.store';
 import { CategorySelectorComponent } from '../_formcontrols/category-selector/category-selector.component';
 import { DatePickerComponent } from '../_formcontrols/date-picker/date-picker.component';
 import { DurationComponent } from '../_formcontrols/duration/duration.component';
@@ -40,10 +44,12 @@ import { SubtasksComponent } from '../_formcontrols/subtasks/subtasks.component'
     TuiAutoFocus,
     TuiAppearance,
     TuiButton,
+    TuiIcon,
     TuiLabel,
     TuiTextfield,
     TuiTitle,
     TuiAccordion,
+    TuiSegmented,
     TuiCardLarge,
     TuiForm,
     TuiHeader,
@@ -65,11 +71,16 @@ export class CreateComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly alerts = inject(TuiAlertService);
   readonly settings = inject(Settings);
+  readonly notifications = inject(Notifications);
+  readonly context = inject(Context);
   readonly attachmentsStore = inject(Attachments);
   readonly form = this.fb.group({
     userId: this.fb.control<string>(''),
     title: this.fb.control<string>('', [Validators.required]),
     date: this.fb.control<Date | null>(null, [Validators.required]),
+    reminder: this.fb.control<boolean>(
+      this.settings.defaultReminderState() !== 'never',
+    ),
     category: this.fb.control<string | null>(null, [Validators.required]),
     priority: this.fb.control<number>(0),
     pinned: this.fb.control<boolean>(false),
@@ -83,6 +94,15 @@ export class CreateComponent implements OnInit {
 
   @ViewChild(TuiAccordionComponent, { static: true })
   readonly accordion!: TuiAccordionComponent;
+
+  // TODO: De-duplicate with apps/tomorrow/src/app/settings/_blocks/notification-preferences.component.ts
+  readonly notificationsEnabled = computed(() => {
+    return (
+      this.notifications.swPushEnabled() &&
+      this.settings.remoteSync() &&
+      this.context.notificationsEnabled()
+    );
+  });
 
   constructor(private route: ActivatedRoute) {
     effect((onCleanup) => {
