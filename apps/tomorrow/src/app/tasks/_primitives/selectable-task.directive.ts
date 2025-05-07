@@ -15,8 +15,7 @@ import {
 } from '@ngrx/signals';
 
 import { Task } from '@tmrw/data-access-models';
-
-import { Context } from '../../core/context.store';
+import { Context } from '@tmrw/ui/core';
 
 interface SelectedTaskState {
   selected: Task[];

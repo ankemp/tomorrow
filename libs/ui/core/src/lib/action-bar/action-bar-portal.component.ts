@@ -17,7 +17,7 @@ import { ActionBarPortalService } from './action-bar.service';
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ActionBarComponent implements AfterViewInit, OnDestroy {
+export class ActionBarPortalComponent implements AfterViewInit, OnDestroy {
   private readonly actionBarPortal = inject(ActionBarPortalService);
   @ContentChild('actionBar') actionBar!: TemplateRef<unknown>;
 

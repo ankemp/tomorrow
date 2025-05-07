@@ -4,11 +4,12 @@ import { TuiElasticSticky } from '@taiga-ui/addon-mobile';
 import { TUI_DARK_MODE, TuiRoot, TuiScrollbar } from '@taiga-ui/core';
 
 import { Settings, syncManager } from '@tmrw/data-access';
-
-import { ActionBarComponent } from './core/action-bar/action-bar.component';
-import { AppBarComponent } from './core/app-bar/app-bar.component';
-import { Context } from './core/context.store';
-import { SearchComponent } from './core/search/search.component';
+import {
+  ActionBarComponent,
+  AppBarComponent,
+  Context,
+  SearchComponent,
+} from '@tmrw/ui/core';
 
 @Component({
   imports: [

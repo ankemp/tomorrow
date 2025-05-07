@@ -27,8 +27,8 @@ import { TuiTextareaModule } from '@taiga-ui/legacy';
 
 import { Attachments, Notifications, Settings, Tasks } from '@tmrw/data-access';
 import { SubTask } from '@tmrw/data-access-models';
+import { Context } from '@tmrw/ui/core';
 
-import { Context } from '../../core/context.store';
 import { CategorySelectorComponent } from '../_formcontrols/category-selector/category-selector.component';
 import { DatePickerComponent } from '../_formcontrols/date-picker/date-picker.component';
 import { DurationComponent } from '../_formcontrols/duration/duration.component';

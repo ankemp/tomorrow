@@ -11,8 +11,8 @@ import { TuiDataListWrapper, TuiSwitch } from '@taiga-ui/kit';
 import { TUI_TEXTFIELD_SIZE, TuiSelectModule } from '@taiga-ui/legacy';
 
 import { Notifications, Settings } from '@tmrw/data-access';
+import { Context } from '@tmrw/ui/core';
 
-import { Context } from '../../core/context.store';
 import { PreferencesCardComponent } from '../_primitives/preferences-card.component';
 
 @Component({
