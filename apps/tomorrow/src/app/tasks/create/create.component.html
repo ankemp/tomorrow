@@ -29,7 +29,7 @@
       Add description
     </tui-textarea>
 
-    @if (notificationsEnabled()) {
+    @if (context.remindersEnabled()) {
       @if (settings.defaultReminderState() === 'ask') {
         <label
           tuiLabel

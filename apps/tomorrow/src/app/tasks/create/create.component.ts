@@ -95,15 +95,6 @@ export class CreateComponent implements OnInit {
   @ViewChild(TuiAccordionComponent, { static: true })
   readonly accordion!: TuiAccordionComponent;
 
-  // TODO: De-duplicate with apps/tomorrow/src/app/settings/_blocks/notification-preferences.component.ts
-  readonly notificationsEnabled = computed(() => {
-    return (
-      this.notifications.swPushEnabled() &&
-      this.settings.remoteSync() &&
-      this.context.notificationsEnabled()
-    );
-  });
-
   constructor(private route: ActivatedRoute) {
     effect((onCleanup) => {
       const userId = this.settings.userId();

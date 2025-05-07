@@ -1,5 +1,5 @@
 {
-  "name": "core",
+  "name": "ui-core",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/ui/core/src",
   "prefix": "lib",

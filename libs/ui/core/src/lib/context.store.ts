@@ -26,6 +26,8 @@ import {
   timer,
 } from 'rxjs';
 
+import { Notifications, Settings } from '@tmrw/data-access';
+
 interface ContextState {
   isOnline: boolean;
   isUpdating: boolean;
@@ -51,6 +53,8 @@ export const Context = signalStore(
     httpClient: inject(HttpClient),
     alertService: inject(TuiAlertService),
     breakpointService: inject(TuiBreakpointService),
+    settings: inject(Settings),
+    notifications: inject(Notifications),
   })),
   withComputed((state) => ({
     isOffline: computed(() => !state.isOnline()),
@@ -63,8 +67,15 @@ export const Context = signalStore(
     canVibrate: computed(
       () => typeof navigator !== 'undefined' && 'vibrate' in navigator,
     ),
-    notificationsEnabled: computed(() => {
+    notificationsHealthy: computed(() => {
       return state.apiHealth()?.details['notifications']?.status === 'up';
+    }),
+    remindersEnabled: computed(() => {
+      return (
+        state.notifications.swPushEnabled() &&
+        state.settings.remoteSync() &&
+        state.apiHealth()?.details['notifications']?.status === 'up'
+      );
     }),
   })),
   withMethods((store) => ({
@@ -72,7 +83,6 @@ export const Context = signalStore(
       pipe(
         switchMap(() =>
           merge(
-            // FIXME: Causes references error on server.
             fromEvent(window, 'offline').pipe(map(() => false)),
             fromEvent(window, 'online').pipe(map(() => true)),
           ),
