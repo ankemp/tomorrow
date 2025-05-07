@@ -39,8 +39,10 @@ export class FileUploadComponent implements ControlValueAccessor {
     return this.files().length > 0;
   });
 
-  private _onChange!: (_: any) => void;
-  private _onTouched!: (_: any) => void;
+  /* eslint-disable @typescript-eslint/no-empty-function */
+  private _onChange = (_: any) => {};
+  private _onTouched = (_: any) => {};
+  /* eslint-enable @typescript-eslint/no-empty-function */
 
   constructor() {
     effect(() => {

@@ -73,13 +73,14 @@ export class SubtasksComponent implements ControlValueAccessor {
       )
       .subscribe((tasks) => {
         this._onChange(tasks);
+        this._onTouched();
       });
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  /* eslint-disable @typescript-eslint/no-empty-function */
   private _onChange = (_: any) => {};
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   private _onTouched = () => {};
+  /* eslint-enable @typescript-eslint/no-empty-function */
 
   writeValue(input: SubTask[] | null): void {
     if (input && input.length > 0) {
@@ -91,10 +92,10 @@ export class SubtasksComponent implements ControlValueAccessor {
       this.form.setControl('tasks', this.fb.array([this.newTask()]));
     }
   }
-  registerOnChange(fn: any): void {
+  registerOnChange(fn: (_: any) => void): void {
     this._onChange = fn;
   }
-  registerOnTouched(fn: any): void {
+  registerOnTouched(fn: () => void): void {
     this._onTouched = fn;
   }
   setDisabledState(isDisabled: boolean): void {

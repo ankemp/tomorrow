@@ -135,8 +135,10 @@ export class DatePickerComponent implements ControlValueAccessor {
     return this.specificityOverride() || this.settings.timeSpecificity();
   });
 
-  private _onChange!: (_: any) => void;
-  private _onTouched!: () => void;
+  /* eslint-disable @typescript-eslint/no-empty-function */
+  private _onChange = (_: any) => {};
+  private _onTouched = () => {};
+  /* eslint-enable @typescript-eslint/no-empty-function */
 
   constructor() {
     effect(() => {
