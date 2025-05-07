@@ -1,19 +1,22 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { TerminusModule } from '@nestjs/terminus';
 
-import { DBService } from './db.service';
+import { EncryptedTaskEntity } from './entities/encrypted-task.entity';
+import { NotificationEntity } from './entities/notification.entity';
+import { PushNotificationSubscriptionEntity } from './entities/notification-subscription.entity';
+import { PlainTaskEntity } from './entities/plain-task.entity';
+import { UserEntity } from './entities/user.entity';
 import { DBStorageHealthIndicator } from './db-storage.health';
-import { EncryptedTaskEntity } from './encrypted-task.entity';
-import { NotificationEntity } from './notification.entity';
-import { PushNotificationSubscriptionEntity } from './notification-subscription.entity';
-import { PlainTaskEntity } from './plain-task.entity';
-import { UserEntity } from './user.entity';
 
 import 'sqlite3';
 
 const isDevMode =
   !process.env['NODE_ENV'] || process.env['NODE_ENV'] === 'development';
+
+if (process.env['NODE_ENV'] === 'production' && !process.env['DB_PATH']) {
+  throw new Error('DB_PATH must be set in production mode');
+}
 
 @Module({
   imports: [
@@ -21,7 +24,7 @@ const isDevMode =
     SequelizeModule.forRoot({
       dialect: 'sqlite',
       storage: process.env['DB_PATH'] || ':memory:',
-      logging: isDevMode ? console.log : false,
+      logging: isDevMode ? Logger.verbose : false,
       models: [
         PlainTaskEntity,
         EncryptedTaskEntity,
@@ -29,15 +32,9 @@ const isDevMode =
         PushNotificationSubscriptionEntity,
         NotificationEntity,
       ],
-      synchronize: true,
-      sync: {
-        force: isDevMode,
-        alter: true,
-        // TODO: Setup migrations, and disable alter mode
-      },
     }),
   ],
-  providers: [DBStorageHealthIndicator, DBService],
+  providers: [DBStorageHealthIndicator],
   exports: [SequelizeModule, DBStorageHealthIndicator],
 })
 export class DatabaseModule {}

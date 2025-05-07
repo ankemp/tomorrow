@@ -7,7 +7,7 @@ import {
   WebPushError,
 } from 'web-push';
 
-import { PushNotificationSubscriptionEntity } from '../_db/notification-subscription.entity';
+import { PushNotificationSubscriptionEntity } from '../_db/entities/notification-subscription.entity';
 
 const VAPID_PRIVATE_KEY = process.env.VAPID_PRIVATE_KEY;
 const VAPID_PUBLIC_KEY = process.env.VAPID_PUBLIC_KEY;
@@ -21,6 +21,10 @@ export class PushSubscriptionService {
     @InjectModel(PushNotificationSubscriptionEntity)
     private readonly subscriptionRepository: typeof PushNotificationSubscriptionEntity,
   ) {
+    if (!VAPID_PRIVATE_KEY || !VAPID_PUBLIC_KEY) {
+      this.logger.warn('VAPID keys are not set.');
+      return;
+    }
     setVapidDetails(
       VAPID_SUBJECT ?? 'mailto: no-reply@example.com',
       VAPID_PUBLIC_KEY,

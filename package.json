@@ -58,6 +58,7 @@
     "sequelize": "^6.37.5",
     "sequelize-typescript": "^2.1.6",
     "sqlite3": "^5.1.7",
+    "umzug": "^3.8.2",
     "web-push": "^3.6.7",
     "zone.js": "~0.15.0"
   },
@@ -119,6 +120,7 @@
     "jsonc-eslint-parser": "^2.1.0",
     "nx": "21.1.1",
     "prettier": "^3.4.2",
+    "sequelize-cli": "^6.6.3",
     "ts-jest": "^29.1.0",
     "ts-node": "10.9.1",
     "tslib": "^2.3.0",

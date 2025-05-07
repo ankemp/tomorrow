@@ -2,7 +2,7 @@ import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectModel } from '@nestjs/sequelize';
 
-import { NotificationEntity } from '../_db/notification.entity';
+import { NotificationEntity } from '../_db/entities/notification.entity';
 
 @Injectable()
 export class NotificationsService implements OnApplicationBootstrap {

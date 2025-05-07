@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 
-import { UserEntity } from '../_db/user.entity';
+import { UserEntity } from '../_db/entities/user.entity';
 
 @Injectable()
 export class UsersService {
