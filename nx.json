@@ -12,7 +12,8 @@
       "!{projectRoot}/src/test-setup.[jt]s",
       "!{projectRoot}/test-setup.[jt]s"
     ],
-    "sharedGlobals": []
+    "sharedGlobals": [],
+    "githubWorkflows": ["{workspaceRoot}/.github/workflows/**/*"]
   },
   "targetDefaults": {
     "@angular-devkit/build-angular:application": {
@@ -26,12 +27,18 @@
         "default",
         "{workspaceRoot}/.eslintrc.json",
         "{workspaceRoot}/.eslintignore",
-        "{workspaceRoot}/eslint.config.cjs"
+        "{workspaceRoot}/eslint.config.cjs",
+        "githubWorkflows"
       ]
     },
     "@nx/jest:jest": {
       "cache": true,
-      "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"],
+      "inputs": [
+        "default",
+        "^production",
+        "{workspaceRoot}/jest.preset.js",
+        "githubWorkflows"
+      ],
       "options": {
         "passWithNoTests": true
       },
@@ -45,7 +52,7 @@
     "@nx/js:tsc": {
       "cache": true,
       "dependsOn": ["^build"],
-      "inputs": ["production", "^production"]
+      "inputs": ["production", "^production", "githubWorkflows"]
     }
   },
   "generators": {
