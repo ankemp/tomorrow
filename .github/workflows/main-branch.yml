@@ -1,4 +1,4 @@
-name: Tomorrow Test, Lint, Build and Publish Docker Image
+name: Main Branch Workflow
 
 on:
   push:
