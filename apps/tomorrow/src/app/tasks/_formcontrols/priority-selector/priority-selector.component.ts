@@ -4,7 +4,6 @@ import {
   Component,
   effect,
   forwardRef,
-  model,
   signal,
 } from '@angular/core';
 import {
@@ -31,27 +30,26 @@ import { PriorityPinComponent } from '../../_primitives/priority-pin.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PrioritySelectorComponent implements ControlValueAccessor {
-  readonly priority = model<number>(0);
+  readonly priority = signal<number>(0);
   readonly disabled = signal(false);
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  private _onChange = (_: any) => {};
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  private _onTouched = () => {};
+  private _onChange!: (_: any) => void;
+  private _onTouched!: (_: any) => void;
 
   constructor() {
     effect(() => {
       this._onChange(this.priority());
+      this._onTouched(this.priority());
     });
   }
 
   writeValue(input: number): void {
     this.priority.set(input);
   }
-  registerOnChange(fn: any): void {
+  registerOnChange(fn: (_: any) => void): void {
     this._onChange = fn;
   }
-  registerOnTouched(fn: any): void {
+  registerOnTouched(fn: (_: any) => void): void {
     this._onTouched = fn;
   }
   setDisabledState(isDisabled: boolean): void {

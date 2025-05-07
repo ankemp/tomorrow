@@ -7,7 +7,6 @@ import {
   forwardRef,
   inject,
   input,
-  model,
   signal,
 } from '@angular/core';
 import {
@@ -122,20 +121,22 @@ export class DatePickerComponent implements ControlValueAccessor {
     null,
   );
 
-  readonly datePickerPreset = model<
+  readonly datePickerPreset = signal<
     'today' | 'tomorrow' | 'weekend' | 'custom' | null
   >(null);
   readonly showDatePicker = computed(() => {
     return !!this.datePickerPreset();
   });
 
-  readonly date = model<Date | null>(null);
-
+  readonly date = signal<Date | null>(null);
   readonly disabled = signal(false);
 
-  timeSpecificity = computed(() => {
+  readonly timeSpecificity = computed(() => {
     return this.specificityOverride() || this.settings.timeSpecificity();
   });
+
+  private _onChange!: (_: any) => void;
+  private _onTouched!: () => void;
 
   constructor() {
     effect(() => {
@@ -177,16 +178,13 @@ export class DatePickerComponent implements ControlValueAccessor {
       } else {
         this.datePickerPreset.set('custom');
       }
+      this._onTouched();
     });
     effect(() => {
       this._onChange(this.date());
+      this._onTouched();
     });
   }
-
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  private _onChange = (_: any) => {};
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  private _onTouched = () => {};
 
   writeValue(input: Date | null): void {
     this.date.set(input);
@@ -196,10 +194,10 @@ export class DatePickerComponent implements ControlValueAccessor {
       this.datePickerPreset.set(null);
     }
   }
-  registerOnChange(fn: any): void {
+  registerOnChange(fn: (_: any) => void): void {
     this._onChange = fn;
   }
-  registerOnTouched(fn: any): void {
+  registerOnTouched(fn: () => void): void {
     this._onTouched = fn;
   }
   setDisabledState(isDisabled: boolean): void {

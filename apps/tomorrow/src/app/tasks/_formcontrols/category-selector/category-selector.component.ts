@@ -5,7 +5,6 @@ import {
   effect,
   forwardRef,
   inject,
-  model,
   signal,
 } from '@angular/core';
 import {
@@ -34,18 +33,17 @@ import { Settings } from '@tmrw/data-access';
 })
 export class CategorySelectorComponent implements ControlValueAccessor {
   private readonly settings = inject(Settings);
-  readonly category = model<string | null>();
+  readonly category = signal<string | null>(null);
 
   readonly disabled = signal(false);
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  private _onChange = (_: any) => {};
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  private _onTouched = () => {};
+  private _onChange!: (_: any) => void;
+  private _onTouched!: (_: any) => void;
 
   constructor() {
     effect(() => {
       this._onChange(this.category());
+      this._onTouched(this.category());
     });
   }
 
@@ -59,10 +57,10 @@ export class CategorySelectorComponent implements ControlValueAccessor {
       }
     }
   }
-  registerOnChange(fn: any): void {
+  registerOnChange(fn: (_: any) => void): void {
     this._onChange = fn;
   }
-  registerOnTouched(fn: any): void {
+  registerOnTouched(fn: (_: any) => void): void {
     this._onTouched = fn;
   }
   setDisabledState(isDisabled: boolean): void {

@@ -6,7 +6,6 @@ import {
   effect,
   forwardRef,
   input,
-  model,
   signal,
 } from '@angular/core';
 import {
@@ -33,32 +32,30 @@ import { TuiFiles } from '@taiga-ui/kit';
 export class FileUploadComponent implements ControlValueAccessor {
   readonly accept = input('*/*');
   readonly maxFileSize = input();
-  readonly files = model<File[]>([]);
+  readonly files = signal<File[]>([]);
+  readonly disabled = signal(false);
 
   readonly hasFiles = computed(() => {
     return this.files().length > 0;
   });
 
-  readonly disabled = signal(false);
+  private _onChange!: (_: any) => void;
+  private _onTouched!: (_: any) => void;
 
   constructor() {
     effect(() => {
       this._onChange(this.files());
+      this._onTouched(this.files());
     });
   }
-
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  private _onChange = (_: any) => {};
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  private _onTouched = () => {};
 
   writeValue(input: File[]): void {
     this.files.set(input);
   }
-  registerOnChange(fn: any): void {
+  registerOnChange(fn: (_: any) => void): void {
     this._onChange = fn;
   }
-  registerOnTouched(fn: any): void {
+  registerOnTouched(fn: (_: any) => void): void {
     this._onTouched = fn;
   }
   setDisabledState(isDisabled: boolean): void {

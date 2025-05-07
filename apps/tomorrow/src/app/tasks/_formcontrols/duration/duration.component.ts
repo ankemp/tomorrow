@@ -34,31 +34,16 @@ import { FormatDurationPipe } from '../../_primitives/format-duration.pipe';
 })
 export class DurationComponent implements ControlValueAccessor {
   readonly duration = signal<number | null>(null);
-
   readonly disabled = signal(false);
+
+  private _onChange!: (_: any) => void;
+  private _onTouched!: (_: any) => void;
 
   constructor(private formatDurationPipe: FormatDurationPipe) {
     effect(() => {
       this._onChange(this.duration());
+      this._onTouched(this.duration());
     });
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  private _onChange = (_: any) => {};
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  private _onTouched = () => {};
-
-  writeValue(input: any): void {
-    this.duration.set(input);
-  }
-  registerOnChange(fn: any): void {
-    this._onChange = fn;
-  }
-  registerOnTouched(fn: any): void {
-    this._onTouched = fn;
-  }
-  setDisabledState(isDisabled: boolean): void {
-    this.disabled.set(isDisabled);
   }
 
   readonly durationLabel = ({ $implicit }: TuiContext<number>): string => {
@@ -98,4 +83,17 @@ export class DurationComponent implements ControlValueAccessor {
     [Math.round((100 / 12) * 11), 60 * 20],
     [100, 60 * 24],
   ];
+
+  writeValue(input: number): void {
+    this.duration.set(input);
+  }
+  registerOnChange(fn: (_: any) => void): void {
+    this._onChange = fn;
+  }
+  registerOnTouched(fn: (_: any) => void): void {
+    this._onTouched = fn;
+  }
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled.set(isDisabled);
+  }
 }
