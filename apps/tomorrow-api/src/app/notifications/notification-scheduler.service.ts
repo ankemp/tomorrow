@@ -108,6 +108,9 @@ export class NotificationSchedulerService implements OnApplicationBootstrap {
   // TODO: Encrypted tasks
   @OnEvent('task.created')
   private handleTaskCreatedEvent(task: PlainTaskEntity) {
+    if (!task.reminder) {
+      return;
+    }
     this.notificationsService.createNotification(
       task.userId,
       task.id,
@@ -118,6 +121,10 @@ export class NotificationSchedulerService implements OnApplicationBootstrap {
 
   @OnEvent('task.updated')
   private handleTaskUpdatedEvent(task: PlainTaskEntity) {
+    if (!task.reminder) {
+      this.notificationsService.deleteNotification(task.id);
+      return;
+    }
     this.notificationsService.updateNotification(
       task.id,
       `Reminder to complete ${task.title}`, // TODO: Better messaging
