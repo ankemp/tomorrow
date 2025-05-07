@@ -20,12 +20,12 @@ import {
 
 import { Tasks } from '@tmrw/data-access';
 import { Task, TASK_SORT_DEFAULT, TaskSort } from '@tmrw/data-access-models';
+import { FormatDurationPipe } from '@tmrw/ui/core';
 
 import { BulkCompleteTasksButtonComponent } from '../_blocks/bulk-complete-tasks-button.component';
 import { EmptyStateComponent } from '../_blocks/empty-state/empty-state.component';
 import { TaskListCardComponent } from '../_blocks/task-list-card/task-list-card.component';
 import { TaskListHeaderComponent } from '../_blocks/task-list-header/task-list-header.component';
-import { FormatDurationPipe } from '../_primitives/format-duration.pipe';
 
 @Component({
   selector: 'tw-category',

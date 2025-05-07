@@ -20,9 +20,9 @@ import { NgMathPipesModule } from 'ngx-pipes';
 import { EMPTY, of, switchMap, tap } from 'rxjs';
 
 import { Attachments, Settings, Tasks } from '@tmrw/data-access';
+import { Context } from '@tmrw/ui/core';
 
 import { version } from '../../../environments/version';
-import { Context } from '../../core/context.store';
 import { PreferencesCardComponent } from '../_primitives/preferences-card.component';
 
 @Component({
