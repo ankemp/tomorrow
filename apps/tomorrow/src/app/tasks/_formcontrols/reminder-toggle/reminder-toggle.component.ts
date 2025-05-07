@@ -34,24 +34,23 @@ export class ReminderToggleComponent implements ControlValueAccessor {
   readonly reminderEnabled = signal<boolean>(false);
   readonly disabled = signal(false);
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  private _onChange = (_: any) => {};
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  private _onTouched = () => {};
+  private _onChange!: (_: any) => void;
+  private _onTouched!: () => void;
 
   constructor() {
     effect(() => {
       this._onChange(this.reminderEnabled());
+      this._onTouched();
     });
   }
 
   writeValue(input: boolean): void {
     this.reminderEnabled.set(input);
   }
-  registerOnChange(fn: any): void {
+  registerOnChange(fn: (_: any) => void): void {
     this._onChange = fn;
   }
-  registerOnTouched(fn: any): void {
+  registerOnTouched(fn: () => void): void {
     this._onTouched = fn;
   }
   setDisabledState(isDisabled: boolean): void {

@@ -31,6 +31,7 @@ import { DatePickerComponent } from '../_formcontrols/date-picker/date-picker.co
 import { DurationComponent } from '../_formcontrols/duration/duration.component';
 import { FileUploadComponent } from '../_formcontrols/file-upload/file-upload.component';
 import { PrioritySelectorComponent } from '../_formcontrols/priority-selector/priority-selector.component';
+import { ReminderToggleComponent } from '../_formcontrols/reminder-toggle/reminder-toggle.component';
 import { SubtasksComponent } from '../_formcontrols/subtasks/subtasks.component';
 
 @Component({
@@ -54,6 +55,7 @@ import { SubtasksComponent } from '../_formcontrols/subtasks/subtasks.component'
     DurationComponent,
     FileUploadComponent,
     PrioritySelectorComponent,
+    ReminderToggleComponent,
     SubtasksComponent,
   ],
   providers: [Attachments],
