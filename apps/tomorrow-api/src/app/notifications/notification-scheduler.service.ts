@@ -4,8 +4,8 @@ import { SchedulerRegistry } from '@nestjs/schedule';
 import { differenceInMilliseconds, isPast } from 'date-fns';
 import { isNil } from 'es-toolkit';
 
-import type { NotificationEntity } from '../_db/notification.entity';
-import type { PlainTaskEntity } from '../_db/plain-task.entity';
+import type { NotificationEntity } from '../_db/entities/notification.entity';
+import type { PlainTaskEntity } from '../_db/entities/plain-task.entity';
 
 import { NotificationsService } from './notifications.service';
 import { PushSubscriptionService } from './push-subscription.service';
@@ -21,7 +21,7 @@ export class NotificationSchedulerService implements OnApplicationBootstrap {
   ) {}
 
   onApplicationBootstrap() {
-    this.rehydrateNotifications();
+    // this.rehydrateNotifications();
   }
 
   private async rehydrateNotifications() {
