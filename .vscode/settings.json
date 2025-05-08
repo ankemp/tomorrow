@@ -6,9 +6,7 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
-  "github.copilot.chat.testGeneration.instructions": [
-    {
-      "file": "./docs/test-generation-instructions.md"
-    }
-  ]
+  "chat.instructionsFilesLocations": {
+    "docs": true
+  }
 }

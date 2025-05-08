@@ -1,3 +1,7 @@
+---
+applyTo: '**/*.spec.ts'
+---
+
 # Custom Instructions for Writing Tests with Vitest Using VS Code Copilot
 
 1. **Writing Tests**
