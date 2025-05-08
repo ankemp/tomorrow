@@ -26,40 +26,36 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
   ],
   template: `
     <tw-preferences-card title="Sync" icon="@tui.arrow-left-right">
-      <div class="switch-container">
-        <label tuiLabel>
-          Remote Sync
-          <input
-            tuiSwitch
-            type="checkbox"
-            [ngModel]="settings.remoteSync()"
-            (ngModelChange)="settings.updateRemoteSync($event)"
+      <label tuiLabel>
+        Remote Sync
+        <input
+          tuiSwitch
+          type="checkbox"
+          [ngModel]="settings.remoteSync()"
+          (ngModelChange)="settings.updateRemoteSync($event)"
+        />
+      </label>
+      <label tuiLabel>
+        <span>
+          Encryption
+          <tui-icon
+            style="--t-bg: unset"
+            [appearance]="settings.hasEncryptionKey() ? 'positive' : 'negative'"
+            [icon]="encryptionIcon()"
+            tuiTooltip="Encryption key is {{
+              settings.hasEncryptionKey() ? 'ready' : 'not ready'
+            }}"
           />
-        </label>
-        <label tuiLabel>
-          <span>
-            Encryption
-            <tui-icon
-              style="--t-bg: unset"
-              [appearance]="
-                settings.hasEncryptionKey() ? 'positive' : 'negative'
-              "
-              [icon]="encryptionIcon()"
-              tuiTooltip="Encryption key is {{
-                settings.hasEncryptionKey() ? 'ready' : 'not ready'
-              }}"
-            />
-          </span>
-          <!-- TODO: Add ability to delete key, warn about losing all data -->
-          <input
-            tuiSwitch
-            type="checkbox"
-            [ngModel]="settings.encryption()"
-            (ngModelChange)="settings.updateEncryption($event)"
-            [disabled]="!this.settings.remoteSync()"
-          />
-        </label>
-      </div>
+        </span>
+        <!-- TODO: Add ability to delete key, warn about losing all data -->
+        <input
+          tuiSwitch
+          type="checkbox"
+          [ngModel]="settings.encryption()"
+          (ngModelChange)="settings.updateEncryption($event)"
+          [disabled]="!this.settings.remoteSync()"
+        />
+      </label>
     </tw-preferences-card>
   `,
   styleUrl: './styles.css',

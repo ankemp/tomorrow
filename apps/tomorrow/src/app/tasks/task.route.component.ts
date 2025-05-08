@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { TuiButton, TuiDataList, TuiDropdown, TuiIcon } from '@taiga-ui/core';
 import { TuiActionBar, TuiItemsWithMore } from '@taiga-ui/kit';
 
-import { Context } from '../core/context.store';
+import { Context } from '@tmrw/ui/core';
 
 import { SelectedTasksStore } from './_primitives/selectable-task.directive';
 import { TaskService } from './task.service';

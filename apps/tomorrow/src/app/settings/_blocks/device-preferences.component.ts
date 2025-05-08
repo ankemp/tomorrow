@@ -20,9 +20,9 @@ import { NgMathPipesModule } from 'ngx-pipes';
 import { EMPTY, of, switchMap, tap } from 'rxjs';
 
 import { Attachments, Settings, Tasks } from '@tmrw/data-access';
+import { Context } from '@tmrw/ui/core';
 
 import { version } from '../../../environments/version';
-import { Context } from '../../core/context.store';
 import { PreferencesCardComponent } from '../_primitives/preferences-card.component';
 
 @Component({
@@ -73,6 +73,15 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
             <label class="update-progress" tuiProgressLabel>
               Updating...
               <progress tuiProgressBar size="l" [max]="100"></progress>
+            </label>
+          } @else if (context.updateReady()) {
+            <label tuiLabel>
+              <tui-icon
+                style="--t-bg: unset"
+                tuiAppearance="info"
+                icon="@tui.check"
+              />
+              Reload to update
             </label>
           } @else {
             <label tuiLabel>

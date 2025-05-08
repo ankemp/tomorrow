@@ -15,7 +15,7 @@ import { TuiContext } from '@taiga-ui/cdk';
 import { TuiKeySteps } from '@taiga-ui/kit';
 import { TuiInputSliderModule } from '@taiga-ui/legacy';
 
-import { FormatDurationPipe } from '../../_primitives/format-duration.pipe';
+import { FormatDurationPipe } from '@tmrw/ui/core';
 
 @Component({
   selector: 'tw-duration',

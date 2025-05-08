@@ -34,13 +34,15 @@ import { isNil } from 'es-toolkit';
 
 import { Attachments, Settings, Tasks } from '@tmrw/data-access';
 import { Task, TaskTimer } from '@tmrw/data-access-models';
+import {
+  ActionBarPortalComponent,
+  FormatDatePipe,
+  FormatDurationPipe,
+} from '@tmrw/ui/core';
 
-import { ActionBarComponent } from '../../core/action-bar/action-bar-portal.component';
 import { EmptyStateComponent } from '../_blocks/empty-state/empty-state.component';
 import { TaskTimerComponent } from '../_blocks/timer.component';
 import { CategoryChipComponent } from '../_primitives/category-chip.component';
-import { FormatDatePipe } from '../_primitives/format-date.pipe';
-import { FormatDurationPipe } from '../_primitives/format-duration.pipe';
 import { PriorityPinComponent } from '../_primitives/priority-pin.component';
 import { TaskService } from '../task.service';
 
@@ -67,7 +69,7 @@ import { TaskService } from '../task.service';
     TuiCell,
     TuiHeader,
     PolymorpheusOutlet,
-    ActionBarComponent,
+    ActionBarPortalComponent,
     CategoryChipComponent,
     EmptyStateComponent,
     FormatDatePipe,
