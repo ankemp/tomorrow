@@ -36,7 +36,8 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
             (ngModelChange)="settings.updateRemoteSync($event)"
           />
         </label>
-        <label tuiLabel>
+        <!-- TODO: Add ability to delete key, warn about losing all data -->
+        <!-- <label tuiLabel>
           <span>
             Encryption
             <tui-icon
@@ -50,7 +51,6 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
               }}"
             />
           </span>
-          <!-- TODO: Add ability to delete key, warn about losing all data -->
           <input
             tuiSwitch
             type="checkbox"
@@ -58,7 +58,7 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
             (ngModelChange)="settings.updateEncryption($event)"
             [disabled]="!this.settings.remoteSync()"
           />
-        </label>
+        </label> -->
       </div>
     </tw-preferences-card>
   `,
