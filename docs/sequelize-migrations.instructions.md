@@ -1,3 +1,7 @@
+---
+applyTo: 'apps/tomorrow-api/src/migrations/*.js'
+---
+
 # Migration Writing Guide
 
 This document provides guidelines and examples for creating and writing migrations in the project.
