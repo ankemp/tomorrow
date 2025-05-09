@@ -17,9 +17,9 @@ import {
 } from '@taiga-ui/kit';
 import { TuiCell } from '@taiga-ui/layout';
 import { NgMathPipesModule } from 'ngx-pipes';
-import { EMPTY, of, switchMap, tap } from 'rxjs';
+import { EMPTY, mergeMap, of, switchMap, tap } from 'rxjs';
 
-import { Attachments, Settings, Tasks } from '@tmrw/data-access';
+import { Attachments, Settings, syncManager, Tasks } from '@tmrw/data-access';
 import { Context } from '@tmrw/ui/core';
 
 import { version } from '../../../environments/version';
@@ -212,6 +212,9 @@ export class DevicePreferencesComponent {
         switchMap((response) => (response ? of(true) : EMPTY)),
         tap(() => {
           this.settingsStore.resetUser();
+        }),
+        mergeMap(() => {
+          return syncManager.dispose();
         }),
         switchMap(() => {
           return this.alerts.open('User scope reset', {
