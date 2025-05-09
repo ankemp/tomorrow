@@ -17,7 +17,7 @@ import {
 } from '@taiga-ui/kit';
 import { TuiCell } from '@taiga-ui/layout';
 import { NgMathPipesModule } from 'ngx-pipes';
-import { EMPTY, mergeMap, of, switchMap, tap } from 'rxjs';
+import { EMPTY, of, switchMap, tap } from 'rxjs';
 
 import { Attachments, Settings, syncManager, Tasks } from '@tmrw/data-access';
 import { Context } from '@tmrw/ui/core';
@@ -141,6 +141,10 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
         width: 100%;
       }
 
+      [tuilabel] {
+        justify-content: unset;
+      }
+
       .version-container {
         display: flex;
         flex-direction: row;
@@ -203,7 +207,7 @@ export class DevicePreferencesComponent {
         label: 'Reset User Scope',
         data: {
           appearance: 'destructive',
-          content: `Reset user scope, and leave sync group?<br />This will not delete any task data.`,
+          content: `Reset user scope, and leave sync group?<br />This will not delete any task data.<br />When complete the app will restart.`,
           yes: 'Reset',
           no: 'Cancel',
         },
@@ -212,15 +216,12 @@ export class DevicePreferencesComponent {
         switchMap((response) => (response ? of(true) : EMPTY)),
         tap(() => {
           this.settingsStore.resetUser();
+          if (syncManager.isSyncing('tasks')) {
+            syncManager.dispose();
+          }
         }),
-        mergeMap(() => {
-          return syncManager.dispose();
-        }),
-        switchMap(() => {
-          return this.alerts.open('User scope reset', {
-            appearance: 'destructive',
-            icon: '@tui.rotate-ccw',
-          });
+        tap(() => {
+          window.location.reload();
         }),
       )
       .subscribe();
