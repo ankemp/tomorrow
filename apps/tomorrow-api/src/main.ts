@@ -1,6 +1,8 @@
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import fs from 'fs';
 import helmet from 'helmet';
+import path from 'path';
 import { Sequelize } from 'sequelize';
 import { SequelizeStorage, Umzug } from 'umzug';
 
@@ -13,9 +15,19 @@ async function runMigrations() {
 
   const logger = new Logger('Migrations');
 
+  const dbPath = process.env['DB_PATH'] || ':memory:';
+  if (dbPath !== ':memory:') {
+    const resolvedPath = path.resolve(dbPath);
+    if (!fs.existsSync(resolvedPath)) {
+      fs.mkdirSync(path.dirname(resolvedPath), { recursive: true });
+      fs.writeFileSync(resolvedPath, '');
+      logger.log(`Created database file at ${resolvedPath}`);
+    }
+  }
+
   const sequelize = new Sequelize({
     dialect: 'sqlite',
-    storage: process.env['DB_PATH'] || ':memory:',
+    storage: dbPath,
   });
 
   const umzug = new Umzug({
