@@ -23,6 +23,7 @@ export const TASK_HEADERS = Object.keys({
   id: '',
   title: '',
   date: new Date(),
+  reminder: false,
   category: '',
   priority: null,
   description: null,
@@ -39,6 +40,7 @@ export const TASK_HEADERS = Object.keys({
 export interface Task extends BaseModel {
   title: string;
   date: Date;
+  reminder: boolean;
   category: string;
   priority: number | null;
   description: string | null;
@@ -52,3 +54,30 @@ export interface Task extends BaseModel {
   notes: string | null;
   userId: string | null;
 }
+
+export interface EncryptedTask {
+  id: string;
+  encryptedData: string;
+  userId: string;
+  date: Date;
+}
+
+export interface TaskChange<T> {
+  id: string;
+  date: Date;
+  content: T;
+}
+
+export type TasksChangePayload =
+  | {
+      changes: Array<TaskChange<Task>>;
+      encrypted: false;
+      userId: string;
+      deviceId: string;
+    }
+  | {
+      changes: Array<TaskChange<string>>;
+      encrypted: true;
+      userId: string;
+      deviceId: string;
+    };

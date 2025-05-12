@@ -36,48 +36,46 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
   ],
   template: `
     <tw-preferences-card title="Display" icon="@tui.palette">
-      <div class="switch-container">
-        <label tuiLabel>
-          Theme
+      <label tuiLabel>
+        Theme
 
-          <tui-segmented [activeItemIndex]="darkModeIndex()">
-            <button
-              title="light"
-              type="button"
-              (click)="darkMode.set(!darkMode())"
-            >
-              <tui-icon icon="@tui.sun" />
-            </button>
-            <button
-              title="dark"
-              type="button"
-              (click)="darkMode.set(!darkMode())"
-            >
-              <tui-icon icon="@tui.moon" />
-            </button>
-          </tui-segmented>
-        </label>
-        <label tuiLabel>
-          Category Display
-          <tui-select
-            [ngModel]="settings.categoryDisplay()"
-            (ngModelChange)="settings.updateCategoryDisplay($event)"
-            [valueContent]="categoryDisplayValueTemplate"
+        <tui-segmented [activeItemIndex]="darkModeIndex()">
+          <button
+            title="light"
+            type="button"
+            (click)="darkMode.set(!darkMode())"
           >
-            Selected display mode
-            <tui-data-list-wrapper
-              *tuiDataList
-              [items]="['name', 'icon', 'name_and_icon']"
-              [itemContent]="categoryDisplayValueTemplate"
-            />
-            <ng-template #categoryDisplayValueTemplate let-item>
-              <span style="text-transform: capitalize;">
-                {{ item.replaceAll('_', ' ') }}
-              </span>
-            </ng-template>
-          </tui-select>
-        </label>
-      </div>
+            <tui-icon icon="@tui.sun" />
+          </button>
+          <button
+            title="dark"
+            type="button"
+            (click)="darkMode.set(!darkMode())"
+          >
+            <tui-icon icon="@tui.moon" />
+          </button>
+        </tui-segmented>
+      </label>
+      <label tuiLabel>
+        Category Display
+        <tui-select
+          [ngModel]="settings.categoryDisplay()"
+          (ngModelChange)="settings.updateCategoryDisplay($event)"
+          [valueContent]="categoryDisplayValueTemplate"
+        >
+          Selected display mode
+          <tui-data-list-wrapper
+            *tuiDataList
+            [items]="['name', 'icon', 'name_and_icon']"
+            [itemContent]="categoryDisplayValueTemplate"
+          />
+          <ng-template #categoryDisplayValueTemplate let-item>
+            <span style="text-transform: capitalize;">
+              {{ item.replaceAll('_', ' ') }}
+            </span>
+          </ng-template>
+        </tui-select>
+      </label>
     </tw-preferences-card>
   `,
   styleUrl: './styles.css',

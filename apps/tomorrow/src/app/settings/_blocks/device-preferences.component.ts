@@ -19,10 +19,10 @@ import { TuiCell } from '@taiga-ui/layout';
 import { NgMathPipesModule } from 'ngx-pipes';
 import { EMPTY, of, switchMap, tap } from 'rxjs';
 
-import { Attachments, Settings, Tasks } from '@tmrw/data-access';
+import { Attachments, Settings, syncManager, Tasks } from '@tmrw/data-access';
+import { Context } from '@tmrw/ui/core';
 
 import { version } from '../../../environments/version';
-import { Context } from '../../core/context.store';
 import { PreferencesCardComponent } from '../_primitives/preferences-card.component';
 
 @Component({
@@ -73,6 +73,15 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
             <label class="update-progress" tuiProgressLabel>
               Updating...
               <progress tuiProgressBar size="l" [max]="100"></progress>
+            </label>
+          } @else if (context.updateReady()) {
+            <label tuiLabel>
+              <tui-icon
+                style="--t-bg: unset"
+                tuiAppearance="info"
+                icon="@tui.check"
+              />
+              Reload to update
             </label>
           } @else {
             <label tuiLabel>
@@ -130,6 +139,10 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
 
       [tuititle] {
         width: 100%;
+      }
+
+      [tuilabel] {
+        justify-content: unset;
       }
 
       .version-container {
@@ -194,7 +207,7 @@ export class DevicePreferencesComponent {
         label: 'Reset User Scope',
         data: {
           appearance: 'destructive',
-          content: `Reset user scope, and leave sync group?<br />This will not delete any task data.`,
+          content: `Reset user scope, and leave sync group?<br />This will not delete any task data.<br />When complete the app will restart.`,
           yes: 'Reset',
           no: 'Cancel',
         },
@@ -203,12 +216,12 @@ export class DevicePreferencesComponent {
         switchMap((response) => (response ? of(true) : EMPTY)),
         tap(() => {
           this.settingsStore.resetUser();
+          if (syncManager.isSyncing('tasks')) {
+            syncManager.dispose();
+          }
         }),
-        switchMap(() => {
-          return this.alerts.open('User scope reset', {
-            appearance: 'destructive',
-            icon: '@tui.rotate-ccw',
-          });
+        tap(() => {
+          window.location.reload();
         }),
       )
       .subscribe();
