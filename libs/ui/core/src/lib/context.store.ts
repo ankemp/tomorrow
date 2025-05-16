@@ -14,6 +14,7 @@ import {
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { TuiAlertService, TuiBreakpointService } from '@taiga-ui/core';
 import {
+  catchError,
   EMPTY,
   fromEvent,
   iif,
@@ -159,6 +160,15 @@ export const Context = signalStore(
                         details: response.details,
                       },
                     });
+                  }),
+                  catchError((response) => {
+                    patchState(store, {
+                      apiHealth: {
+                        status: response.status,
+                        details: response.details,
+                      },
+                    });
+                    return EMPTY;
                   }),
                 );
             }),
