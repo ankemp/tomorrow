@@ -1,14 +1,17 @@
 import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectModel } from '@nestjs/sequelize';
+import { addMinutes } from 'date-fns';
 
 import { NotificationEntity } from '../_db/entities/notification.entity';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class NotificationsService implements OnApplicationBootstrap {
   constructor(
     @InjectModel(NotificationEntity)
     private readonly notificationRepository: typeof NotificationEntity,
+    private readonly userService: UsersService,
     private readonly eventEmitter: EventEmitter2,
   ) {}
 
@@ -82,6 +85,18 @@ export class NotificationsService implements OnApplicationBootstrap {
         },
       },
     );
+  }
+
+  async snoozeNotification(id: string, userId: string) {
+    const user = await this.userService.getUser(userId);
+    const notification = await this.notificationRepository.findByPk(id);
+    await notification.update('isSent', false);
+    await notification.update(
+      'snoozedUntil',
+      addMinutes(notification.scheduledAt, user.snoozeTime),
+    );
+    await notification.increment('snoozeCount');
+    return notification.get();
   }
 
   async deleteNotification(notificationId: string) {

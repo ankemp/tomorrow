@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 
 import { NotificationsService } from './notifications.service';
 import { PushSubscriptionService } from './push-subscription.service';
@@ -61,5 +61,17 @@ export class NotificationsController {
   async getPublicKey() {
     const publicKey = await this.pushSubscriptionService.getPublicKey();
     return { publicKey };
+  }
+
+  @Post(':notificationId/snooze')
+  async snoozeNotification(
+    @Param('notificationId') notificationId: string,
+    @Body()
+    body: {
+      userId: string;
+    },
+  ) {
+    const { userId } = body;
+    return this.notificationsService.snoozeNotification(notificationId, userId);
   }
 }

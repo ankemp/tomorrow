@@ -5,6 +5,7 @@ import { TerminusModule } from '@nestjs/terminus';
 import { DatabaseModule } from '../_db/db.module';
 import { NotificationEntity } from '../_db/entities/notification.entity';
 import { PushNotificationSubscriptionEntity } from '../_db/entities/notification-subscription.entity';
+import { UsersModule } from '../users/users.module';
 
 import { NotificationSchedulerService } from './notification-scheduler.service';
 import { NotificationsController } from './notifications.controller';
@@ -21,6 +22,7 @@ import { SchedulerHealthIndicator } from './scheduler.health';
       PushNotificationSubscriptionEntity,
       NotificationEntity,
     ]),
+    UsersModule,
   ],
   controllers: [NotificationsController],
   providers: [
