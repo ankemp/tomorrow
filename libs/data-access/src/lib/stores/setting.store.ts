@@ -13,7 +13,15 @@ import {
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { TuiDayOfWeek, TuiTimeMode } from '@taiga-ui/cdk';
 import { omit } from 'es-toolkit';
-import { catchError, concatMap, EMPTY, map, pipe, tap } from 'rxjs';
+import {
+  catchError,
+  concatMap,
+  debounceTime,
+  EMPTY,
+  map,
+  pipe,
+  tap,
+} from 'rxjs';
 
 import {
   NO_SYNC_KEYS,
@@ -38,6 +46,7 @@ const initialState: SettingsState = {
   encryption: false,
   locale: 'en-US', // TODO: Get from browser(?)
   remoteSync: false,
+  snoozeTime: 10,
   sort: {},
   startOfWeek: 'Sunday',
   syncDevices: {},
@@ -55,6 +64,7 @@ export const Settings = signalStore(
   withMethods((store) => ({
     pushUserSettings: rxMethod<void>(
       pipe(
+        debounceTime(300),
         map(() => {
           const settings = getState(store);
           return settings;
@@ -216,6 +226,9 @@ export const Settings = signalStore(
     },
     updateSort(saveKey: string, sort: TaskSort): void {
       patchState(store, { sort: { ...getState(store).sort, [saveKey]: sort } });
+    },
+    updateSnoozeTime(minutes: number): void {
+      patchState(store, { snoozeTime: minutes });
     },
     updateCategoryDisplay(
       categoryDisplay: 'name' | 'icon' | 'name_and_icon',

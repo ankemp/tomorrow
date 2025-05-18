@@ -24,6 +24,7 @@ export type SettingsState = {
   encryption: boolean;
   locale: string;
   remoteSync: boolean;
+  snoozeTime: number;
   sort: Record<string, TaskSort>; // saveKey, sort
   startOfWeek: string;
   syncDevices: Record<string, string>; // deviceId, userAgent

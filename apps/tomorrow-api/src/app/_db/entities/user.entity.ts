@@ -67,6 +67,11 @@ export class UserEntity
   startOfWeek: string;
 
   @Column({
+    type: DataType.NUMBER,
+  })
+  snoozeTime: number;
+
+  @Column({
     type: DataType.STRING,
   })
   timeFormat: string;

@@ -1,4 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { TuiContext } from '@taiga-ui/cdk';
 
 @Pipe({
   name: 'formatDuration',
@@ -13,3 +14,11 @@ export class FormatDurationPipe implements PipeTransform {
     return `${minutes}m`;
   }
 }
+
+export const durationLabelContext = ({
+  $implicit,
+}: TuiContext<number>): string => {
+  const pipe = new FormatDurationPipe();
+  const minutes = $implicit;
+  return pipe.transform(minutes);
+};

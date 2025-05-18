@@ -8,10 +8,18 @@ import {
 import { FormsModule } from '@angular/forms';
 import { TuiLabel, TuiNotification } from '@taiga-ui/core';
 import { TuiDataListWrapper, TuiSwitch } from '@taiga-ui/kit';
-import { TUI_TEXTFIELD_SIZE, TuiSelectModule } from '@taiga-ui/legacy';
+import {
+  TUI_TEXTFIELD_SIZE,
+  TuiInputSliderModule,
+  TuiSelectModule,
+} from '@taiga-ui/legacy';
 
 import { Notifications, Settings } from '@tmrw/data-access';
-import { Context } from '@tmrw/ui/core';
+import {
+  Context,
+  durationLabelContext,
+  FormatDurationPipe,
+} from '@tmrw/ui/core';
 
 import { PreferencesCardComponent } from '../_primitives/preferences-card.component';
 
@@ -23,11 +31,13 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
     TuiLabel,
     TuiNotification,
     TuiDataListWrapper,
+    TuiInputSliderModule,
     TuiSwitch,
     TuiSelectModule,
     PreferencesCardComponent,
   ],
   providers: [
+    FormatDurationPipe,
     {
       provide: TUI_TEXTFIELD_SIZE,
       useValue: {
@@ -71,6 +81,20 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
           </ng-template>
         </tui-select>
       </label>
+      <label tuiLabel>
+        Default Snooze Time (minutes)
+        <tui-input-slider
+          [ngModel]="settings.snoozeTime()"
+          (ngModelChange)="settings.updateSnoozeTime($event)"
+          [min]="1"
+          [max]="60"
+          [steps]="60"
+          [segments]="6"
+          [valueContent]="durationLabel"
+        >
+          Minutes Snoozed
+        </tui-input-slider>
+      </label>
     </tw-preferences-card>
   `,
   styleUrl: './styles.css',
@@ -93,4 +117,6 @@ export class NotificationPreferencesComponent {
     }
     return 'Unknown reason';
   });
+
+  readonly durationLabel = durationLabelContext;
 }
