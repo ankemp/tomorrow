@@ -23,4 +23,6 @@ RUN npm --prefix=tomorrow-api ci
 
 USER tomorrow-api
 
+VOLUME /data
+
 CMD [ "node", "tomorrow-api" ]
