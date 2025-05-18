@@ -1,7 +1,7 @@
 import { Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { SchedulerRegistry } from '@nestjs/schedule';
-import { differenceInMilliseconds, isPast } from 'date-fns';
+import { differenceInDays, differenceInMilliseconds, isPast } from 'date-fns';
 import { isNil } from 'es-toolkit';
 
 import type { NotificationEntity } from '../_db/entities/notification.entity';
@@ -63,15 +63,28 @@ export class NotificationSchedulerService implements OnApplicationBootstrap {
   @OnEvent('notification.created')
   scheduleNotification(notification: NotificationEntity) {
     if (isPast(notification.scheduledAt)) {
+      this.logger.warn(
+        `Notification ${notification.id} is in the past, unable to schedule.`,
+      );
       return;
     }
     const now = new Date();
-    const timeout = setTimeout(
-      () => {
-        this.dispatchNotification(notification);
-      },
-      differenceInMilliseconds(notification.scheduledAt, now),
-    );
+    let timeout: NodeJS.Timeout;
+    if (differenceInDays(notification.scheduledAt, now) > 24) {
+      timeout = setTimeout(
+        () => {
+          this.scheduleNotification(notification);
+        },
+        12 * 24 * 60 * 60 * 1000, // 12 days (half of the 24 limit)
+      );
+    } else {
+      timeout = setTimeout(
+        () => {
+          this.dispatchNotification(notification);
+        },
+        differenceInMilliseconds(notification.scheduledAt, now),
+      );
+    }
     this.schedulerRegistry.addTimeout(notification.id, timeout);
   }
 
