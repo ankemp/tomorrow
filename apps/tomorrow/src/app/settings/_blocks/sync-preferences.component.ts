@@ -6,8 +6,8 @@ import {
   inject,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TuiIcon, TuiLabel } from '@taiga-ui/core';
-import { TuiSwitch, TuiTooltip } from '@taiga-ui/kit';
+import { TuiLabel } from '@taiga-ui/core';
+import { TuiSwitch } from '@taiga-ui/kit';
 
 import { Settings } from '@tmrw/data-access';
 
@@ -18,10 +18,10 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
   imports: [
     CommonModule,
     FormsModule,
-    TuiIcon,
+    // TuiIcon,
     TuiLabel,
     TuiSwitch,
-    TuiTooltip,
+    // TuiTooltip,
     PreferencesCardComponent,
   ],
   template: `
@@ -35,7 +35,7 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
           (ngModelChange)="settings.updateRemoteSync($event)"
         />
       </label>
-      <label tuiLabel>
+      <!-- <label tuiLabel>
         <span>
           Encryption
           <tui-icon
@@ -47,7 +47,7 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
             }}"
           />
         </span>
-      </label>
+      </label> -->
       <!-- TODO: Add ability to delete key, warn about losing all data -->
       <!-- <label tuiLabel>
           <span>
