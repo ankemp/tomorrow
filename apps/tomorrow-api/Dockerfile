@@ -17,6 +17,8 @@ RUN addgroup --system tomorrow-api && \
 
 COPY dist/apps/tomorrow-api tomorrow-api/
 COPY dist/apps/tomorrow/browser static
+RUN mkdir -p /data
+RUN chown -R tomorrow-api:tomorrow-api /data
 RUN chown -R tomorrow-api:tomorrow-api .
 
 RUN npm --prefix=tomorrow-api ci
