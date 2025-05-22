@@ -53,10 +53,15 @@ export class NotificationSchedulerService implements OnApplicationBootstrap {
    */
 
   dispatchNotification(notification: NotificationEntity) {
-    this.pushSubscription.sendNotificationToUsersDevices(
-      notification.userId,
-      notification.message,
-    );
+    this.pushSubscription.sendNotificationToUsersDevices(notification.userId, {
+      title: 'Task Reminder',
+      body: notification.message,
+      data: {
+        url: `/tasks/${notification.taskId}`,
+        id: notification.id,
+        snoozeUrl: `/api/notifications/${notification.id}/snooze`,
+      },
+    });
     this.notificationsService.markNotificationAsSent(notification.id);
   }
 

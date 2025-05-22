@@ -28,6 +28,8 @@ import {
   tap,
 } from 'rxjs';
 
+import { PushNotificationEvent } from '@tmrw/data-access-models';
+
 import { Settings } from './setting.store';
 
 interface NotificationState {
@@ -62,8 +64,7 @@ export const Notifications = signalStore(
     incoming: toSignal(
       store.swPush.messages.pipe(
         map((message) => {
-          // TODO: Create type for the message
-          return message as any;
+          return message as PushNotificationEvent;
         }),
       ),
     ),
@@ -181,7 +182,7 @@ export const Notifications = signalStore(
           return toObservable(store.incoming).pipe(
             filter((data) => !!data),
             mergeMap((notification) => {
-              return store.pushService.open(notification.message);
+              return store.pushService.open(notification.body);
             }),
           );
         }),

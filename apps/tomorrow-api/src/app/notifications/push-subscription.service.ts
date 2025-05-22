@@ -70,7 +70,7 @@ export class PushSubscriptionService {
 
   async sendNotificationToUsersDevices(
     userId: string,
-    payload: string,
+    payload: Pick<Notification, 'title' | 'body' | 'data'>,
   ): Promise<void> {
     if (!VAPID_PRIVATE_KEY || !VAPID_PUBLIC_KEY) {
       this.logger.error('VAPID keys are not set. Skipping notification.');
@@ -85,22 +85,26 @@ export class PushSubscriptionService {
       );
       return;
     }
-    const notifications = subscriptions.map((subscription) => {
-      const pushSubscription: PushSubscription = {
-        endpoint: subscription.endpoint,
-        keys: {
-          p256dh: subscription.p256dh,
-          auth: subscription.auth,
-        },
-      };
-      return pushSubscription;
-    });
+    const payloadBuffer = Buffer.from(JSON.stringify(payload));
+
     await Promise.allSettled(
-      notifications.map((subscription) =>
-        sendNotification(subscription, payload).catch((error: WebPushError) =>
-          this.handleNotificationError(subscription, error),
+      subscriptions
+        .map((subscription) => {
+          const pushSubscription: PushSubscription = {
+            endpoint: subscription.endpoint,
+            keys: {
+              p256dh: subscription.p256dh,
+              auth: subscription.auth,
+            },
+          };
+          return pushSubscription;
+        })
+        .map((subscription) =>
+          sendNotification(subscription, payloadBuffer).catch(
+            (error: WebPushError) =>
+              this.handleNotificationError(subscription, error),
+          ),
         ),
-      ),
     );
   }
 
