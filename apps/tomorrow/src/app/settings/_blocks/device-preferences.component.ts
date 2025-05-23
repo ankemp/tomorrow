@@ -173,6 +173,24 @@ export class DevicePreferencesComponent {
     return `https://github.com/ankemp/tomorrow/commit/${this.version}`;
   }
 
+  async clearAllIndexedDBs(): Promise<void> {
+    if ('databases' in indexedDB) {
+      const dbs = await indexedDB.databases();
+      await Promise.all(
+        dbs.map(
+          (db) =>
+            new Promise<void>((resolve) => {
+              const req = indexedDB.deleteDatabase(db.name!);
+              req.onsuccess = req.onerror = req.onblocked = () => resolve();
+            }),
+        ),
+      );
+    } else {
+      // Fallback: try to delete known DBs if you know their names
+      // (No-op here)
+    }
+  }
+
   clearDeviceData(): void {
     this.dialogs
       .open<boolean>(TUI_CONFIRM, {
@@ -191,7 +209,8 @@ export class DevicePreferencesComponent {
           localStorage.removeItem('settings');
           Tasks.removeMany({});
         }),
-        switchMap(() => {
+        switchMap(async () => {
+          await this.clearAllIndexedDBs();
           return this.alerts.open('Data deleted', {
             appearance: 'destructive',
             icon: '@tui.trash-2',
@@ -216,9 +235,9 @@ export class DevicePreferencesComponent {
         switchMap((response) => (response ? of(true) : EMPTY)),
         tap(() => {
           this.settingsStore.resetUser();
-          if (syncManager.isSyncing('tasks')) {
-            syncManager.dispose();
-          }
+        }),
+        switchMap(() => {
+          return syncManager.dispose();
         }),
         tap(() => {
           window.location.reload();
