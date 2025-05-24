@@ -11,11 +11,10 @@ import {
   FormsModule,
   NG_VALUE_ACCESSOR,
 } from '@angular/forms';
-import { TuiContext } from '@taiga-ui/cdk';
 import { TuiKeySteps } from '@taiga-ui/kit';
 import { TuiInputSliderModule } from '@taiga-ui/legacy';
 
-import { FormatDurationPipe } from '../../_primitives/format-duration.pipe';
+import { durationLabelContext, FormatDurationPipe } from '@tmrw/ui/core';
 
 @Component({
   selector: 'tw-duration',
@@ -41,17 +40,14 @@ export class DurationComponent implements ControlValueAccessor {
   private _onTouched = (_: any) => {};
   /* eslint-enable @typescript-eslint/no-empty-function */
 
-  constructor(private formatDurationPipe: FormatDurationPipe) {
+  constructor() {
     effect(() => {
       this._onChange(this.duration());
       this._onTouched(this.duration());
     });
   }
 
-  readonly durationLabel = ({ $implicit }: TuiContext<number>): string => {
-    const minutes = $implicit;
-    return this.formatDurationPipe.transform(minutes);
-  };
+  readonly durationLabel = durationLabelContext;
 
   readonly tickLabels = [
     '0',
