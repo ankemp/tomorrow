@@ -12,12 +12,13 @@ ENV NODE_ENV=production
 
 WORKDIR /app
 
-RUN addgroup --system tomorrow-api && \
-          adduser --system -G tomorrow-api tomorrow-api
-
 COPY dist/apps/tomorrow-api tomorrow-api/
 COPY dist/apps/tomorrow/browser static
 RUN chown -R node:node /app
+
+RUN mkdir -p /data && chown -R node:node /data
+
+VOLUME /data
 
 RUN npm --prefix=tomorrow-api ci
 

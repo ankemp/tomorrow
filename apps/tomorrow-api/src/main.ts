@@ -10,7 +10,7 @@ import { AppModule } from './app/app.module';
 
 async function runMigrations() {
   if (process.env['NODE_ENV'] === 'production' && !process.env['DB_PATH']) {
-    throw new Error('DB_PATH is not set in production');
+    throw new Error('DB_PATH must be set in production');
   }
 
   const logger = new Logger('Migrations');
