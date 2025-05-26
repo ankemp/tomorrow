@@ -14,7 +14,7 @@ import {
 } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { TuiAlertService } from '@taiga-ui/core';
-import { TuiPushService } from '@taiga-ui/kit';
+import { TuiPushOptions, TuiPushService } from '@taiga-ui/kit';
 import {
   catchError,
   EMPTY,
@@ -28,7 +28,10 @@ import {
   tap,
 } from 'rxjs';
 
-import { IPushNotificationEvent } from '@tmrw/data-access-models';
+import {
+  IPushNotificationEvent,
+  PushNotificationType,
+} from '@tmrw/data-access-models';
 
 import { Settings } from './setting.store';
 
@@ -182,7 +185,16 @@ export const Notifications = signalStore(
           return toObservable(store.incoming).pipe(
             filter((data) => !!data),
             mergeMap((notification) => {
-              return store.pushService.open(notification.body);
+              const options: Partial<TuiPushOptions> = {
+                heading: notification.title,
+                timestamp: notification.timestamp,
+                type: notification.data?.['type'] as PushNotificationType,
+                // TODO: Parse actions
+              };
+              return store.pushService.open(
+                notification.body ?? notification.title,
+                notification.body ? options : undefined,
+              );
             }),
           );
         }),

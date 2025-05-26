@@ -1,6 +1,10 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { addMinutes } from 'date-fns';
 
-import { PushNotificationEvent } from '@tmrw/data-access-models';
+import {
+  PushNotificationEvent,
+  PushNotificationType,
+} from '@tmrw/data-access-models';
 
 import { NotificationsService } from './notifications.service';
 import { PushSubscriptionService } from './push-subscription.service';
@@ -58,7 +62,27 @@ export class NotificationsController {
       new PushNotificationEvent('Test Notification', {
         body: 'This is a test notification from Tomorrow API.',
         timestamp: Date.now(),
+        data: {
+          type: PushNotificationType.TEST,
+        },
       }),
+    );
+  }
+
+  @Post('scheduled-test')
+  async sendScheduledNotificationToUsersDevices(
+    @Body()
+    body: {
+      userId: string;
+      delay: number;
+    },
+  ) {
+    const { userId, delay } = body;
+    await this.notificationsService.createNotification(
+      userId,
+      '',
+      'Scheduled Test Notification',
+      addMinutes(new Date(), delay),
     );
   }
 

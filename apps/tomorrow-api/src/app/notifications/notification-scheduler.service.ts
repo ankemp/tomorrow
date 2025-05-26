@@ -4,7 +4,10 @@ import { SchedulerRegistry } from '@nestjs/schedule';
 import { differenceInDays, differenceInMilliseconds, isPast } from 'date-fns';
 import { isNil } from 'es-toolkit';
 
-import { PushNotificationEvent } from '@tmrw/data-access-models';
+import {
+  PushNotificationEvent,
+  PushNotificationType,
+} from '@tmrw/data-access-models';
 
 import type { NotificationEntity } from '../_db/entities/notification.entity';
 import type { PlainTaskEntity } from '../_db/entities/plain-task.entity';
@@ -62,8 +65,10 @@ export class NotificationSchedulerService implements OnApplicationBootstrap {
         body: `Task: ${notification.taskId} is due at ${notification.scheduledAt.toLocaleString()}`,
         icon: 'assets/icons/icon-512x512.png', // TODO: Use a proper icon
         timestamp: notification.scheduledAt.getTime(),
+        tag: notification.id,
         data: {
           url: `/tasks/${notification.taskId}`, // Link to the task
+          type: PushNotificationType.TASK,
         },
       }),
     );

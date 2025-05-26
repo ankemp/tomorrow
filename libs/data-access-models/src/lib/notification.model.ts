@@ -1,20 +1,6 @@
 // Mirrors the browser Notification class
-export interface IPushNotificationEvent {
+export interface IPushNotificationEvent extends NotificationOptions {
   title: string;
-  dir?: NotificationDirection;
-  lang?: string;
-  body?: string;
-  tag?: string;
-  icon?: string;
-  badge?: string;
-  image?: string;
-  data?: unknown;
-  vibrate?: number | number[];
-  renotify?: boolean;
-  requireInteraction?: boolean;
-  silent?: boolean;
-  timestamp?: number;
-  actions?: NotificationAction[];
 }
 
 export class PushNotificationEvent implements IPushNotificationEvent {
@@ -26,7 +12,7 @@ export class PushNotificationEvent implements IPushNotificationEvent {
   icon?: string;
   badge?: string;
   image?: string;
-  data?: unknown;
+  data?: Record<string, unknown>;
   vibrate?: number | number[];
   renotify?: boolean;
   requireInteraction?: boolean;
@@ -76,6 +62,11 @@ export class PushNotificationEvent implements IPushNotificationEvent {
   }
 }
 
+export enum PushNotificationType {
+  TASK = 'TASK',
+  TEST = 'TEST',
+}
+
 // Types from the browser Notification API
 export type NotificationDirection = 'auto' | 'ltr' | 'rtl';
 
@@ -93,7 +84,7 @@ export interface NotificationOptions {
   icon?: string;
   badge?: string;
   image?: string;
-  data?: unknown;
+  data?: Record<string, unknown>;
   vibrate?: number | number[];
   renotify?: boolean;
   requireInteraction?: boolean;
