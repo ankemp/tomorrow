@@ -7,6 +7,8 @@ import {
   WebPushError,
 } from 'web-push';
 
+import { PushNotificationEvent } from '@tmrw/data-access-models';
+
 import { PushNotificationSubscriptionEntity } from '../_db/entities/notification-subscription.entity';
 
 const VAPID_PRIVATE_KEY = process.env.VAPID_PRIVATE_KEY;
@@ -70,7 +72,7 @@ export class PushSubscriptionService {
 
   async sendNotificationToUsersDevices(
     userId: string,
-    payload: Pick<Notification, 'title' | 'body' | 'data'>,
+    notification: PushNotificationEvent,
   ): Promise<void> {
     if (!VAPID_PRIVATE_KEY || !VAPID_PUBLIC_KEY) {
       this.logger.error('VAPID keys are not set. Skipping notification.');
@@ -85,7 +87,6 @@ export class PushSubscriptionService {
       );
       return;
     }
-    const payloadBuffer = Buffer.from(JSON.stringify(payload));
 
     await Promise.allSettled(
       subscriptions
@@ -100,7 +101,7 @@ export class PushSubscriptionService {
           return pushSubscription;
         })
         .map((subscription) =>
-          sendNotification(subscription, payloadBuffer).catch(
+          sendNotification(subscription, notification.toBuffer()).catch(
             (error: WebPushError) =>
               this.handleNotificationError(subscription, error),
           ),
@@ -111,7 +112,7 @@ export class PushSubscriptionService {
   async sendNotificationToDevice(
     userId: string,
     deviceId: string,
-    payload: string,
+    notification: PushNotificationEvent,
   ): Promise<void> {
     const subscription = await this.subscriptionRepository.findOne({
       where: { userId, deviceId },
@@ -129,7 +130,7 @@ export class PushSubscriptionService {
         auth: subscription.auth,
       },
     };
-    await sendNotification(pushSubscription, payload).catch(
+    await sendNotification(pushSubscription, notification.toBuffer()).catch(
       (error: WebPushError) =>
         this.handleNotificationError(pushSubscription, error),
     );

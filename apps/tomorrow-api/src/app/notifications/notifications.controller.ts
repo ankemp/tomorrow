@@ -1,5 +1,7 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 
+import { PushNotificationEvent } from '@tmrw/data-access-models';
+
 import { NotificationsService } from './notifications.service';
 import { PushSubscriptionService } from './push-subscription.service';
 import { VapidKeyGuard } from './vapid-key.guard';
@@ -53,7 +55,10 @@ export class NotificationsController {
     return this.pushSubscriptionService.sendNotificationToDevice(
       userId,
       deviceId,
-      'Test notification',
+      new PushNotificationEvent('Test Notification', {
+        body: 'This is a test notification from Tomorrow API.',
+        timestamp: Date.now(),
+      }),
     );
   }
 

@@ -28,7 +28,7 @@ import {
   tap,
 } from 'rxjs';
 
-import { PushNotificationEvent } from '@tmrw/data-access-models';
+import { IPushNotificationEvent } from '@tmrw/data-access-models';
 
 import { Settings } from './setting.store';
 
@@ -64,7 +64,7 @@ export const Notifications = signalStore(
     incoming: toSignal(
       store.swPush.messages.pipe(
         map((message) => {
-          return message as PushNotificationEvent;
+          return message as IPushNotificationEvent;
         }),
       ),
     ),

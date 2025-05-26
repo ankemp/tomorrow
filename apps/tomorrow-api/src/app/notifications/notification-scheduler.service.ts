@@ -4,6 +4,8 @@ import { SchedulerRegistry } from '@nestjs/schedule';
 import { differenceInDays, differenceInMilliseconds, isPast } from 'date-fns';
 import { isNil } from 'es-toolkit';
 
+import { PushNotificationEvent } from '@tmrw/data-access-models';
+
 import type { NotificationEntity } from '../_db/entities/notification.entity';
 import type { PlainTaskEntity } from '../_db/entities/plain-task.entity';
 
@@ -52,17 +54,20 @@ export class NotificationSchedulerService implements OnApplicationBootstrap {
    * If the time of the notification changes, we'd need to figure out which entry to remove from the map, and add a new one, or append to an already existing one - this could be tricky.
    */
 
-  dispatchNotification(notification: NotificationEntity) {
-    this.pushSubscription.sendNotificationToUsersDevices(notification.userId, {
-      title: 'Task Reminder',
-      body: notification.message,
-      data: {
-        url: `/tasks/${notification.taskId}`,
-        id: notification.id,
-        snoozeUrl: `/api/notifications/${notification.id}/snooze`,
-      },
-    });
-    this.notificationsService.markNotificationAsSent(notification.id);
+  async dispatchNotification(notification: NotificationEntity) {
+    // TODO: Improve notification message
+    await this.pushSubscription.sendNotificationToUsersDevices(
+      notification.userId,
+      new PushNotificationEvent(notification.message, {
+        body: `Task: ${notification.taskId} is due at ${notification.scheduledAt.toLocaleString()}`,
+        icon: 'assets/icons/icon-512x512.png', // TODO: Use a proper icon
+        timestamp: notification.scheduledAt.getTime(),
+        data: {
+          url: `/tasks/${notification.taskId}`, // Link to the task
+        },
+      }),
+    );
+    await this.notificationsService.markNotificationAsSent(notification.id);
   }
 
   @OnEvent('notification.created')
