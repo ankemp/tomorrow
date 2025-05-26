@@ -21,7 +21,6 @@ async function runMigrations() {
     if (!fs.existsSync(resolvedPath)) {
       fs.mkdirSync(path.dirname(resolvedPath), { recursive: true });
       fs.writeFileSync(resolvedPath, '');
-      fs.chmodSync(resolvedPath, 0o600);
       logger.log(`Created database file at ${resolvedPath}`);
     }
   }
