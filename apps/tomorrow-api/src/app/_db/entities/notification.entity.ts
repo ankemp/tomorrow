@@ -1,4 +1,9 @@
-import { InferAttributes, InferCreationAttributes, UUIDV4 } from 'sequelize';
+import {
+  CreationOptional,
+  InferAttributes,
+  InferCreationAttributes,
+  UUIDV4,
+} from 'sequelize';
 import {
   Column,
   CreatedAt,
@@ -8,6 +13,8 @@ import {
   Table,
   UpdatedAt,
 } from 'sequelize-typescript';
+
+import { PushNotificationType } from '@tmrw/data-access-models';
 
 @Table({ tableName: 'Notifications' })
 export class NotificationEntity extends Model<
@@ -47,7 +54,18 @@ export class NotificationEntity extends Model<
     type: DataType.STRING,
     allowNull: false,
   })
-  message: string;
+  title: string;
+
+  @Column({
+    type: DataType.STRING,
+  })
+  body: CreationOptional<string>;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  type: PushNotificationType;
 
   @Column({
     type: DataType.DATE,
@@ -64,14 +82,15 @@ export class NotificationEntity extends Model<
   @Column({
     type: DataType.JSON,
     allowNull: true,
+    validate: { isIn: [['TASK', 'TEST']] },
   })
-  metadata: Record<string, any>;
+  metadata: CreationOptional<Record<string, any>>;
 
   @Column({
     type: DataType.DATE,
     allowNull: true,
   })
-  snoozedUntil: Date;
+  snoozedUntil: CreationOptional<Date>;
 
   @Column({
     type: DataType.INTEGER,

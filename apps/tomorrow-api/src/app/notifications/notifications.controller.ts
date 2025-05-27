@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
-import { addMinutes } from 'date-fns';
+import { addSeconds } from 'date-fns';
 
 import {
   PushNotificationEvent,
@@ -74,7 +74,7 @@ export class NotificationsController {
     @Body()
     body: {
       userId: string;
-      delay: number;
+      delay: number; // in seconds
     },
   ) {
     const { userId, delay } = body;
@@ -82,7 +82,9 @@ export class NotificationsController {
       userId,
       '',
       'Scheduled Test Notification',
-      addMinutes(new Date(), delay),
+      PushNotificationType.TEST,
+      addSeconds(new Date(), delay),
+      'This is a test notification from Tomorrow API.',
     );
   }
 

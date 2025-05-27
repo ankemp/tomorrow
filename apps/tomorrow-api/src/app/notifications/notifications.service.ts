@@ -3,6 +3,8 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectModel } from '@nestjs/sequelize';
 import { addMinutes } from 'date-fns';
 
+import { PushNotificationType } from '@tmrw/data-access-models';
+
 import { NotificationEntity } from '../_db/entities/notification.entity';
 import { UsersService } from '../users/users.service';
 
@@ -44,13 +46,19 @@ export class NotificationsService implements OnApplicationBootstrap {
   async createNotification(
     userId: string,
     taskId: string,
-    message: string,
+    title: string,
+    type: PushNotificationType,
     scheduledAt: Date,
+    body?: string,
+    data?: Record<string, any>,
   ): Promise<NotificationEntity> {
     const notification = await this.notificationRepository.create({
       userId,
       taskId,
-      message,
+      title,
+      type,
+      body,
+      metadata: data,
       scheduledAt,
     });
     return notification;
@@ -58,11 +66,10 @@ export class NotificationsService implements OnApplicationBootstrap {
 
   async updateNotification(
     notificationId: string,
-    message: string,
-    scheduledAt: Date,
+    notification: Partial<NotificationEntity>,
   ): Promise<NotificationEntity | null> {
     await this.notificationRepository.update(
-      { message, scheduledAt },
+      { ...notification },
       {
         where: {
           id: notificationId,

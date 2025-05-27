@@ -58,17 +58,17 @@ export class NotificationSchedulerService implements OnApplicationBootstrap {
    */
 
   async dispatchNotification(notification: NotificationEntity) {
-    // TODO: Improve notification message
+    const url = notification.taskId ? `/tasks/${notification.taskId}` : '/';
     await this.pushSubscription.sendNotificationToUsersDevices(
       notification.userId,
-      new PushNotificationEvent(notification.message, {
-        body: `Task: ${notification.taskId} is due at ${notification.scheduledAt.toLocaleString()}`,
+      new PushNotificationEvent(notification.title, {
+        body: notification.body,
         icon: 'assets/icons/icon-512x512.png', // TODO: Use a proper icon
         timestamp: notification.scheduledAt.getTime(),
         tag: notification.id,
         data: {
-          url: `/tasks/${notification.taskId}`, // Link to the task
-          type: PushNotificationType.TASK,
+          url,
+          type: notification.type,
         },
       }),
     );
@@ -83,9 +83,8 @@ export class NotificationSchedulerService implements OnApplicationBootstrap {
       );
       return;
     }
-    const now = new Date();
     let timeout: NodeJS.Timeout;
-    if (differenceInDays(notification.scheduledAt, now) > 24) {
+    if (differenceInDays(notification.scheduledAt, new Date()) > 24) {
       timeout = setTimeout(
         () => {
           this.scheduleNotification(notification);
@@ -97,7 +96,7 @@ export class NotificationSchedulerService implements OnApplicationBootstrap {
         () => {
           this.dispatchNotification(notification);
         },
-        differenceInMilliseconds(notification.scheduledAt, now),
+        differenceInMilliseconds(notification.scheduledAt, new Date()),
       );
     }
     this.schedulerRegistry.addTimeout(notification.id, timeout);
@@ -143,7 +142,8 @@ export class NotificationSchedulerService implements OnApplicationBootstrap {
     this.notificationsService.createNotification(
       task.userId,
       task.id,
-      `Reminder to complete ${task.title}`, // TODO: Better messaging
+      `Reminder to complete ${task.title}`,
+      PushNotificationType.TASK,
       task.date,
     );
   }
@@ -154,9 +154,11 @@ export class NotificationSchedulerService implements OnApplicationBootstrap {
       this.notificationsService.deleteNotification(task.id);
       return;
     }
-    this.notificationsService.updateNotification(
+    this.notificationsService.createNotification(
+      task.userId,
       task.id,
-      `Reminder to complete ${task.title}`, // TODO: Better messaging
+      `Reminder to complete ${task.title}`,
+      PushNotificationType.TASK,
       task.date,
     );
   }
