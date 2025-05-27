@@ -45,6 +45,7 @@ const initialState: SettingsState = {
   deviceId: null,
   encryption: false,
   locale: 'en-US', // TODO: Get from browser(?)
+  onCreateRedirectTo: 'task',
   remoteSync: false,
   snoozeTime: 10,
   sort: {},
@@ -234,6 +235,9 @@ export const Settings = signalStore(
       categoryDisplay: 'name' | 'icon' | 'name_and_icon',
     ): void {
       patchState(store, { categoryDisplay });
+    },
+    updateOnCreateRedirectTo(onCreateRedirectTo: 'task' | 'dashboard'): void {
+      patchState(store, { onCreateRedirectTo });
     },
     setDeviceId(): void {
       const deviceId = window.crypto.randomUUID();

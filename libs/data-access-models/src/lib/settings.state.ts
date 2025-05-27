@@ -23,6 +23,7 @@ export type SettingsState = {
   deviceId: string | null;
   encryption: boolean;
   locale: string;
+  onCreateRedirectTo: 'dashboard' | 'task';
   remoteSync: boolean;
   snoozeTime: number;
   sort: Record<string, TaskSort>; // saveKey, sort

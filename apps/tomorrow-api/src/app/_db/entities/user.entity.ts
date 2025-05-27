@@ -92,4 +92,10 @@ export class UserEntity
     type: DataType.STRING,
   })
   locale: string;
+
+  @Column({
+    type: DataType.STRING,
+    validate: { isIn: [['dashboard', 'task']] },
+  })
+  onCreateRedirectTo: 'dashboard' | 'task';
 }

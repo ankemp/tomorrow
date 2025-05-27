@@ -171,16 +171,16 @@ class TimeTransformer extends TuiValueTransformer<
         <tui-select
           [ngModel]="settings.timeSpecificity()"
           (ngModelChange)="settings.updateTimeSpecificity($event)"
-          [valueContent]="timeSpecificityValueTemplate"
+          [valueContent]="valueContentTemplate"
         >
           Select Option
           <!-- TODO: add optional as an item, requires writing a custom validator for our date-picker -->
           <tui-data-list-wrapper
             *tuiDataList
             [items]="['always', 'never']"
-            [itemContent]="timeSpecificityValueTemplate"
+            [itemContent]="valueContentTemplate"
           />
-          <ng-template #timeSpecificityValueTemplate let-item>
+          <ng-template #valueContentTemplate let-item>
             <span style="text-transform: capitalize;">{{ item }}</span>
           </ng-template>
         </tui-select>
@@ -190,15 +190,33 @@ class TimeTransformer extends TuiValueTransformer<
         <tui-select
           [ngModel]="settings.autoCompleteTasks()"
           (ngModelChange)="settings.updateAutoCompleteTasks($event)"
-          [valueContent]="autoCompleteTasksValueTemplate"
+          [valueContent]="valueContentTemplate"
         >
           Select Option
           <tui-data-list-wrapper
             *tuiDataList
             [items]="['always', 'never', 'ask']"
-            [itemContent]="autoCompleteTasksValueTemplate"
+            [itemContent]="valueContentTemplate"
           />
-          <ng-template #autoCompleteTasksValueTemplate let-item>
+          <ng-template #valueContentTemplate let-item>
+            <span style="text-transform: capitalize;">{{ item }}</span>
+          </ng-template>
+        </tui-select>
+      </label>
+      <label tuiLabel>
+        Redirect on Task Creation
+        <tui-select
+          [ngModel]="settings.onCreateRedirectTo()"
+          (ngModelChange)="settings.updateOnCreateRedirectTo($event)"
+          [valueContent]="valueContentTemplate"
+        >
+          Select Option
+          <tui-data-list-wrapper
+            *tuiDataList
+            [items]="['dashboard', 'task']"
+            [itemContent]="valueContentTemplate"
+          />
+          <ng-template #valueContentTemplate let-item>
             <span style="text-transform: capitalize;">{{ item }}</span>
           </ng-template>
         </tui-select>
