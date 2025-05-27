@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 
-import { User } from '../_db/user.entity';
+import { UserEntity } from '../_db/entities/user.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectModel(User)
-    private userRepository: typeof User,
+    @InjectModel(UserEntity)
+    private userRepository: typeof UserEntity,
   ) {}
 
   async getUser(userId: string) {

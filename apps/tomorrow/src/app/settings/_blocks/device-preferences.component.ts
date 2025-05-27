@@ -19,10 +19,10 @@ import { TuiCell } from '@taiga-ui/layout';
 import { NgMathPipesModule } from 'ngx-pipes';
 import { EMPTY, of, switchMap, tap } from 'rxjs';
 
-import { Attachments, Settings, Tasks } from '@tmrw/data-access';
+import { Attachments, Settings, syncManager, Tasks } from '@tmrw/data-access';
+import { Context } from '@tmrw/ui/core';
 
 import { version } from '../../../environments/version';
-import { Context } from '../../core/context.store';
 import { PreferencesCardComponent } from '../_primitives/preferences-card.component';
 
 @Component({
@@ -73,6 +73,15 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
             <label class="update-progress" tuiProgressLabel>
               Updating...
               <progress tuiProgressBar size="l" [max]="100"></progress>
+            </label>
+          } @else if (context.updateReady()) {
+            <label tuiLabel>
+              <tui-icon
+                style="--t-bg: unset"
+                tuiAppearance="info"
+                icon="@tui.check"
+              />
+              Reload to update
             </label>
           } @else {
             <label tuiLabel>
@@ -132,6 +141,10 @@ import { PreferencesCardComponent } from '../_primitives/preferences-card.compon
         width: 100%;
       }
 
+      [tuilabel] {
+        justify-content: unset;
+      }
+
       .version-container {
         display: flex;
         flex-direction: row;
@@ -160,6 +173,24 @@ export class DevicePreferencesComponent {
     return `https://github.com/ankemp/tomorrow/commit/${this.version}`;
   }
 
+  async clearAllIndexedDBs(): Promise<void> {
+    if ('databases' in indexedDB) {
+      const dbs = await indexedDB.databases();
+      await Promise.all(
+        dbs.map(
+          (db) =>
+            new Promise<void>((resolve) => {
+              const req = indexedDB.deleteDatabase(db.name!);
+              req.onsuccess = req.onerror = req.onblocked = () => resolve();
+            }),
+        ),
+      );
+    } else {
+      // Fallback: try to delete known DBs if you know their names
+      // (No-op here)
+    }
+  }
+
   clearDeviceData(): void {
     this.dialogs
       .open<boolean>(TUI_CONFIRM, {
@@ -178,7 +209,8 @@ export class DevicePreferencesComponent {
           localStorage.removeItem('settings');
           Tasks.removeMany({});
         }),
-        switchMap(() => {
+        switchMap(async () => {
+          await this.clearAllIndexedDBs();
           return this.alerts.open('Data deleted', {
             appearance: 'destructive',
             icon: '@tui.trash-2',
@@ -194,7 +226,7 @@ export class DevicePreferencesComponent {
         label: 'Reset User Scope',
         data: {
           appearance: 'destructive',
-          content: `Reset user scope, and leave sync group?<br />This will not delete any task data.`,
+          content: `Reset user scope, and leave sync group?<br />This will not delete any task data.<br />When complete the app will restart.`,
           yes: 'Reset',
           no: 'Cancel',
         },
@@ -205,10 +237,10 @@ export class DevicePreferencesComponent {
           this.settingsStore.resetUser();
         }),
         switchMap(() => {
-          return this.alerts.open('User scope reset', {
-            appearance: 'destructive',
-            icon: '@tui.rotate-ccw',
-          });
+          return syncManager.dispose();
+        }),
+        tap(() => {
+          window.location.reload();
         }),
       )
       .subscribe();

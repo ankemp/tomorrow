@@ -4,7 +4,7 @@
 # Tip: Modify "docker-build" options in project.json to change docker build args.
 #
 # Run the container with `docker run -p 3000:3000 -t tomorrow-api`.
-FROM docker.io/node:lts-alpine
+FROM node:22-alpine
 
 ENV HOST=0.0.0.0
 ENV PORT=3000
@@ -12,15 +12,16 @@ ENV NODE_ENV=production
 
 WORKDIR /app
 
-RUN addgroup --system tomorrow-api && \
-          adduser --system -G tomorrow-api tomorrow-api
-
 COPY dist/apps/tomorrow-api tomorrow-api/
 COPY dist/apps/tomorrow/browser static
-RUN chown -R tomorrow-api:tomorrow-api .
+RUN chown -R node:node /app
+
+RUN mkdir -p /data && chown -R node:node /data
+
+VOLUME /data
 
 RUN npm --prefix=tomorrow-api ci
 
-USER tomorrow-api
+USER node
 
 CMD [ "node", "tomorrow-api" ]

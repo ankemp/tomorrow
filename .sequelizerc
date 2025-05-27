@@ -1,0 +1,8 @@
+const path = require('path');
+
+module.exports = {
+  config: path.resolve('apps/tomorrow-api/sequelize.config.js'),
+  'models-path': path.resolve('apps/tomorrow-api/src/app/_db/entities'),
+  'migrations-path': path.resolve('apps/tomorrow-api/src/migrations'),
+  'seeders-path': path.resolve('apps/tomorrow-api/src/seeders'),
+};

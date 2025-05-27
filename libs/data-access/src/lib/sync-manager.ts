@@ -3,9 +3,13 @@ import angularReactivityAdapter from '@signaldb/angular';
 import { Changeset } from '@signaldb/core/index';
 import createIndexedDBAdapter from '@signaldb/indexeddb';
 import { SyncManager } from '@signaldb/sync';
+import { isNil } from 'es-toolkit';
 import { firstValueFrom, map } from 'rxjs';
 
-import { SettingsState } from '@tmrw/data-access-models';
+import type {
+  SettingsState,
+  TasksChangePayload,
+} from '@tmrw/data-access-models';
 import { decryptContent, encryptContent } from '@tmrw/encryption';
 
 // TODO: Possible to replace this with settings store? Pass in though DI in appInit?
@@ -14,6 +18,7 @@ function getSettings(): SettingsState {
   return settings ? JSON.parse(settings) : {};
 }
 
+// TODO: Refactor to be more generic, so we can use it with other entities. Its very tied to tasks right now.
 export const syncManager = new SyncManager({
   autostart: false,
   reactivity: angularReactivityAdapter,
@@ -74,6 +79,12 @@ export const syncManager = new SyncManager({
   },
   push: async ({ apiPath, httpClient }, { changes }) => {
     const settings = getSettings();
+    if (isNil(settings.userId)) {
+      throw new Error('User ID is not set in settings');
+    }
+    if (isNil(settings.deviceId)) {
+      throw new Error('Device ID is not set in settings');
+    }
     const key =
       settings && settings.encryption ? settings._encryptionKey : undefined;
 
@@ -88,10 +99,11 @@ export const syncManager = new SyncManager({
             changes: changes.added.map((item) => {
               return {
                 id: item.id,
+                date: item.date,
                 content: key ? encryptContent(key, JSON.stringify(item)) : item,
               };
             }),
-          },
+          } satisfies TasksChangePayload,
           { responseType: 'text' },
         ),
       );
@@ -108,10 +120,11 @@ export const syncManager = new SyncManager({
             changes: changes.modified.map((item) => {
               return {
                 id: item.id,
+                date: item.date,
                 content: key ? encryptContent(key, JSON.stringify(item)) : item,
               };
             }),
-          },
+          } satisfies TasksChangePayload,
           { responseType: 'text' },
         ),
       );
@@ -127,10 +140,11 @@ export const syncManager = new SyncManager({
             changes: changes.removed.map((item) => {
               return {
                 id: item.id,
+                date: item.date,
                 content: key ? encryptContent(key, JSON.stringify(item)) : item,
               };
             }),
-          },
+          } satisfies TasksChangePayload,
           responseType: 'text',
         }),
       );

@@ -22,14 +22,16 @@ import { TuiAccordion, TuiAccordionComponent } from '@taiga-ui/experimental';
 import { TuiCardLarge, TuiForm, TuiHeader } from '@taiga-ui/layout';
 import { TuiTextareaModule } from '@taiga-ui/legacy';
 
-import { Attachments, Settings, Tasks } from '@tmrw/data-access';
+import { Attachments, Notifications, Settings, Tasks } from '@tmrw/data-access';
 import { SubTask } from '@tmrw/data-access-models';
+import { Context } from '@tmrw/ui/core';
 
 import { CategorySelectorComponent } from '../_formcontrols/category-selector/category-selector.component';
 import { DatePickerComponent } from '../_formcontrols/date-picker/date-picker.component';
 import { DurationComponent } from '../_formcontrols/duration/duration.component';
 import { FileUploadComponent } from '../_formcontrols/file-upload/file-upload.component';
 import { PrioritySelectorComponent } from '../_formcontrols/priority-selector/priority-selector.component';
+import { ReminderToggleComponent } from '../_formcontrols/reminder-toggle/reminder-toggle.component';
 import { SubtasksComponent } from '../_formcontrols/subtasks/subtasks.component';
 
 @Component({
@@ -53,6 +55,7 @@ import { SubtasksComponent } from '../_formcontrols/subtasks/subtasks.component'
     DurationComponent,
     FileUploadComponent,
     PrioritySelectorComponent,
+    ReminderToggleComponent,
     SubtasksComponent,
   ],
   providers: [Attachments],
@@ -65,11 +68,16 @@ export class CreateComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly alerts = inject(TuiAlertService);
   readonly settings = inject(Settings);
+  readonly notifications = inject(Notifications);
+  readonly context = inject(Context);
   readonly attachmentsStore = inject(Attachments);
   readonly form = this.fb.group({
     userId: this.fb.control<string>(''),
     title: this.fb.control<string>('', [Validators.required]),
     date: this.fb.control<Date | null>(null, [Validators.required]),
+    reminder: this.fb.control<boolean>(
+      this.settings.defaultReminderState() !== 'never',
+    ),
     category: this.fb.control<string | null>(null, [Validators.required]),
     priority: this.fb.control<number>(0),
     pinned: this.fb.control<boolean>(false),

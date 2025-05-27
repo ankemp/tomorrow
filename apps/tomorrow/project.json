@@ -69,6 +69,19 @@
             }
           ]
         },
+        "prod-debug": {
+          "outputHashing": "all",
+          "serviceWorker": "apps/tomorrow/ngsw-config.json",
+          "fileReplacements": [
+            {
+              "replace": "apps/tomorrow/src/environments/version.ts",
+              "with": "apps/tomorrow/src/environments/version.prod.ts"
+            }
+          ],
+          "optimization": true,
+          "extractLicenses": false,
+          "sourceMap": false
+        },
         "development": {
           "optimization": false,
           "extractLicenses": false,

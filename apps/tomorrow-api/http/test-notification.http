@@ -1,0 +1,18 @@
+POST http://localhost:3000/api/notifications/test HTTP/1.1
+content-type: application/json
+
+{
+  "userId": "fd58809f-0998-4b6e-bbce-0f17bd9a0984",
+  "deviceId": "1f565351-1d2a-47f6-994c-880e795f3f0b"
+}
+
+
+###
+
+POST http://localhost:3000/api/notifications/scheduled-test HTTP/1.1
+content-type: application/json
+
+{
+  "userId": "fd58809f-0998-4b6e-bbce-0f17bd9a0984",
+  "delay": 10
+}

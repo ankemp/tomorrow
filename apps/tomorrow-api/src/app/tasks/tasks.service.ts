@@ -1,38 +1,63 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
 
-import type { Task } from '@tmrw/data-access-models';
+import type { Task, TasksChangePayload } from '@tmrw/data-access-models';
 
-import { EncryptedTask } from '../_db/encrypted_task.entity';
-import { PlainTask } from '../_db/plain_task.entity';
+import { EncryptedTaskEntity } from '../_db/entities/encrypted-task.entity';
+import { PlainTaskEntity } from '../_db/entities/plain-task.entity';
 
 const TASK_PROP_EXCLUDES = ['createdAt', 'updatedAt', 'deletedAt'];
 
-export type TaskEndpointBody =
-  | {
-      changes: { id: string; content: Task }[];
-      encrypted: false;
-      userId: string;
-      deviceId: string;
-    }
-  | {
-      changes: Array<{ id: string; content: string }>;
-      encrypted: true;
-      userId: string;
-      deviceId: string;
-    };
-
 @Injectable()
-export class TasksService {
+export class TasksService implements OnApplicationBootstrap {
+  private readonly logger = new Logger(TasksService.name);
+
   constructor(
-    @InjectModel(PlainTask)
-    private plainTaskRepository: typeof PlainTask,
-    @InjectModel(EncryptedTask)
-    private encryptedTaskRepository: typeof EncryptedTask,
+    @InjectModel(PlainTaskEntity)
+    private plainTaskRepository: typeof PlainTaskEntity,
+    @InjectModel(EncryptedTaskEntity)
+    private encryptedTaskRepository: typeof EncryptedTaskEntity,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
-  async createTasks(body: TaskEndpointBody) {
+  onApplicationBootstrap() {
+    this.plainTaskRepository.addHook(
+      'afterCreate',
+      'emitTaskCreated',
+      (task) => {
+        this.eventEmitter.emit('task.created', task);
+      },
+    );
+    this.plainTaskRepository.addHook(
+      'afterBulkCreate',
+      'emitTasksCreated',
+      (tasks) => {
+        tasks.forEach((task) => {
+          this.eventEmitter.emit('task.created', task);
+        });
+      },
+    );
+
+    this.plainTaskRepository.addHook(
+      'afterUpdate',
+      'emitTaskUpdated',
+      (task) => {
+        this.eventEmitter.emit('task.updated', task);
+      },
+    );
+
+    this.plainTaskRepository.addHook(
+      'afterDestroy',
+      'emitTaskDeleted',
+      (task) => {
+        this.eventEmitter.emit('task.deleted', task);
+      },
+    );
+  }
+
+  async createTasks(body: TasksChangePayload) {
     const { changes, encrypted, userId, deviceId } = body;
 
     if (!userId || !deviceId) {
@@ -52,7 +77,6 @@ export class TasksService {
         changes.map((change: any) => change.content),
       );
     }
-
     return {
       added: changes.map((change: any) => change.content),
       modified: [],
@@ -60,7 +84,7 @@ export class TasksService {
     };
   }
 
-  async updateTasks(body: TaskEndpointBody) {
+  async updateTasks(body: TasksChangePayload) {
     const { changes, encrypted, userId, deviceId } = body;
 
     if (!userId || !deviceId) {
@@ -89,7 +113,7 @@ export class TasksService {
     };
   }
 
-  async deleteTasks(body: TaskEndpointBody) {
+  async deleteTasks(body: TasksChangePayload) {
     const { changes, encrypted, userId, deviceId } = body;
 
     if (!userId || !deviceId) {
@@ -116,7 +140,6 @@ export class TasksService {
     deviceId: string;
     encrypted: boolean;
   }) {
-    console.log('getTasks', query);
     const { since, userId, deviceId, encrypted } = query;
 
     if (!userId || !deviceId) {
