@@ -31,6 +31,8 @@ import {
   addMinutes,
   DateValues,
   isAfter,
+  isWeekend,
+  nextMonday,
   nextSaturday,
   set,
 } from 'date-fns';
@@ -122,7 +124,7 @@ export class DatePickerComponent implements ControlValueAccessor {
   );
 
   readonly datePickerPreset = signal<
-    'today' | 'tomorrow' | 'weekend' | 'custom' | null
+    'today' | 'tomorrow' | 'weekend' | 'monday' | 'custom' | null
   >(null);
   readonly showDatePicker = computed(() => {
     return !!this.datePickerPreset();
@@ -131,6 +133,7 @@ export class DatePickerComponent implements ControlValueAccessor {
   readonly date = signal<Date | null>(null);
   readonly disabled = signal(false);
 
+  readonly isWeekend = signal<boolean>(isWeekend(new Date()));
   readonly timeSpecificity = computed(() => {
     return this.specificityOverride() || this.settings.timeSpecificity();
   });
@@ -174,6 +177,10 @@ export class DatePickerComponent implements ControlValueAccessor {
           }
           case 'weekend': {
             this.date.set(set(nextSaturday(today), dateValues));
+            break;
+          }
+          case 'monday': {
+            this.date.set(set(nextMonday(today), dateValues));
             break;
           }
         }

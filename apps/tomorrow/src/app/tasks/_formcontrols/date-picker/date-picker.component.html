@@ -24,18 +24,34 @@
         [disabled]="disabled()"
       />
     </label>
-    <label tuiChip>
-      Weekend
-      <input
-        name="date"
-        appearance="outline-grayscale"
-        tuiChip
-        type="radio"
-        value="weekend"
-        [(ngModel)]="datePickerPreset"
-        [disabled]="disabled()"
-      />
-    </label>
+    @if (isWeekend()) {
+      <label tuiChip>
+        Monday
+        <input
+          name="date"
+          appearance="outline-grayscale"
+          tuiChip
+          type="radio"
+          value="monday"
+          [(ngModel)]="datePickerPreset"
+          [disabled]="disabled()"
+        />
+      </label>
+    } @else {
+      <label tuiChip>
+        Weekend
+        <input
+          name="date"
+          appearance="outline-grayscale"
+          tuiChip
+          type="radio"
+          value="weekend"
+          [(ngModel)]="datePickerPreset"
+          [disabled]="disabled()"
+        />
+      </label>
+    }
+
     <label iconStart="@tui.calendar-clock" tuiChip>
       Custom
       <input
